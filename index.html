@@ -4,6 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>El drive colaborativo de la movida sst</title>
+    
+    <!-- SEO y Meta Tags (Búsquedas, WhatsApp, Telegram, etc.) -->
+    <meta name="description" content="El drive de La Movida de SST DAO Network">
+    <meta name="keywords" content="normas covenin, normas sst venezuela, seguridad y salud en el trabajo, sst dao network, movida sst, drive colaborativo">
+    
+    <!-- Open Graph (Facebook, WhatsApp, Telegram, LinkedIn) -->
+    <meta property="og:title" content="El drive colaborativo de la movida sst">
+    <meta property="og:description" content="El drive de La Movida de SST DAO Network">
+    <meta property="og:image" content="https://assets.poap.xyz/7a0347ca-c7eb-4842-b5f5-b72c364b1fff.png">
+    <meta property="og:url" content="https://www.movidasst.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="El drive colaborativo de la movida sst">
+    <meta name="twitter:description" content="El drive de La Movida de SST DAO Network">
+    <meta name="twitter:image" content="https://assets.poap.xyz/7a0347ca-c7eb-4842-b5f5-b72c364b1fff.png">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Fuentes Google: Outfit (Incluyendo peso 800) -->
@@ -70,7 +88,7 @@
         .ambient-light-bottom {
             position: fixed; bottom: -150px; right: 0%;
             width: 600px; height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%); /* Morado sutil */
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
             filter: blur(120px); pointer-events: none; z-index: 0;
         }
 
@@ -83,6 +101,13 @@
         /* --- ANIMACIONES --- */
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        /* Animación suave para el Visor (Recomendación 2) */
+        @keyframes lightboxZoom {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .lightbox-content-enter { animation: lightboxZoom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
         /* Loader Esqueleto Premium */
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
@@ -119,50 +144,8 @@
     <div class="ambient-light-top"></div>
     <div class="ambient-light-bottom"></div>
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="fixed inset-0 z-[99999] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-white/50 backdrop-blur-md"></div>
-
-        <div class="bg-white p-10 rounded-[2rem] w-[90%] max-w-[420px] shadow-2xl relative z-10 fade-in border border-slate-100">
-            <div class="text-center mb-8">
-                <!-- LOGO CON SOMBRA SUAVE -->
-                <div class="relative inline-block group">
-                    <div class="absolute inset-0 bg-brand rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
-                    <img src="https://assets.poap.xyz/9e03ccf3-6fb3-46bd-bde7-2baeb7d46b7f.png" 
-                         class="w-40 h-40 mx-auto mb-6 object-contain relative z-10 transform group-hover:scale-105 transition-transform duration-500" 
-                         alt="Logo Movida SST">
-                </div>
-                
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Drive de La Movida</h2>
-                <p class="text-sm text-slate-500 mt-2 font-medium">Acceso solo para Integrantes</p>
-            </div>
-            
-            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
-                <div>
-                    <label class="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2 ml-1">Cédula o DNI</label>
-                    <input class="w-full input-modern rounded-xl px-5 py-4 text-sm outline-none" id="dni" type="text" placeholder="Ingresa tu número de identificación" required inputmode="numeric">
-                </div>
-                <div>
-                    <label class="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2 ml-1">Código de Verificación</label>
-                    <input class="w-full input-modern rounded-xl px-5 py-4 text-sm outline-none" id="codigo" type="password" placeholder="••••••••" required>
-                </div>
-                <div id="login-error" class="text-red-500 text-xs font-bold text-center hidden bg-red-50 p-3 rounded-xl border border-red-100 animate-pulse"></div>
-                <button id="login-btn" class="w-full bg-gradient-to-r from-brand to-emerald-600 hover:from-emerald-600 hover:to-brand text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-brand/30 transform active:scale-[0.98] transition-all duration-300 flex justify-center items-center gap-2 mt-4" type="button" onclick="handleLogin(event)">
-                    <span class="tracking-wide">INGRESAR AL SISTEMA</span>
-                    <svg id="login-spinner" class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                </button>
-            </form>
-
-            <div class="mt-8 pt-6 border-t border-slate-100 text-center">
-                <p class="text-xs text-slate-400">
-                    ¿No eres miembro? <a href="https://portal.movidasst.com" target="_blank" class="text-brand font-bold hover:text-emerald-700 hover:underline transition-colors">Regístrate aquí</a>
-                </p>
-            </div>
-        </div>
-    </div>
-
     <!-- APP PRINCIPAL -->
-    <div id="app-container" class="hidden opacity-0 transition-opacity duration-700 relative z-10">
+    <div id="app-container" class="transition-opacity duration-700 relative z-10">
         
         <!-- NAVBAR STICKY GLASSMORPHISM -->
         <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-slate-200 shadow-sm transition-all duration-300">
@@ -170,8 +153,8 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <!-- Brand -->
                     <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="bg-white p-1.5 rounded-xl shadow-sm border border-slate-100">
-                            <img src="https://assets.poap.xyz/9e03ccf3-6fb3-46bd-bde7-2baeb7d46b7f.png" class="w-9 h-9 object-contain">
+                        <div class="bg-white p-1 rounded-full shadow-md border border-slate-100 flex items-center justify-center">
+                            <img src="https://assets.poap.xyz/7a0347ca-c7eb-4842-b5f5-b72c364b1fff.png" class="w-14 h-14 object-contain rounded-full" alt="Logo">
                         </div>
                         <div>
                             <h1 class="text-lg font-extrabold tracking-tight text-slate-900 leading-none">Drive Movida SST</h1>
@@ -186,32 +169,41 @@
                     </div>
 
                     <!-- Actions -->
-                    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end flex-wrap md:flex-nowrap">
+                    <!-- Recomendación 5: Optimización en móviles usando flex-wrap y orders -->
+                    <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end flex-wrap md:flex-nowrap">
                         
-                        <!-- BOTÓN DE APORTE (NUEVO) -->
-                        <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" class="order-first md:order-none w-full md:w-auto flex justify-center items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-brand transition-all shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5 group">
-                            <svg class="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            Aportar Recurso
+                        <!-- BOTÓN DE VOLVER A MOVIDASST -->
+                        <a href="https://www.movidasst.com" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-white text-slate-700 border border-slate-200 px-5 py-2.5 rounded-full text-xs font-bold hover:bg-slate-50 hover:text-brand transition-all shadow-sm hover:shadow group">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            <span class="hidden sm:inline">Volver a la Web</span>
+                            <span class="sm:hidden">Volver</span>
                         </a>
 
-                        <div class="hidden md:flex flex-col items-end">
-                            <span class="text-xs font-semibold text-slate-900">Hola, <span id="user-greeting" class="text-brand">Usuario</span></span>
-                            <button onclick="logout()" class="text-[10px] text-slate-400 hover:text-red-500 font-medium transition-colors">Cerrar Sesión</button>
+                        <!-- BOTÓN DE APORTE -->
+                        <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-brand transition-all shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5 group">
+                            <svg class="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            <span class="hidden sm:inline">Aportar Recurso</span>
+                            <span class="sm:hidden">Aportar</span>
+                        </a>
+
+                        <div class="hidden lg:flex flex-col items-end mr-2">
+                            <span class="text-xs font-semibold text-slate-900">Hola, <span class="text-brand">Equipo</span></span>
                         </div>
                         
-                        <!-- Search Bar Integrada -->
-                        <div class="relative group w-full md:w-64">
-                            <input type="text" id="search-input" placeholder="Buscar..." class="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-brand/20 transition-all placeholder-slate-400">
-                            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        </div>
-
                         <div class="flex gap-1 bg-slate-100 p-1 rounded-lg">
                              <button id="grid-view-btn" class="p-1.5 rounded-md bg-white text-brand shadow-sm transition-all"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg></button>
                              <button id="list-view-btn" class="p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg></button>
                         </div>
-                        
-                        <div class="md:hidden">
-                            <button onclick="logout()" class="p-2 text-slate-400 hover:text-red-500"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg></button>
+
+                        <!-- Search Bar Integrada -->
+                        <div class="relative group w-full md:w-64 order-last md:order-none mt-2 md:mt-0" title="La búsqueda aplica solo a los archivos de la carpeta actual">
+                            <input type="text" id="search-input" placeholder="Buscar en esta carpeta..." class="w-full pl-10 pr-10 py-2.5 bg-slate-100 border-none rounded-full text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-brand/20 transition-all placeholder-slate-400 shadow-inner">
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            
+                            <!-- Botón Limpiar Búsqueda ("X") -->
+                            <button id="clear-search-btn" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600 transition-colors bg-slate-200 hover:bg-slate-300 rounded-full p-0.5" title="Limpiar búsqueda">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -252,11 +244,12 @@
                     <div class="bg-slate-50 p-6 rounded-3xl mb-4 border border-slate-100 shadow-sm">
                         <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
                     </div>
-                    <p class="text-slate-500 font-medium">Esta carpeta está vacía</p>
+                    <p class="text-slate-500 font-medium">No se encontraron resultados</p>
                 </div>
 
                 <!-- Grid de Archivos -->
-                <div id="file-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"></div>
+                <!-- Ajustado items-start para que las carpetas compactas no se estiren verticalmente -->
+                <div id="file-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 items-start"></div>
                 
                 <!-- Load More -->
                 <div id="load-more-container" class="flex justify-center mt-16 pb-12"></div>
@@ -265,7 +258,7 @@
     </div>
 
     <!-- Lightbox de Vista Previa (Modo Cine) -->
-    <div id="lightbox-overlay" class="fixed inset-0 bg-slate-900/95 z-[10000] hidden flex flex-col transition-all duration-300 backdrop-blur-sm">
+    <div id="lightbox-overlay" class="fixed inset-0 bg-slate-900/95 z-[10000] hidden flex flex-col transition-opacity duration-300 backdrop-blur-sm">
         <div class="flex justify-between items-center px-6 py-4 bg-gradient-to-b from-black/50 to-transparent text-white absolute top-0 w-full z-20 pointer-events-none">
             <div class="pointer-events-auto flex items-center gap-3">
                 <div class="p-2 bg-white/10 rounded-lg backdrop-blur-md border border-white/10">
@@ -280,6 +273,7 @@
         </div>
         
         <div id="lightbox-body" class="flex-grow flex items-center justify-center w-full h-full p-6 overflow-hidden relative">
+            <!-- Loader inicial del visor -->
             <div id="preview-loader" class="flex flex-col items-center gap-4">
                 <div class="relative w-16 h-16">
                     <div class="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
@@ -307,8 +301,7 @@
         /* --- CONFIGURACIÓN --- */
         const CONFIG = {
             API_KEY: 'AIzaSyCclnDEY_Rsq33mNiGmcAuqECD5Tv4Uk5I',
-            ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq',
-            AUTH_SHEET: '1n1livlrbZBCc5EZeb2_NFbOKkiJb60NCIiL8e3Af7x8'
+            ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq'
         };
         
         let state = { files: [], stack: [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }], token: null, view: 'grid' };
@@ -321,87 +314,6 @@
             x.querySelector('span').textContent = message;
             x.className = "show";
             setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
-        }
-
-        /* --- LOGIN LOGIC --- */
-        function checkSession() {
-            const user = localStorage.getItem('driveUser');
-            if (user) {
-                const u = JSON.parse(user);
-                $('user-greeting').textContent = u.nombre.split(' ')[0];
-                const loginScreen = $('login-screen');
-                loginScreen.style.opacity = '0';
-                loginScreen.style.pointerEvents = 'none';
-                
-                setTimeout(() => { 
-                    loginScreen.style.display = 'none';
-                    const app = $('app-container');
-                    app.classList.remove('hidden');
-                    // Pequeño delay para animar la entrada
-                    setTimeout(() => app.classList.remove('opacity-0'), 50);
-                    initDrive(); 
-                }, 500);
-            } else {
-                $('login-screen').style.display = 'flex';
-                $('app-container').classList.add('hidden');
-            }
-        }
-
-        window.handleLogin = function(e) {
-            e.preventDefault();
-            const btn = $('login-btn'), spinner = $('login-spinner'), err = $('login-error');
-            const dni = $('dni').value.trim(), cod = $('codigo').value.trim();
-
-            if(!dni || !cod) { err.textContent = "Por favor completa todos los campos"; err.classList.remove('hidden'); return; }
-
-            btn.disabled = true; btn.querySelector('span').textContent = "Verificando..."; 
-            spinner.classList.remove('hidden'); err.classList.add('hidden');
-
-            window.authSheetCallback = function(res) {
-                const scriptTag = $('auth-script'); if(scriptTag) scriptTag.remove();
-                if(res.status === 'error') { loginFail("Error de conexión"); return; }
-                
-                try {
-                    const rows = res.table.rows, cols = res.table.cols;
-                    let iDni = -1, iCod = -1, iNom = -1;
-                    cols.forEach((c, i) => {
-                        if(!c.label) return;
-                        const l = c.label.toLowerCase();
-                        if(l.includes('cedula') || l.includes('dni')) iDni = i;
-                        if(l.includes('código') || l.includes('verificación')) iCod = i;
-                        if(l.includes('nombre')) iNom = i;
-                    });
-
-                    let foundUser = null;
-                    for(let r of rows) {
-                        if(!r.c) continue;
-                        const rowDni = r.c[iDni] ? String(r.c[iDni].v).trim() : '';
-                        const rowCod = r.c[iCod] ? String(r.c[iCod].v).trim() : '';
-                        if(rowDni === dni && rowCod.toLowerCase() === cod.toLowerCase()) {
-                            foundUser = { dni: rowDni, nombre: (iNom !== -1 && r.c[iNom]) ? r.c[iNom].v : "Usuario" }; break;
-                        }
-                    }
-
-                    if(foundUser) {
-                        localStorage.setItem('driveUser', JSON.stringify(foundUser)); checkSession();
-                    } else { loginFail("Credenciales incorrectas."); }
-                } catch(e) { loginFail("Error procesando datos."); }
-            };
-
-            const script = document.createElement('script');
-            script.id = 'auth-script';
-            script.src = `https://docs.google.com/spreadsheets/d/${CONFIG.AUTH_SHEET}/gviz/tq?tqx=responseHandler:window.authSheetCallback`;
-            script.onerror = () => loginFail("Sin conexión a internet.");
-            document.body.appendChild(script);
-        }
-
-        function loginFail(msg) {
-            const btn = $('login-btn'); btn.disabled = false; btn.querySelector('span').textContent = "INGRESAR AL SISTEMA";
-            $('login-spinner').classList.add('hidden'); $('login-error').textContent = msg; $('login-error').classList.remove('hidden');
-        }
-
-        window.logout = function() {
-            if(confirm("¿Estás seguro que deseas salir?")) { localStorage.removeItem('driveUser'); location.reload(); }
         }
 
         /* --- DRIVE LOGIC --- */
@@ -428,7 +340,10 @@
                 const idx = state.stack.findIndex(x => x.id === id);
                 if (idx !== -1) state.stack = state.stack.slice(0, idx + 1);
             }
-            renderBreadcrumbs(); loadFolder(id);
+            $('search-input').value = ''; // Limpiar búsqueda al cambiar de carpeta
+            $('clear-search-btn').classList.add('hidden');
+            renderBreadcrumbs(); 
+            loadFolder(id);
         }
 
         async function loadFolder(folderId, pageToken = null) {
@@ -479,6 +394,9 @@
             const filtered = files.filter(f => f.name.toLowerCase().includes(term));
             if(!append) container.innerHTML = '';
             
+            // Recomendación 1: Acciones amigables para Celular (opacity-100 en móviles, hover en PC)
+            const mobileFriendlyActions = "opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity";
+
             filtered.forEach((f, i) => {
                 const isFolder = f.mimeType.includes('folder'), isImg = f.mimeType.includes('image'), isPdf = f.mimeType.includes('pdf');
                 const canPreview = isImg || isPdf;
@@ -488,31 +406,43 @@
                 let action = isFolder ? `navTo('${f.id}', '${safeLink}', true)` : (canPreview ? `previewFile('${safeLink}', '${f.mimeType}', '${f.webViewLink}', '${f.thumbnailLink}')` : `window.open('${f.webViewLink}', '_blank')`);
 
                 const fileInfo = getFileIcon(f.mimeType, f.iconLink);
-                
                 const el = document.createElement('div');
-                // AQUÍ APLICAMOS LA MAGIA: bg-white + hover:-translate-y-2 + sombra dinámica
-                el.className = `fade-in bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-xl ${fileInfo.shadow} transition-all duration-300 transform hover:-translate-y-2 flex flex-col justify-between group h-full`;
                 el.style.animationDelay = `${Math.min(i * 40, 400)}ms`;
                 
-                let thumb = isImg && f.thumbnailLink ? 
-                    `<div class="w-full aspect-square rounded-xl bg-slate-50 mb-4 overflow-hidden relative shadow-inner"><img src="${f.thumbnailLink.replace('=s220', '=s400')}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy"></div>` : 
-                    `<div class="w-full aspect-square rounded-xl ${fileInfo.bg} mb-4 flex items-center justify-center transition-colors shadow-inner">${fileInfo.icon}</div>`;
-
                 if(state.view === 'grid') {
-                    el.innerHTML = `
-                        <div onclick="${action}" class="cursor-pointer">
-                            ${thumb}
-                            <h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 mb-2 group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
-                            <p class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
-                                ${date}
-                            </p>
-                        </div>
-                        ${!isFolder ? `
-                        <div class="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center opacity-80 group-hover:opacity-100 transition-opacity">
-                            <button onclick="shareLink('${f.webViewLink}')" class="text-slate-400 hover:text-brand transition-colors p-1" title="Compartir"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg></button>
-                            <button onclick="copyLink('${f.webViewLink}')" class="text-slate-400 hover:text-blue-500 transition-colors p-1" title="Copiar Link"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></button>
-                        </div>` : ''}`;
+                    // Recomendación 3: Carpetas compactas vs Archivos grandes en la Cuadrícula
+                    if(isFolder) {
+                        el.className = `fade-in bg-white col-span-1 rounded-xl p-3 border border-slate-100 shadow-sm hover:shadow-md ${fileInfo.shadow} transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3 cursor-pointer group`;
+                        el.innerHTML = `
+                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center ${fileInfo.bg} rounded-lg shadow-inner">
+                                 ${fileInfo.icon.replace('w-10 h-10', 'w-5 h-5')}
+                            </div>
+                            <div class="flex-grow min-w-0" onclick="${action}">
+                                <h3 class="text-sm font-bold text-slate-800 truncate group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
+                                <p class="text-[10px] text-slate-400 mt-0.5">${date}</p>
+                            </div>
+                        `;
+                    } else {
+                        let thumb = isImg && f.thumbnailLink ? 
+                            `<div class="w-full aspect-square rounded-xl bg-slate-50 mb-4 overflow-hidden relative shadow-inner"><img src="${f.thumbnailLink.replace('=s220', '=s400')}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy"></div>` : 
+                            `<div class="w-full aspect-square rounded-xl ${fileInfo.bg} mb-4 flex items-center justify-center transition-colors shadow-inner">${fileInfo.icon}</div>`;
+
+                        el.className = `fade-in bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-xl ${fileInfo.shadow} transition-all duration-300 transform hover:-translate-y-2 flex flex-col justify-between group h-full`;
+                        el.innerHTML = `
+                            <div onclick="${action}" class="cursor-pointer">
+                                ${thumb}
+                                <h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 mb-2 group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
+                                <p class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
+                                    ${date}
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center ${mobileFriendlyActions}">
+                                <button onclick="shareLink('${f.webViewLink}')" class="text-slate-400 hover:text-brand transition-colors p-1 bg-slate-50 rounded-lg md:bg-transparent" title="Compartir"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg></button>
+                                <button onclick="copyLink('${f.webViewLink}')" class="text-slate-400 hover:text-blue-500 transition-colors p-1 bg-slate-50 rounded-lg md:bg-transparent" title="Copiar Link"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></button>
+                            </div>`;
+                    }
                 } else {
+                    // List View
                     el.className = `fade-in bg-white rounded-xl p-4 border border-slate-100 shadow-sm hover:shadow-lg ${fileInfo.shadow} transition-all duration-300 flex items-center gap-4 cursor-pointer mb-3 group transform hover:-translate-x-1`;
                     el.innerHTML = `
                         <div onclick="${action}" class="flex-shrink-0 w-12 h-12 flex items-center justify-center ${fileInfo.bg} rounded-xl shadow-sm">
@@ -522,7 +452,7 @@
                             <h3 class="text-sm font-bold text-slate-800 truncate group-hover:text-brand transition-colors">${safeName}</h3>
                             <p class="text-xs text-slate-400 mt-0.5">${date}</p>
                         </div>
-                        ${!isFolder ? `<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        ${!isFolder ? `<div class="flex gap-2 ${mobileFriendlyActions}">
                             <button onclick="shareLink('${f.webViewLink}')" class="p-2 text-slate-400 hover:text-brand bg-slate-50 hover:bg-brand/10 rounded-lg transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg></button>
                             <button onclick="copyLink('${f.webViewLink}')" class="p-2 text-slate-400 hover:text-blue-500 bg-slate-50 hover:bg-blue-50 rounded-lg transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></button>
                         </div>` : ''}`;
@@ -545,19 +475,25 @@
         /* --- PREVIEW & ACTIONS --- */
         window.previewFile = function(encName, mime, link, thumbLink) {
             const name = decodeURIComponent(encName), overlay = $('lightbox-overlay'), body = $('lightbox-body'), title = $('lightbox-title'), extLink = $('lightbox-external-link');
-            // Mantenemos título genérico "Vista Previa" para limpieza, o podrías usar 'name'
-            body.innerHTML = ''; overlay.classList.remove('hidden');
+            body.innerHTML = ''; 
+            overlay.classList.remove('hidden');
+            
+            // Recomendación 2: Contenedor con animación de Zoom-In
+            const animatedWrapper = document.createElement('div');
+            animatedWrapper.className = 'w-full h-full flex items-center justify-center lightbox-content-enter';
+            
             extLink.href = link; 
             
             if (mime.includes('image')) {
                 const img = new Image(); img.className = 'max-w-full max-h-full object-contain rounded-lg shadow-2xl';
-                img.onload = () => { body.innerHTML = ''; body.appendChild(img); };
+                img.onload = () => { animatedWrapper.appendChild(img); body.appendChild(animatedWrapper); };
                 img.src = thumbLink ? thumbLink.replace(/=s\d+/, '=s1600') : link; 
             } else {
                 const iframe = document.createElement('iframe');
                 iframe.src = link.replace(/\/view.*/, '/preview');
                 iframe.className = 'w-full h-full md:w-[90%] md:h-[85%] bg-white rounded-xl shadow-2xl border-0';
-                body.appendChild(iframe);
+                animatedWrapper.appendChild(iframe);
+                body.appendChild(animatedWrapper);
             }
         }
 
@@ -577,14 +513,28 @@
         }
 
         /* --- EVENTOS --- */
-        $('search-input').addEventListener('input', () => {
+        
+        // Recomendación 4: Limpiar búsqueda interactiva
+        const searchInput = $('search-input');
+        const clearBtn = $('clear-search-btn');
+
+        searchInput.addEventListener('input', () => {
+            if(searchInput.value.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+            
             renderFiles(state.files);
-            if(state.files.length > 0 && $('file-container').children.length === 0) $('file-container').innerHTML = '<div class="col-span-full text-center py-20"><p class="text-slate-400 font-medium">No encontramos archivos con ese nombre</p></div>';
+            if(state.files.length > 0 && $('file-container').children.length === 0) $('file-container').innerHTML = '<div class="col-span-full text-center py-20"><p class="text-slate-400 font-medium">No encontramos resultados en esta carpeta</p></div>';
+        });
+
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.classList.add('hidden');
+            renderFiles(state.files);
         });
 
         $('grid-view-btn').addEventListener('click', () => { 
             state.view = 'grid'; 
-            $('file-container').className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6';
+            $('file-container').className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 items-start';
             $('grid-view-btn').className = "p-1.5 rounded-md bg-white text-brand shadow-sm transition-all";
             $('list-view-btn').className = "p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all";
             renderFiles(state.files); 
@@ -598,7 +548,8 @@
             renderFiles(state.files); 
         });
 
-        checkSession();
+        // Inicializar el Drive directamente al cargar
+        initDrive();
     </script>
 </body>
 </html>
