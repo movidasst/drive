@@ -179,6 +179,13 @@
                             <span class="sm:hidden">Volver</span>
                         </a>
 
+                        <!-- BOTÓN DE CANAL WHATSAPP -->
+                        <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-[#128C7E] transition-all shadow-lg hover:shadow-[#25D366]/30 hover:-translate-y-0.5 group">
+                            <svg class="w-4 h-4 text-white/90 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.388 0 12.035c0 2.126.553 4.195 1.603 6.01L.226 23.53l5.63-1.478A11.968 11.968 0 0 0 12.031 24c6.643 0 12.03-5.388 12.03-12.035S18.675 0 12.031 0zm0 21.996c-1.802 0-3.567-.482-5.118-1.4l-.366-.217-3.804.998.995-3.705-.238-.377a9.982 9.982 0 0 1-1.528-5.26c0-5.526 4.498-10.026 10.03-10.026 5.53 0 10.028 4.5 10.028 10.026s-4.5 10.028-10.028 10.026zm5.503-7.525c-.301-.151-1.783-.88-2.06-.98-.276-.101-.478-.151-.678.151-.202.302-.78 1.002-.955 1.203-.176.202-.352.227-.653.076-.302-.151-1.274-.469-2.428-1.503-.898-.806-1.503-1.801-1.68-2.102-.176-.302-.018-.465.132-.616.135-.135.302-.352.453-.528.151-.176.202-.302.302-.503.1-.202.05-.378-.025-.529-.076-.151-.678-1.631-.93-2.234-.246-.588-.495-.508-.678-.518-.176-.008-.378-.008-.579-.008-.201 0-.528.076-.804.378-.276.302-1.056 1.032-1.056 2.518 0 1.486 1.081 2.922 1.232 3.123.151.202 2.133 3.255 5.166 4.56.721.311 1.283.497 1.722.636.724.23 1.383.197 1.898.119.58-.088 1.783-.728 2.034-1.433.251-.705.251-1.309.176-1.434-.076-.126-.277-.202-.579-.353z"/></svg>
+                            <span class="hidden sm:inline">Canal WhatsApp</span>
+                            <span class="sm:hidden">Canal</span>
+                        </a>
+
                         <!-- BOTÓN DE APORTE -->
                         <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-brand transition-all shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5 group">
                             <svg class="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
@@ -418,8 +425,8 @@
                                  ${fileInfo.icon.replace('w-10 h-10', 'w-5 h-5')}
                             </div>
                             <div class="flex-grow min-w-0" onclick="${action}">
-                                <h3 class="text-sm font-bold text-slate-800 truncate group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
-                                <p class="text-[10px] text-slate-400 mt-0.5">${date}</p>
+                                <h3 class="text-sm font-bold text-slate-800 line-clamp-3 leading-snug group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
+                                <p class="text-[10px] text-slate-400 mt-1">${date}</p>
                             </div>
                         `;
                     } else {
@@ -449,7 +456,7 @@
                              ${isImg ? `<img src="${f.thumbnailLink}" class="w-full h-full object-cover rounded-xl">` : fileInfo.icon.replace('w-10 h-10', 'w-6 h-6')}
                         </div>
                         <div onclick="${action}" class="flex-grow min-w-0">
-                            <h3 class="text-sm font-bold text-slate-800 truncate group-hover:text-brand transition-colors">${safeName}</h3>
+                            <h3 class="text-sm font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
                             <p class="text-xs text-slate-400 mt-0.5">${date}</p>
                         </div>
                         ${!isFolder ? `<div class="flex gap-2 ${mobileFriendlyActions}">
