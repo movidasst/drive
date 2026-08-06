@@ -1,964 +1,1366 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca colaborativa | La Movida SST</title>
-    
-    <!-- SEO y Meta Tags (Búsquedas, WhatsApp, Telegram, etc.) -->
-    <meta name="description" content="Biblioteca colaborativa de recursos técnicos para integrantes de La Movida SST.">
-    <meta name="keywords" content="normas covenin, normas sst venezuela, seguridad y salud en el trabajo, sst dao network, movida sst, drive colaborativo">
-    
-    <!-- Open Graph (Facebook, WhatsApp, Telegram, LinkedIn) -->
-    <meta property="og:title" content="Biblioteca colaborativa | La Movida SST">
-    <meta property="og:description" content="Recursos técnicos para integrantes de La Movida SST.">
-    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200">
-    <meta property="og:url" content="https://drive.movidasst.com">
-    <meta property="og:type" content="website">
-    
-    <!-- Twitter Cards -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Biblioteca colaborativa | La Movida SST">
-    <meta name="twitter:description" content="Recursos técnicos para integrantes de La Movida SST.">
-    <meta name="twitter:image" content="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca colaborativa | La Movida SST</title>
+  <meta name="description" content="Biblioteca colaborativa de recursos técnicos para integrantes de La Movida SST.">
+  <meta name="theme-color" content="#0B2A6F">
+  <meta property="og:title" content="Biblioteca colaborativa | La Movida SST">
+  <meta property="og:description" content="Recursos técnicos para integrantes de La Movida SST.">
+  <meta property="og:image" content="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200">
+  <meta property="og:url" content="https://drive.movidasst.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Biblioteca colaborativa | La Movida SST">
+  <meta name="twitter:description" content="Recursos técnicos para integrantes de La Movida SST.">
+  <meta name="twitter:image" content="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Fuentes Google: Outfit (Incluyendo peso 800) -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        slate: {
-                            50: '#f8fafc',  /* Fondo Principal */
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            600: '#475569', /* Texto Cuerpo */
-                            900: '#0f172a', /* Títulos */
-                        },
-                        brand: {
-                            DEFAULT: '#006D8F',
-                            dark: '#0B2A6F',
-                            light: '#e9f7f8'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'glow': '0 0 15px rgba(0, 109, 143, 0.3)',
-                    }
-                }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            movida: {
+              navy: '#0B2A6F',
+              petrol: '#006D8F',
+              teal: '#139F9F',
+              green: '#58B947',
+              ink: '#102A43',
+              mist: '#F4F8FA'
             }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif']
+          },
+          boxShadow: {
+            card: '0 12px 28px -22px rgba(15, 42, 67, .32)',
+            lift: '0 20px 42px -28px rgba(15, 42, 67, .38)'
+          }
         }
-    </script>
+      }
+    };
+  </script>
 
-    <style>
-        /* --- ESTILOS GENERALES --- */
-        html, body { 
-            width: 100%; min-height: 100vh; margin: 0; padding: 0; 
-            font-family: 'Outfit', sans-serif; 
-            background-color: #f8fafc; /* Slate 50 */
-            color: #475569; /* Slate 600 */
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
-        }
+  <style>
+    :root { color-scheme: light; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      background: #f4f8fa;
+      color: #486581;
+      font-family: 'Outfit', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button, input, select, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 3px solid rgba(19, 159, 159, .28);
+      outline-offset: 3px;
+    }
+    .glass-header {
+      background: rgba(255, 255, 255, .94);
+      border-bottom: 1px solid #d9e4ec;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .auth-card {
+      box-shadow: 0 28px 80px -42px rgba(11, 42, 111, .55);
+    }
+    .auth-input {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid #d9e4ec;
+      border-radius: 16px;
+      background: #f8fbfd;
+      padding: 13px 46px;
+      color: #102a43;
+      font-size: 16px;
+      font-weight: 650;
+      transition: .2s ease;
+    }
+    .auth-input:focus {
+      border-color: #139f9f;
+      background: #fff;
+      box-shadow: 0 0 0 5px rgba(19, 159, 159, .1);
+      outline: none;
+    }
+    .auth-input::placeholder { color: #9fb3c8; font-weight: 500; }
+    .fade-up { animation: fadeUp .38s cubic-bezier(.2,.8,.2,1) both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .skeleton {
+      position: relative;
+      overflow: hidden;
+      background: #e9eff3;
+    }
+    .skeleton::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent);
+      animation: shimmer 1.35s infinite;
+    }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+    .line-clamp-2 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .line-clamp-3 {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+    .menu-open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) scale(1) !important; }
+    .toast-show { opacity: 1 !important; transform: translate(-50%, 0) !important; pointer-events: auto !important; }
 
-        /* --- FONDO TECH GRID (SUTIL) --- */
-        .tech-bg {
-            background-color: #f8fafc;
-            background-image: 
-                linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px), 
-                linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
-            background-size: 50px 50px;
-            position: relative;
-        }
-
-        /* Luces Ambientales (Blur Profundo) */
-        .ambient-light-top {
-            position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
-            width: 800px; height: 400px;
-            background: radial-gradient(circle, rgba(0, 109, 143, 0.08) 0%, transparent 70%);
-            filter: blur(120px); pointer-events: none; z-index: 0;
-        }
-        .ambient-light-bottom {
-            position: fixed; bottom: -150px; right: 0%;
-            width: 600px; height: 500px;
-            background: radial-gradient(circle, rgba(11, 42, 111, 0.07) 0%, transparent 70%);
-            filter: blur(120px); pointer-events: none; z-index: 0;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* --- ANIMACIONES --- */
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        
-        /* Animación suave para el Visor (Recomendación 2) */
-        @keyframes lightboxZoom {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .lightbox-content-enter { animation: lightboxZoom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
-        /* Loader Esqueleto Premium */
-        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
-        .skeleton-loader div { 
-            background: linear-gradient(to right, #f1f5f9 8%, #e2e8f0 18%, #f1f5f9 33%);
-            background-size: 1000px 100%;
-            animation: shimmer 2s infinite linear; 
-        }
-
-        input, select, button { font-size: 16px !important; }
-        
-        /* Inputs Modernos */
-        .input-modern {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            color: #0f172a;
-            transition: all 0.3s ease;
-        }
-        .input-modern:focus {
-            border-color: #006D8F;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(0, 109, 143, 0.12);
-        }
-        .input-modern::placeholder { color: #94a3b8; }
-
-        /* Toast Notification */
-        #toast { visibility: hidden; min-width: 280px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px); font-size: 14px; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px -5px rgba(0,0,0,0.2); font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); bottom: 50px; }
-
-
-        /* --- ACCESO PREMIUM --- */
-        .auth-screen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px 16px;
-            position: relative;
-            z-index: 100;
-        }
-        .auth-card {
-            width: 100%;
-            max-width: 430px;
-            background: rgba(255,255,255,.96);
-            border: 1px solid rgba(226,232,240,.95);
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 32px 85px -38px rgba(11,42,111,.5);
-            backdrop-filter: blur(18px);
-        }
-        .auth-hero {
-            position: relative;
-            overflow: hidden;
-            padding: 30px 24px 26px;
-            text-align: center;
-            color: white;
-            background: linear-gradient(135deg,#0B2A6F 0%,#006D8F 62%,#139f9f 100%);
-        }
-        .auth-hero::before,
-        .auth-hero::after {
-            content: '';
-            position: absolute;
-            border-radius: 999px;
-            background: rgba(255,255,255,.08);
-        }
-        .auth-hero::before { width: 190px; height: 190px; right: -75px; top: -90px; }
-        .auth-hero::after { width: 230px; height: 230px; left: -115px; bottom: -150px; }
-        .auth-logo {
-            width: 96px;
-            height: 96px;
-            object-fit: contain;
-            border-radius: 999px;
-            background: white;
-            padding: 8px;
-            box-shadow: 0 18px 35px -18px rgba(0,0,0,.55);
-            position: relative;
-            z-index: 1;
-        }
-        .auth-body { padding: 26px 24px 24px; }
-        .auth-label { display:block; font-size:14px; font-weight:800; color:#334155; margin-bottom:8px; }
-        .auth-field { position:relative; }
-        .auth-field svg { position:absolute; width:20px; height:20px; left:15px; top:50%; transform:translateY(-50%); color:#94a3b8; pointer-events:none; }
-        .auth-input {
-            width:100%;
-            border:1px solid #dbe5ec;
-            background:#f8fafc;
-            border-radius:16px;
-            padding:14px 45px;
-            color:#0f172a;
-            font-weight:700;
-            transition:.22s ease;
-        }
-        .auth-input:focus { outline:none; background:white; border-color:#006D8F; box-shadow:0 0 0 5px rgba(0,109,143,.11); }
-        .auth-submit {
-            width:100%; min-height:54px; border:0; border-radius:16px; margin-top:22px;
-            display:flex; align-items:center; justify-content:center; gap:10px;
-            color:white; font-weight:800;
-            background:linear-gradient(90deg,#0B2A6F,#006D8F,#139f9f);
-            box-shadow:0 14px 30px -16px rgba(0,109,143,.75);
-            transition:.22s ease;
-        }
-        .auth-submit:hover { transform:translateY(-1px); box-shadow:0 18px 34px -16px rgba(0,109,143,.8); }
-        .auth-submit:disabled { opacity:.65; cursor:not-allowed; transform:none; }
-        .auth-message { margin-top:16px; border-radius:14px; padding:12px 14px; font-size:13px; font-weight:700; }
-        .auth-message.error { color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; }
-        .auth-message.success { color:#047857; background:#ecfdf5; border:1px solid #a7f3d0; }
-        .session-chip { display:inline-flex; align-items:center; gap:7px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); padding:7px 11px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.14em; position:relative; z-index:1; }
-        .session-chip-dot { width:8px; height:8px; border-radius:999px; background:#86efac; }
-        .logout-btn { display:flex; align-items:center; gap:7px; padding:9px 12px; border-radius:12px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px!important; font-weight:800; transition:.2s ease; }
-        .logout-btn:hover { color:#dc2626; background:#fef2f2; border-color:#fecaca; }
-        @media (max-width: 767px) {
-            .auth-card { border-radius:26px; }
-            .auth-body { padding:24px 20px; }
-            .auth-hero { padding:28px 20px 24px; }
-        }
-
-    </style>
+    @media (max-width: 369px) {
+      #file-container.file-grid { grid-template-columns: 1fr !important; }
+    }
+    @media (min-width: 370px) and (max-width: 639px) {
+      #file-container.file-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
-<body class="tech-bg">
+<body>
 
-    <!-- ACCESO PARA INTEGRANTES -->
-    <section id="auth-screen" class="auth-screen" aria-labelledby="auth-title">
-        <div class="auth-card fade-in">
-            <div class="auth-hero">
-                <img src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w512" class="auth-logo" alt="Logo de La Movida SST">
-                <div class="mt-4"><span class="session-chip"><span class="session-chip-dot"></span>Acceso para integrantes</span></div>
-                <h1 id="auth-title" class="relative z-10 mt-4 text-3xl font-extrabold leading-tight">Biblioteca colaborativa</h1>
-                <p class="relative z-10 mt-2 text-sm text-white/80 leading-relaxed">Recursos técnicos y materiales compartidos por la comunidad de La Movida SST.</p>
-            </div>
-            <div class="auth-body">
-                <form id="login-form" novalidate>
-                    <label for="login-cedula" class="auth-label">Cédula</label>
-                    <div class="auth-field">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21a8 8 0 10-16 0m8-11a4 4 0 100-8 4 4 0 000 8z"/></svg>
-                        <input id="login-cedula" class="auth-input" type="text" inputmode="numeric" autocomplete="username" maxlength="12" placeholder="Ejemplo: 12345678" required>
-                    </div>
-                    <p class="mt-2 text-xs text-slate-500">Solo números, sin V, puntos ni guiones.</p>
+  <!-- ACCESO -->
+  <section id="auth-screen" class="min-h-screen px-4 py-7 flex items-center justify-center" aria-labelledby="auth-title">
+    <div class="auth-card w-full max-w-md overflow-hidden rounded-[28px] border border-slate-200 bg-white fade-up">
+      <div class="relative overflow-hidden bg-movida-navy px-6 pb-7 pt-8 text-center text-white">
+        <div class="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-white/5" aria-hidden="true"></div>
+        <div class="absolute -bottom-24 -left-20 h-52 w-52 rounded-full bg-movida-teal/25" aria-hidden="true"></div>
 
-                    <label for="login-code" class="auth-label mt-5">Código de integrante</label>
-                    <div class="auth-field">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        <input id="login-code" class="auth-input pr-12" type="password" autocomplete="current-password" maxlength="20" placeholder="Tu código del directorio" required>
-                        <button id="toggle-code" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-100" aria-label="Mostrar código">
-                            <svg class="!static !transform-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.5 12C3.8 8 7.5 5 12 5s8.2 3 9.5 7c-1.3 4-5 7-9.5 7s-8.2-3-9.5-7z"/></svg>
-                        </button>
-                    </div>
+        <img
+          src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w512"
+          class="relative mx-auto h-24 w-24 rounded-full bg-white p-2 object-contain shadow-xl"
+          alt="Logo de La Movida SST"
+        >
+        <span class="relative mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.16em]">
+          <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+          Acceso para integrantes
+        </span>
+        <h1 id="auth-title" class="relative mt-4 text-3xl font-extrabold leading-tight">Biblioteca colaborativa</h1>
+        <p class="relative mx-auto mt-2 max-w-sm text-sm leading-relaxed text-white/75">
+          Recursos técnicos y materiales compartidos por la comunidad de La Movida SST.
+        </p>
+      </div>
 
-                    <div id="login-message" class="auth-message error hidden" role="alert" aria-live="polite"></div>
-                    <button id="login-button" type="submit" class="auth-submit">
-                        <svg id="login-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3"/></svg>
-                        <span id="login-button-text">Ingresar a la biblioteca</span>
-                    </button>
-                </form>
-                <div class="mt-5 pt-5 border-t border-slate-100 text-center">
-                    <p class="text-xs text-slate-500 leading-relaxed">La sesión dura hasta dos horas. El código no se guarda en este dispositivo.</p>
-                    <a href="https://directorio.movidasst.com/" target="_blank" rel="noopener noreferrer" class="inline-flex mt-3 text-sm font-extrabold text-brand hover:text-brand-dark">Consultar mi credencial</a>
-                </div>
-            </div>
-        </div>
-    </section>
+      <div class="px-5 py-7 sm:px-8">
+        <form id="login-form" novalidate>
+          <label for="login-cedula" class="mb-2 block text-sm font-extrabold text-slate-700">Cédula</label>
+          <div class="relative">
+            <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21a8 8 0 10-16 0m8-11a4 4 0 100-8 4 4 0 000 8z"></path>
+            </svg>
+            <input id="login-cedula" class="auth-input" type="text" inputmode="numeric" autocomplete="username" maxlength="12" placeholder="Ejemplo: 12345678" required>
+          </div>
+          <p class="mt-2 text-xs text-slate-500">Solo números, sin V, puntos ni guiones.</p>
 
-
-    <!-- Luces Ambientales -->
-    <div class="ambient-light-top"></div>
-    <div class="ambient-light-bottom"></div>
-
-    <!-- APP PRINCIPAL -->
-    <div id="app-container" class="hidden transition-opacity duration-700 relative z-10">
-        
-        <!-- NAVBAR STICKY GLASSMORPHISM -->
-        <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-slate-200 shadow-sm transition-all duration-300">
-            <div class="container mx-auto px-4 py-3 max-w-7xl">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <!-- Brand -->
-                    <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="bg-white p-1 rounded-full shadow-md border border-slate-100 flex items-center justify-center">
-                            <img src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200" class="w-14 h-14 object-contain rounded-full" alt="Logo">
-                        </div>
-                        <div>
-                            <h1 class="text-lg font-extrabold tracking-tight text-slate-900 leading-none">Drive Movida SST</h1>
-                            <div class="flex items-center gap-1.5 mt-1">
-                                <span class="relative flex h-2 w-2">
-                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                  <span class="relative inline-flex rounded-full h-2 w-2 bg-brand"></span>
-                                </span>
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-brand">Online</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <!-- Recomendación 5: Optimización en móviles usando flex-wrap y orders -->
-                    <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end flex-wrap md:flex-nowrap">
-                        
-                        <!-- BOTÓN DE VOLVER A MOVIDASST -->
-                        <a href="https://www.movidasst.com" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-white text-slate-700 border border-slate-200 px-5 py-2.5 rounded-full text-xs font-bold hover:bg-slate-50 hover:text-brand transition-all shadow-sm hover:shadow group">
-                            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                            <span class="hidden sm:inline">Volver a la Web</span>
-                            <span class="sm:hidden">Volver</span>
-                        </a>
-
-                        <!-- BOTÓN DE CANAL WHATSAPP -->
-                        <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" rel="noopener noreferrer" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-[#128C7E] transition-all shadow-lg hover:shadow-[#25D366]/30 hover:-translate-y-0.5 group">
-                            <svg class="w-4 h-4 text-white/90 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.388 0 12.035c0 2.126.553 4.195 1.603 6.01L.226 23.53l5.63-1.478A11.968 11.968 0 0 0 12.031 24c6.643 0 12.03-5.388 12.03-12.035S18.675 0 12.031 0zm0 21.996c-1.802 0-3.567-.482-5.118-1.4l-.366-.217-3.804.998.995-3.705-.238-.377a9.982 9.982 0 0 1-1.528-5.26c0-5.526 4.498-10.026 10.03-10.026 5.53 0 10.028 4.5 10.028 10.026s-4.5 10.028-10.028 10.026zm5.503-7.525c-.301-.151-1.783-.88-2.06-.98-.276-.101-.478-.151-.678.151-.202.302-.78 1.002-.955 1.203-.176.202-.352.227-.653.076-.302-.151-1.274-.469-2.428-1.503-.898-.806-1.503-1.801-1.68-2.102-.176-.302-.018-.465.132-.616.135-.135.302-.352.453-.528.151-.176.202-.302.302-.503.1-.202.05-.378-.025-.529-.076-.151-.678-1.631-.93-2.234-.246-.588-.495-.508-.678-.518-.176-.008-.378-.008-.579-.008-.201 0-.528.076-.804.378-.276.302-1.056 1.032-1.056 2.518 0 1.486 1.081 2.922 1.232 3.123.151.202 2.133 3.255 5.166 4.56.721.311 1.283.497 1.722.636.724.23 1.383.197 1.898.119.58-.088 1.783-.728 2.034-1.433.251-.705.251-1.309.176-1.434-.076-.126-.277-.202-.579-.353z"/></svg>
-                            <span class="hidden sm:inline">Canal WhatsApp</span>
-                            <span class="sm:hidden">Canal</span>
-                        </a>
-
-                        <!-- BOTÓN DE APORTE -->
-                        <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" rel="noopener noreferrer" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-brand transition-all shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5 group">
-                            <svg class="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            <span class="hidden sm:inline">Aportar Recurso</span>
-                            <span class="sm:hidden">Aportar</span>
-                        </a>
-
-                        <div class="hidden lg:flex flex-col items-end mr-1 max-w-[190px]">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Acceso autorizado</span>
-                            <span id="session-user-name" class="truncate w-full text-right text-xs font-extrabold text-slate-900">Integrante</span>
-                        </div>
-                        <button id="logout-button" type="button" class="logout-btn" aria-label="Cerrar sesión">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                            <span class="hidden sm:inline">Salir</span>
-                        </button>
-                        
-                        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg">
-                             <button id="grid-view-btn" class="p-1.5 rounded-md bg-white text-brand shadow-sm transition-all"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg></button>
-                             <button id="list-view-btn" class="p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg></button>
-                        </div>
-
-                        <!-- Search Bar Integrada -->
-                        <div class="relative group w-full md:w-64 order-last md:order-none mt-2 md:mt-0" title="La búsqueda aplica solo a los archivos de la carpeta actual">
-                            <input type="text" id="search-input" placeholder="Buscar en esta carpeta..." class="w-full pl-10 pr-10 py-2.5 bg-slate-100 border-none rounded-full text-sm font-medium text-slate-700 focus:bg-white focus:ring-2 focus:ring-brand/20 transition-all placeholder-slate-400 shadow-inner">
-                            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand transition-colors absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            
-                            <!-- Botón Limpiar Búsqueda ("X") -->
-                            <button id="clear-search-btn" class="hidden absolute right-3 top-3 text-slate-400 hover:text-slate-600 transition-colors bg-slate-200 hover:bg-slate-300 rounded-full p-0.5" title="Limpiar búsqueda">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Breadcrumbs Row -->
-                <div class="mt-3 pt-2 border-t border-slate-100 flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar" id="breadcrumb-container">
-                    <!-- JS Injected -->
-                </div>
-            </div>
-        </header>
-
-        <div class="container mx-auto p-4 sm:p-6 pb-24 max-w-7xl">
-            <!-- Area de Contenido -->
-            <div id="content" class="min-h-[400px]">
-                 <!-- Loader Skeleton -->
-                 <div id="skeleton-loader" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    <script>
-                        for(let i=0; i<10; i++) {
-                            document.write(`
-                            <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col items-center">
-                                <div class="w-full aspect-square bg-slate-50 rounded-xl mb-4 animate-pulse"></div>
-                                <div class="w-3/4 h-3 bg-slate-100 rounded-full animate-pulse mb-2"></div>
-                                <div class="w-1/2 h-2 bg-slate-50 rounded-full animate-pulse"></div>
-                            </div>`);
-                        }
-                    </script>
-                 </div>
-                
-                <!-- Mensajes de Estado -->
-                <div id="error-container" class="hidden flex flex-col items-center justify-center py-20">
-                    <div class="bg-red-50 text-red-500 rounded-full p-4 mb-4 ring-8 ring-red-50/50"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
-                    <p class="text-slate-800 font-bold mb-1">Algo salió mal</p>
-                    <p class="text-slate-500 text-sm mb-4" id="error-text">No pudimos cargar los archivos</p>
-                    <button onclick="location.reload()" class="px-5 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-black transition-colors">Intentar de nuevo</button>
-                </div>
-                
-                <div id="no-results" class="hidden flex flex-col items-center justify-center py-24 text-slate-400">
-                    <div class="bg-slate-50 p-6 rounded-3xl mb-4 border border-slate-100 shadow-sm">
-                        <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                    </div>
-                    <p class="text-slate-500 font-medium">No se encontraron resultados</p>
-                </div>
-
-                <!-- Grid de Archivos -->
-                <!-- Ajustado items-start para que las carpetas compactas no se estiren verticalmente -->
-                <div id="file-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 items-start"></div>
-                
-                <!-- Load More -->
-                <div id="load-more-container" class="flex justify-center mt-16 pb-12"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Lightbox de Vista Previa (Modo Cine) -->
-    <div id="lightbox-overlay" class="fixed inset-0 bg-slate-900/95 z-[10000] hidden flex flex-col transition-opacity duration-300 backdrop-blur-sm">
-        <div class="flex justify-between items-center px-6 py-4 bg-gradient-to-b from-black/50 to-transparent text-white absolute top-0 w-full z-20 pointer-events-none">
-            <div class="pointer-events-auto flex items-center gap-3">
-                <div class="p-2 bg-white/10 rounded-lg backdrop-blur-md border border-white/10">
-                    <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                </div>
-                <h3 id="lightbox-title" class="text-sm font-semibold tracking-wide text-shadow">Vista Previa</h3>
-            </div>
-            
-            <button onclick="closeLightbox()" class="pointer-events-auto p-2.5 bg-white/5 hover:bg-white/15 rounded-full transition-all border border-white/5 hover:border-white/20 group">
-                <svg class="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          <label for="login-code" class="mb-2 mt-5 block text-sm font-extrabold text-slate-700">Código de tu credencial</label>
+          <div class="relative">
+            <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="10" rx="2" stroke-width="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <input id="login-code" class="auth-input pr-12" type="password" autocomplete="current-password" maxlength="20" placeholder="Código que aparece en tu credencial" required>
+            <button id="toggle-code" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-movida-petrol" aria-label="Mostrar código">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.5 12C3.8 8 7.5 5 12 5s8.2 3 9.5 7c-1.3 4-5 7-9.5 7s-8.2-3-9.5-7z"></path>
+              </svg>
             </button>
+          </div>
+
+          <div id="login-message" class="mt-5 hidden rounded-2xl border px-4 py-3 text-sm font-bold" role="alert" aria-live="polite"></div>
+
+          <button id="login-button" type="submit" class="mt-6 flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl bg-movida-navy px-5 py-3.5 text-base font-extrabold text-white shadow-lg shadow-movida-navy/20 transition hover:-translate-y-0.5 hover:bg-movida-petrol disabled:cursor-not-allowed disabled:opacity-60">
+            <svg id="login-icon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3"></path>
+            </svg>
+            <span id="login-button-text">Ingresar a la biblioteca</span>
+          </button>
+        </form>
+
+        <div class="mt-6 border-t border-slate-100 pt-5 text-center">
+          <p class="text-xs leading-relaxed text-slate-500">La sesión dura hasta dos horas. Tu código no se guarda en el dispositivo.</p>
+          <a href="https://directorio.movidasst.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-movida-petrol transition hover:text-movida-navy">
+            ¿No recuerdas tu código? Consulta tu credencial
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7M7 7h10v10"></path>
+            </svg>
+          </a>
         </div>
-        
-        <div id="lightbox-body" class="flex-grow flex items-center justify-center w-full h-full p-6 overflow-hidden relative">
-            <!-- Loader inicial del visor -->
-            <div id="preview-loader" class="flex flex-col items-center gap-4">
-                <div class="relative w-16 h-16">
-                    <div class="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
-                    <div class="absolute inset-0 border-4 border-t-brand rounded-full animate-spin"></div>
-                </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- APLICACIÓN -->
+  <div id="app-shell" class="hidden min-h-screen">
+    <header class="glass-header sticky top-0 z-50">
+      <div class="mx-auto max-w-7xl px-4 py-3 sm:px-6">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex min-w-0 items-center gap-3">
+            <img src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w256" class="h-11 w-11 flex-none rounded-full border border-slate-100 bg-white p-1 object-contain shadow-sm" alt="La Movida SST">
+            <div class="min-w-0">
+              <h1 class="truncate text-base font-extrabold text-movida-ink sm:text-lg">Biblioteca Movida SST</h1>
+              <div class="mt-0.5 flex items-center gap-2">
+                <span id="connection-dot" class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span id="connection-label" class="text-[10px] font-extrabold uppercase tracking-[.14em] text-slate-500">En línea</span>
+              </div>
             </div>
+          </div>
+
+          <div class="relative">
+            <button id="profile-button" type="button" class="flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-slate-600 shadow-sm transition hover:border-movida-petrol/30 hover:text-movida-petrol" aria-haspopup="menu" aria-expanded="false" aria-label="Abrir menú de integrante">
+              <span class="flex h-8 w-8 items-center justify-center rounded-full bg-movida-navy text-sm font-extrabold text-white" id="profile-initial">M</span>
+              <span class="hidden max-w-40 truncate text-sm font-extrabold sm:block" id="header-user-name">Integrante</span>
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"></path></svg>
+            </button>
+
+            <div id="profile-menu" class="invisible absolute right-0 top-[calc(100%+10px)] z-[70] w-72 origin-top-right translate-y-1 scale-[.98] rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition" role="menu">
+              <div class="rounded-xl bg-slate-50 px-3 py-3">
+                <p class="text-[10px] font-extrabold uppercase tracking-[.13em] text-slate-400">Acceso autorizado</p>
+                <p id="menu-user-name" class="mt-1 truncate text-sm font-extrabold text-movida-ink">Integrante</p>
+                <p class="mt-1 text-xs font-semibold text-slate-500">Sesión restante: <span id="menu-session-time" class="font-extrabold text-movida-petrol">2 h</span></p>
+              </div>
+
+              <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" rel="noopener noreferrer" class="mt-1 flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-movida-petrol" role="menuitem">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"></path></svg>
+                Aportar recurso
+              </a>
+              <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" rel="noopener noreferrer" class="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-emerald-700" role="menuitem">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.03 0A12 12 0 0 0 1.6 17.94L.23 23.53l5.74-1.5A12 12 0 1 0 12.03 0Zm0 21.82c-1.77 0-3.5-.47-5.02-1.37l-.36-.21-3.4.89.91-3.31-.23-.37a9.83 9.83 0 1 1 8.1 4.37Zm5.4-7.37c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.76.98-.94 1.18-.17.2-.34.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.76-1.65-2.06-.18-.3-.02-.46.13-.6.13-.13.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.57-.48-.5-.66-.5h-.56c-.2 0-.52.08-.79.37-.27.3-1.04 1.01-1.04 2.47 0 1.46 1.06 2.87 1.21 3.07.15.2 2.09 3.19 5.06 4.47.7.3 1.25.49 1.68.63.71.22 1.36.19 1.86.11.57-.08 1.75-.71 2-1.4.24-.69.24-1.28.17-1.41-.08-.12-.27-.2-.57-.34Z"></path></svg>
+                Canal de WhatsApp
+              </a>
+              <a href="https://www.movidasst.com" class="flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-movida-petrol" role="menuitem">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19 3 12l7-7M3 12h18"></path></svg>
+                Volver a Movida SST
+              </a>
+              <button id="logout-button" type="button" class="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-extrabold text-red-600 transition hover:bg-red-50" role="menuitem">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
         </div>
-        
-        <!-- Botón Externo de Seguridad -->
-        <div class="absolute bottom-10 left-0 w-full flex justify-center z-20 pointer-events-none">
-             <a id="lightbox-external-link" href="#" target="_blank" rel="noopener noreferrer" class="pointer-events-auto bg-white hover:bg-slate-50 text-slate-900 text-xs font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 border border-slate-100">
-                <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                ABRIR EN NUEVA PESTAÑA
-             </a>
+
+        <div class="mt-3 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div class="relative">
+            <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" stroke-width="2"></circle><path d="m21 21-4.35-4.35" stroke-width="2" stroke-linecap="round"></path></svg>
+            <input id="search-input" type="search" autocomplete="off" placeholder="Buscar archivos o carpetas..." class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-12 text-base font-semibold text-slate-700 outline-none transition focus:border-movida-teal focus:bg-white focus:ring-4 focus:ring-movida-teal/10" aria-label="Buscar archivos y carpetas">
+            <button id="clear-search" type="button" class="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Limpiar búsqueda">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6 6 18M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex rounded-xl border border-slate-200 bg-slate-100 p-1">
+              <button id="grid-view" type="button" class="rounded-lg bg-white p-2 text-movida-petrol shadow-sm" aria-label="Vista de cuadrícula" aria-pressed="true">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z"></path></svg>
+              </button>
+              <button id="list-view" type="button" class="rounded-lg p-2 text-slate-400" aria-label="Vista de lista" aria-pressed="false">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 5h16v3H4V5Zm0 6h16v3H4v-3Zm0 6h16v3H4v-3Z"></path></svg>
+              </button>
+            </div>
+
+            <select id="sort-select" class="min-h-11 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-600 outline-none transition focus:border-movida-teal" aria-label="Ordenar recursos">
+              <option value="name-asc">Nombre A–Z</option>
+              <option value="recent">Más recientes</option>
+              <option value="oldest">Más antiguos</option>
+            </select>
+          </div>
         </div>
+
+        <div class="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3">
+          <button id="back-folder-button" type="button" class="hidden min-h-10 flex-none items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-extrabold text-slate-600 shadow-sm transition hover:border-movida-petrol/30 hover:text-movida-petrol">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 18 9 12l6-6"></path></svg>
+            Volver
+          </button>
+          <div id="breadcrumbs" class="no-scrollbar flex min-w-0 flex-1 items-center gap-1 overflow-x-auto" aria-label="Ruta de carpetas"></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl px-4 pb-24 pt-5 sm:px-6 sm:pt-7">
+      <section id="home-hero" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-card sm:p-7">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p class="text-xs font-extrabold uppercase tracking-[.17em] text-movida-petrol">Repositorio colaborativo</p>
+            <h2 class="mt-2 text-2xl font-extrabold text-movida-ink sm:text-3xl">Recursos para tu actualización profesional</h2>
+            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">Explora carpetas, consulta documentos y comparte materiales de Seguridad y Salud en el Trabajo.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 sm:flex">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-center">
+              <p id="home-folder-count" class="text-xl font-extrabold text-movida-petrol">0</p>
+              <p class="text-[10px] font-extrabold uppercase tracking-wide text-slate-500">Carpetas</p>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-center">
+              <p id="home-file-count" class="text-xl font-extrabold text-movida-petrol">0</p>
+              <p class="text-[10px] font-extrabold uppercase tracking-wide text-slate-500">Archivos</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="folder-summary" class="hidden rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-card sm:px-5">
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-[10px] font-extrabold uppercase tracking-[.15em] text-movida-petrol">Carpeta actual</p>
+            <h2 id="current-folder-title" class="mt-1 truncate text-xl font-extrabold text-movida-ink">Carpeta</h2>
+          </div>
+          <div class="flex-none rounded-xl bg-slate-50 px-3 py-2 text-center">
+            <p id="current-item-count" class="text-lg font-extrabold text-movida-petrol">0</p>
+            <p class="text-[9px] font-extrabold uppercase tracking-wide text-slate-500">Elementos</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-5">
+        <div class="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1" aria-label="Filtros de tipo">
+          <button class="filter-chip flex-none rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white" data-filter="all" aria-pressed="true">Todos</button>
+          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="folders" aria-pressed="false">Carpetas</button>
+          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="pdf" aria-pressed="false">PDF</button>
+          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="docs" aria-pressed="false">Documentos</button>
+          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="images" aria-pressed="false">Imágenes</button>
+        </div>
+      </section>
+
+      <section id="loading-state" class="mt-5" aria-label="Cargando recursos">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card"><div class="skeleton h-16 rounded-xl"></div></div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card"><div class="skeleton h-16 rounded-xl"></div></div>
+          <div class="hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-card lg:block"><div class="skeleton h-16 rounded-xl"></div></div>
+        </div>
+        <div class="mt-6 file-grid grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5">
+          <div class="rounded-2xl border border-slate-200 bg-white p-3 shadow-card"><div class="skeleton aspect-[4/3] rounded-xl"></div><div class="skeleton mt-3 h-4 w-4/5 rounded"></div><div class="skeleton mt-2 h-3 w-2/5 rounded"></div></div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-3 shadow-card"><div class="skeleton aspect-[4/3] rounded-xl"></div><div class="skeleton mt-3 h-4 w-4/5 rounded"></div><div class="skeleton mt-2 h-3 w-2/5 rounded"></div></div>
+          <div class="hidden rounded-2xl border border-slate-200 bg-white p-3 shadow-card sm:block"><div class="skeleton aspect-[4/3] rounded-xl"></div><div class="skeleton mt-3 h-4 w-4/5 rounded"></div><div class="skeleton mt-2 h-3 w-2/5 rounded"></div></div>
+        </div>
+      </section>
+
+      <section id="error-state" class="mt-5 hidden rounded-3xl border border-red-100 bg-white px-5 py-14 text-center shadow-card" role="alert">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-500">
+          <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-width="2"></circle><path d="M12 7v6M12 17h.01" stroke-width="2" stroke-linecap="round"></path></svg>
+        </div>
+        <h3 class="mt-5 text-xl font-extrabold text-movida-ink">No pudimos cargar la biblioteca</h3>
+        <p id="error-text" class="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-slate-500">Verifica tu conexión e inténtalo nuevamente.</p>
+        <button id="retry-button" type="button" class="mt-6 rounded-xl bg-movida-navy px-5 py-3 text-sm font-extrabold text-white transition hover:bg-movida-petrol">Intentar nuevamente</button>
+      </section>
+
+      <section id="empty-state" class="mt-5 hidden rounded-3xl border border-slate-200 bg-white px-5 py-14 text-center shadow-card">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+          <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path></svg>
+        </div>
+        <h3 id="empty-title" class="mt-5 text-xl font-extrabold text-movida-ink">No hay resultados</h3>
+        <p id="empty-text" class="mt-2 text-sm text-slate-500">Prueba con otra búsqueda o filtro.</p>
+      </section>
+
+      <section id="folder-section" class="mt-6 hidden">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="text-base font-extrabold text-movida-ink">Carpetas</h2>
+          <span id="visible-folder-count" class="text-xs font-bold text-slate-500">0</span>
+        </div>
+        <div id="folder-container" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </section>
+
+      <section id="file-section" class="mt-7 hidden">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <h2 class="text-base font-extrabold text-movida-ink">Documentos y recursos</h2>
+          <span id="visible-file-count" class="text-xs font-bold text-slate-500">0</span>
+        </div>
+        <div id="file-container" class="file-grid grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5"></div>
+      </section>
+
+      <p class="mt-12 text-center text-xs leading-relaxed text-slate-500">Los documentos pertenecen a sus respectivos autores y se comparten con fines de actualización profesional.</p>
+    </main>
+  </div>
+
+  <!-- MENÚ DE ARCHIVO -->
+  <div id="file-menu" class="invisible fixed z-[90] w-52 translate-y-1 scale-[.98] rounded-2xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition" role="menu">
+    <button id="menu-open-drive" type="button" class="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-movida-petrol" role="menuitem">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5h5v5M10 14 19 5M19 14v5H5V5h5"></path></svg>
+      Abrir en Drive
+    </button>
+    <button id="menu-share" type="button" class="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-movida-petrol" role="menuitem">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3" stroke-width="2"></circle><circle cx="6" cy="12" r="3" stroke-width="2"></circle><circle cx="18" cy="19" r="3" stroke-width="2"></circle><path d="m8.6 10.7 6.8-4.4M8.6 13.3l6.8 4.4" stroke-width="2"></path></svg>
+      Compartir
+    </button>
+    <button id="menu-copy" type="button" class="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-sm font-bold text-slate-600 transition hover:bg-slate-50 hover:text-movida-petrol" role="menuitem">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 13a5 5 0 007.1 0l2-2A5 5 0 0012 3.9L10.9 5M14 11a5 5 0 00-7.1 0l-2 2A5 5 0 0012 20.1l1.1-1.1"></path></svg>
+      Copiar enlace
+    </button>
+  </div>
+
+  <!-- AVISO DE SESIÓN -->
+  <div id="session-warning" class="fixed inset-x-4 bottom-4 z-[95] hidden max-w-lg rounded-2xl border border-amber-200 bg-white p-4 shadow-2xl sm:left-auto sm:right-5">
+    <div class="flex items-start gap-3">
+      <div class="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-amber-50 text-amber-600">
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.3 3.6 2.7 17a2 2 0 001.7 3h15.2a2 2 0 001.7-3L13.7 3.6a2 2 0 00-3.4 0z"></path></svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="font-extrabold text-movida-ink">Tu sesión finalizará pronto</p>
+        <p class="mt-1 text-sm text-slate-500">Quedan <span id="warning-session-time" class="font-extrabold text-amber-700">5 minutos</span>. Guarda o termina lo que estés consultando.</p>
+        <div class="mt-3 flex gap-2">
+          <button id="dismiss-session-warning" type="button" class="rounded-xl bg-movida-navy px-4 py-2 text-xs font-extrabold text-white">Seguir trabajando</button>
+          <button id="warning-logout" type="button" class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600">Salir ahora</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Toast Notification -->
-    <div id="toast">
-        <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-        <span>Enlace copiado al portapapeles</span>
+  <!-- VISTA PREVIA -->
+  <div id="preview-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/95 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="preview-title">
+    <div class="flex h-full flex-col">
+      <div class="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 text-white sm:px-6">
+        <div class="min-w-0">
+          <p class="text-[10px] font-extrabold uppercase tracking-[.18em] text-cyan-300">Vista previa</p>
+          <h2 id="preview-title" class="truncate text-sm font-bold sm:text-base">Documento</h2>
+        </div>
+        <button id="close-preview" type="button" class="rounded-xl border border-white/10 bg-white/5 p-2.5 text-slate-300 transition hover:bg-white/10 hover:text-white" aria-label="Cerrar vista previa">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6 6 18M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div id="preview-body" class="relative flex min-h-0 flex-1 items-center justify-center p-3 sm:p-6"></div>
+      <div class="flex justify-center border-t border-white/10 p-3">
+        <a id="preview-external" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-movida-ink shadow-lg transition hover:-translate-y-0.5">
+          Abrir en Google Drive
+          <svg class="h-4 w-4 text-movida-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5h5v5M10 14 19 5M19 14v5H5V5h5"></path></svg>
+        </a>
+      </div>
     </div>
+  </div>
 
-    <script>
-        /* --- CONFIGURACIÓN --- */
-        const CONFIG = {
-            API_KEY: 'AIzaSyCIDaShfG6acvLg2LiH-zmKtcC_klQbA0E',
-            ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq',
-            SUPABASE_URL: 'https://lfdmbkzghnwvsapxypvt.supabase.co',
-            SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_bRnkA6PA8-v073nrw9zxiQ_8rVGiOn1',
-            SESSION_KEY: 'movida_drive_session_v1',
-            SESSION_DURATION: 2 * 60 * 60 * 1000,
-            MAX_ATTEMPTS: 5,
-            LOCK_TIME: 10 * 60 * 1000
+  <!-- TOAST -->
+  <div id="toast" class="pointer-events-none fixed bottom-5 left-1/2 z-[120] flex max-w-[calc(100%-32px)] -translate-x-1/2 translate-y-4 items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-bold text-white opacity-0 shadow-2xl transition" role="status" aria-live="polite">
+    <svg class="h-5 w-5 flex-none text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m5 13 4 4L19 7"></path></svg>
+    <span id="toast-text"></span>
+  </div>
+
+  <script>
+    'use strict';
+
+    const CONFIG = Object.freeze({
+      API_KEY: 'AIzaSyCIDaShfG6acvLg2LiH-zmKtcC_klQbA0E',
+      ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq',
+      SUPABASE_URL: 'https://lfdmbkzghnwvsapxypvt.supabase.co',
+      SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_bRnkA6PA8-v073nrw9zxiQ_8rVGiOn1',
+      SESSION_KEY: 'movida_drive_session_v1',
+      VIEW_KEY: 'movida_drive_view_v2',
+      SORT_KEY: 'movida_drive_sort_v1',
+      SESSION_DURATION: 2 * 60 * 60 * 1000,
+      MAX_ATTEMPTS: 5,
+      LOCK_TIME: 10 * 60 * 1000,
+      SESSION_WARNING: 5 * 60 * 1000
+    });
+
+    const state = {
+      files: [],
+      stack: [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }],
+      currentFolderId: CONFIG.ROOT_FOLDER,
+      view: localStorage.getItem(CONFIG.VIEW_KEY) === 'list' ? 'list' : 'grid',
+      sort: localStorage.getItem(CONFIG.SORT_KEY) || 'name-asc',
+      filter: 'all',
+      driveReady: false,
+      loading: false,
+      attempts: 0,
+      lockedUntil: 0,
+      sessionTimer: null,
+      toastTimer: null,
+      warningDismissed: false,
+      activeFile: null,
+      suppressPopState: false
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const supabaseClient = window.supabase.createClient(
+      CONFIG.SUPABASE_URL,
+      CONFIG.SUPABASE_PUBLISHABLE_KEY,
+      { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
+    );
+
+    const normalizeCedula = (value) => String(value || '').replace(/\D/g, '');
+    const normalizeCode = (value) => String(value || '').trim().toUpperCase();
+    const isFolder = (file) => file.mimeType === 'application/vnd.google-apps.folder';
+    const isImage = (file) => String(file.mimeType || '').startsWith('image/');
+    const isPdf = (file) => file.mimeType === 'application/pdf';
+
+    function showLoginMessage(message, type = 'error') {
+      const box = $('login-message');
+      box.className = 'mt-5 rounded-2xl border px-4 py-3 text-sm font-bold';
+      if (type === 'success') {
+        box.classList.add('border-emerald-200', 'bg-emerald-50', 'text-emerald-700');
+      } else {
+        box.classList.add('border-red-200', 'bg-red-50', 'text-red-700');
+      }
+      box.textContent = message;
+      box.classList.remove('hidden');
+    }
+
+    function clearLoginMessage() {
+      $('login-message').classList.add('hidden');
+      $('login-message').textContent = '';
+    }
+
+    function setLoginLoading(loading) {
+      $('login-button').disabled = loading;
+      $('login-button-text').textContent = loading ? 'Verificando acceso...' : 'Ingresar a la biblioteca';
+      $('login-icon').classList.toggle('animate-spin', loading);
+    }
+
+    function readSession() {
+      try {
+        const raw = sessionStorage.getItem(CONFIG.SESSION_KEY);
+        if (!raw) return null;
+        const session = JSON.parse(raw);
+        if (!session?.expiresAt || Date.now() >= session.expiresAt) {
+          sessionStorage.removeItem(CONFIG.SESSION_KEY);
+          return null;
+        }
+        return session;
+      } catch {
+        sessionStorage.removeItem(CONFIG.SESSION_KEY);
+        return null;
+      }
+    }
+
+    function saveSession(name, cedula) {
+      const session = {
+        name: name || 'Integrante',
+        cedula,
+        expiresAt: Date.now() + CONFIG.SESSION_DURATION
+      };
+      sessionStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(session));
+      return session;
+    }
+
+    function formatRemaining(milliseconds) {
+      const minutesTotal = Math.max(0, Math.ceil(milliseconds / 60000));
+      const hours = Math.floor(minutesTotal / 60);
+      const minutes = minutesTotal % 60;
+      return hours > 0 ? `${hours} h ${minutes} min` : `${minutes} min`;
+    }
+
+    function setUserIdentity(session) {
+      const name = session.name || 'Integrante';
+      $('header-user-name').textContent = name;
+      $('menu-user-name').textContent = name;
+      $('profile-initial').textContent = name.trim().charAt(0).toUpperCase() || 'M';
+    }
+
+    function scheduleSession(session) {
+      clearInterval(state.sessionTimer);
+      state.warningDismissed = false;
+
+      const update = () => {
+        const remaining = session.expiresAt - Date.now();
+        if (remaining <= 0) {
+          logout('Tu sesión de dos horas finalizó.');
+          return;
+        }
+        const label = formatRemaining(remaining);
+        $('menu-session-time').textContent = label;
+        $('warning-session-time').textContent = label;
+        if (remaining <= CONFIG.SESSION_WARNING && !state.warningDismissed) {
+          $('session-warning').classList.remove('hidden');
+        }
+      };
+
+      update();
+      state.sessionTimer = setInterval(update, 30000);
+    }
+
+    function openApp(session) {
+      $('auth-screen').classList.add('hidden');
+      $('app-shell').classList.remove('hidden');
+      setUserIdentity(session);
+      scheduleSession(session);
+      updateViewControls();
+      $('sort-select').value = state.sort;
+      replaceHistoryState();
+      if (!state.driveReady) initDrive();
+      else loadFolder(state.currentFolderId, { keepStack: true, updateHistory: false });
+    }
+
+    function logout(message = '') {
+      sessionStorage.removeItem(CONFIG.SESSION_KEY);
+      clearInterval(state.sessionTimer);
+      closeProfileMenu();
+      closeFileMenu();
+      $('session-warning').classList.add('hidden');
+      $('app-shell').classList.add('hidden');
+      $('auth-screen').classList.remove('hidden');
+      $('login-code').value = '';
+      state.stack = [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }];
+      state.currentFolderId = CONFIG.ROOT_FOLDER;
+      state.files = [];
+      if (message) showLoginMessage(message);
+      else clearLoginMessage();
+      setTimeout(() => $('login-cedula').focus(), 50);
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      clearLoginMessage();
+
+      if (Date.now() < state.lockedUntil) {
+        const mins = Math.ceil((state.lockedUntil - Date.now()) / 60000);
+        showLoginMessage(`Demasiados intentos. Espera ${mins} minuto(s).`);
+        return;
+      }
+
+      const cedula = normalizeCedula($('login-cedula').value);
+      const codigo = normalizeCode($('login-code').value);
+      $('login-cedula').value = cedula;
+
+      if (cedula.length < 6 || cedula.length > 12) {
+        showLoginMessage('Escribe una cédula válida usando solamente números.');
+        $('login-cedula').focus();
+        return;
+      }
+      if (codigo.length < 4) {
+        showLoginMessage('Escribe el código que aparece en tu credencial.');
+        $('login-code').focus();
+        return;
+      }
+
+      setLoginLoading(true);
+      try {
+        const { data, error } = await supabaseClient.rpc('validar_acceso_drive', {
+          p_cedula: cedula,
+          p_codigo: codigo
+        });
+        if (error) throw error;
+        const result = Array.isArray(data) ? data[0] : data;
+
+        if (!result?.autorizado) {
+          state.attempts += 1;
+          if (state.attempts >= CONFIG.MAX_ATTEMPTS) {
+            state.lockedUntil = Date.now() + CONFIG.LOCK_TIME;
+            state.attempts = 0;
+            showLoginMessage('Acceso bloqueado temporalmente durante 10 minutos.');
+          } else {
+            showLoginMessage(`Cédula o código incorrectos. Te quedan ${CONFIG.MAX_ATTEMPTS - state.attempts} intento(s).`);
+          }
+          return;
+        }
+
+        state.attempts = 0;
+        state.lockedUntil = 0;
+        showLoginMessage('Acceso autorizado. Abriendo la biblioteca...', 'success');
+        const session = saveSession(result.nombre, cedula);
+        setTimeout(() => openApp(session), 350);
+      } catch (error) {
+        console.error('Error de acceso:', error);
+        showLoginMessage('No fue posible validar el acceso. Verifica tu conexión e inténtalo nuevamente.');
+      } finally {
+        setLoginLoading(false);
+      }
+    }
+
+    async function initDrive() {
+      if (!readSession()) {
+        logout('Tu sesión no es válida o ya finalizó.');
+        return;
+      }
+      state.driveReady = true;
+      await loadFolder(CONFIG.ROOT_FOLDER, { keepStack: false, updateHistory: false });
+    }
+
+    async function requestDriveFolder(folderId, pageToken = null) {
+      const params = new URLSearchParams({
+        key: CONFIG.API_KEY,
+        q: `'${folderId}' in parents and trashed = false`,
+        pageSize: '1000',
+        fields: 'nextPageToken,files(id,name,mimeType,webViewLink,iconLink,modifiedTime,thumbnailLink,size)',
+        orderBy: 'folder,name',
+        includeItemsFromAllDrives: 'true',
+        supportsAllDrives: 'true'
+      });
+      if (pageToken) params.set('pageToken', pageToken);
+
+      const response = await fetch(`https://www.googleapis.com/drive/v3/files?${params.toString()}`, {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-store',
+        referrerPolicy: 'strict-origin-when-cross-origin'
+      });
+
+      let payload = null;
+      try { payload = await response.json(); } catch { payload = null; }
+
+      if (!response.ok) {
+        const error = new Error(payload?.error?.message || `Google Drive respondió con el estado ${response.status}.`);
+        error.status = response.status;
+        error.reason = payload?.error?.errors?.[0]?.reason || '';
+        throw error;
+      }
+      return payload || { files: [] };
+    }
+
+    async function fetchAllFiles(folderId) {
+      const files = [];
+      let pageToken = null;
+      do {
+        const data = await requestDriveFolder(folderId, pageToken);
+        files.push(...(data.files || []));
+        pageToken = data.nextPageToken || null;
+      } while (pageToken);
+      return files;
+    }
+
+    async function loadFolder(folderId, options = {}) {
+      if (state.loading) return;
+      const { keepStack = true, updateHistory = false } = options;
+      state.loading = true;
+      state.currentFolderId = folderId;
+      state.filter = 'all';
+      $('search-input').value = '';
+      $('clear-search').classList.add('hidden');
+      updateFilterChips();
+      showLoading();
+      renderNavigation();
+
+      try {
+        state.files = await fetchAllFiles(folderId);
+        renderContent();
+        if (updateHistory) pushHistoryState();
+        else if (!keepStack) replaceHistoryState();
+      } catch (error) {
+        console.error('Error Google Drive:', error);
+        let message = error?.message || 'No se pudo abrir esta carpeta de Google Drive.';
+        if (error?.reason === 'keyInvalid' || /API key not valid/i.test(message)) {
+          message = 'La clave de Google API no es válida o fue desactivada.';
+        } else if (error?.reason === 'ipRefererBlocked' || /referer|referrer/i.test(message)) {
+          message = 'Google bloqueó la clave para este dominio. Revisa los referentes HTTP autorizados.';
+        } else if (error?.status === 403) {
+          message = `Google Drive rechazó la solicitud: ${message}`;
+        }
+        showError(message);
+      } finally {
+        state.loading = false;
+      }
+    }
+
+    function navigateToFolder(id, name) {
+      if (state.stack[state.stack.length - 1]?.id !== id) {
+        state.stack.push({ id, name });
+      }
+      loadFolder(id, { keepStack: true, updateHistory: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function navigateToStackIndex(index, updateHistory = true) {
+      if (index < 0 || index >= state.stack.length) return;
+      state.stack = state.stack.slice(0, index + 1);
+      const folder = state.stack[state.stack.length - 1];
+      loadFolder(folder.id, { keepStack: true, updateHistory });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBackFolder() {
+      if (state.stack.length <= 1) return;
+      history.back();
+    }
+
+    function historyPayload() {
+      return {
+        movidaDrive: true,
+        stack: state.stack.map((item) => ({ id: item.id, name: item.name }))
+      };
+    }
+
+    function replaceHistoryState() {
+      history.replaceState(historyPayload(), '', location.href);
+    }
+
+    function pushHistoryState() {
+      history.pushState(historyPayload(), '', location.href);
+    }
+
+    function renderNavigation() {
+      const isRoot = state.stack.length === 1;
+      $('back-folder-button').classList.toggle('hidden', isRoot);
+      $('back-folder-button').classList.toggle('flex', !isRoot);
+      $('home-hero').classList.toggle('hidden', !isRoot);
+      $('folder-summary').classList.toggle('hidden', isRoot);
+      $('current-folder-title').textContent = state.stack[state.stack.length - 1]?.name || 'Carpeta';
+
+      const container = $('breadcrumbs');
+      container.innerHTML = '';
+      state.stack.forEach((folder, index) => {
+        if (index > 0) {
+          const separator = document.createElement('span');
+          separator.className = 'px-1 text-slate-300';
+          separator.textContent = '›';
+          container.appendChild(separator);
+        }
+        if (index === state.stack.length - 1) {
+          const current = document.createElement('span');
+          current.className = 'max-w-[220px] flex-none truncate rounded-xl bg-slate-100 px-3 py-2 text-xs font-extrabold text-movida-ink';
+          current.textContent = folder.name;
+          current.title = folder.name;
+          container.appendChild(current);
+        } else {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'flex-none rounded-xl px-2.5 py-2 text-xs font-bold text-slate-500 transition hover:bg-slate-100 hover:text-movida-petrol';
+          button.textContent = folder.name;
+          button.addEventListener('click', () => navigateToStackIndex(index, true));
+          container.appendChild(button);
+        }
+      });
+    }
+
+    function getType(file) {
+      const mime = String(file.mimeType || '');
+      if (isFolder(file)) return 'folders';
+      if (mime === 'application/pdf') return 'pdf';
+      if (mime.startsWith('image/')) return 'images';
+      if (mime.includes('document') || mime.includes('word') || mime.includes('spreadsheet') || mime.includes('sheet') || mime.includes('excel') || mime.includes('presentation')) return 'docs';
+      return 'other';
+    }
+
+    function getTypeLabel(file) {
+      const type = getType(file);
+      if (type === 'folders') return 'Carpeta';
+      if (type === 'pdf') return 'PDF';
+      if (type === 'images') return 'Imagen';
+      if (String(file.mimeType || '').includes('spreadsheet') || String(file.mimeType || '').includes('sheet') || String(file.mimeType || '').includes('excel')) return 'Hoja de cálculo';
+      if (String(file.mimeType || '').includes('presentation')) return 'Presentación';
+      if (type === 'docs') return 'Documento';
+      return 'Archivo';
+    }
+
+    function formatDate(value) {
+      if (!value) return 'Sin fecha';
+      return new Intl.DateTimeFormat('es-VE', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(value));
+    }
+
+    function formatSize(value) {
+      const bytes = Number(value);
+      if (!Number.isFinite(bytes) || bytes <= 0) return '';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let size = bytes;
+      let index = 0;
+      while (size >= 1024 && index < units.length - 1) {
+        size /= 1024;
+        index += 1;
+      }
+      return `${size.toFixed(size >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+    }
+
+    function sortFiles(files) {
+      const copy = [...files];
+      if (state.sort === 'recent') {
+        return copy.sort((a, b) => new Date(b.modifiedTime || 0) - new Date(a.modifiedTime || 0));
+      }
+      if (state.sort === 'oldest') {
+        return copy.sort((a, b) => new Date(a.modifiedTime || 0) - new Date(b.modifiedTime || 0));
+      }
+      return copy.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
+    }
+
+    function filteredItems() {
+      const term = $('search-input').value.trim().toLocaleLowerCase('es');
+      let items = state.files.filter((file) => !term || file.name.toLocaleLowerCase('es').includes(term));
+      if (state.filter !== 'all') items = items.filter((file) => getType(file) === state.filter);
+      return sortFiles(items);
+    }
+
+    function iconMarkup(file, size = 'h-9 w-9') {
+      const type = getType(file);
+      if (type === 'folders') {
+        return `<svg class="${size} text-amber-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6a2 2 0 012-2h5l2 2h7a2 2 0 012 2v9a3 3 0 01-3 3H6a3 3 0 01-3-3V6z"></path></svg>`;
+      }
+      if (type === 'pdf') {
+        return `<svg class="${size} text-red-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h8l4 4v16H6V2zm7 1.5V7h3.5L13 3.5zM8 11v7h2v-2h1.1a2.5 2.5 0 000-5H8zm2 2h1a.5.5 0 010 1h-1v-1zm3 5h2.1a3.1 3.1 0 000-6H13v6zm2-4h.2a1.1 1.1 0 010 2H15v-2z"></path></svg>`;
+      }
+      if (type === 'images') {
+        return `<svg class="${size} text-violet-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h16a2 2 0 012 2v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2zm1 16h14l-4.5-6-3.5 4.5-2.5-3L5 19zm4-10a2 2 0 100-4 2 2 0 000 4z"></path></svg>`;
+      }
+      if (getTypeLabel(file) === 'Hoja de cálculo') {
+        return `<svg class="${size} text-emerald-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2h10l4 4v16H5V2zm9 1.5V7h3.5L14 3.5zM8 10v8h8v-8H8zm2 2h1v1h-1v-1zm3 0h1v1h-1v-1zm-3 3h1v1h-1v-1zm3 0h1v1h-1v-1z"></path></svg>`;
+      }
+      return `<svg class="${size} text-blue-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h8l4 4v16H6V2zm7 1.5V7h3.5L13 3.5zM8 11h8v2H8v-2zm0 4h8v2H8v-2z"></path></svg>`;
+    }
+
+    function createFolderCard(file, index) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'fade-up group flex min-h-20 w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-card transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-lift';
+      button.style.animationDelay = `${Math.min(index * 25, 220)}ms`;
+      button.innerHTML = `
+        <span class="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-amber-50">${iconMarkup(file, 'h-7 w-7')}</span>
+        <span class="min-w-0 flex-1">
+          <span class="line-clamp-2 text-sm font-extrabold leading-snug text-movida-ink transition group-hover:text-movida-petrol"></span>
+          <span class="mt-1 block text-[11px] font-semibold text-slate-400">Actualizada ${formatDate(file.modifiedTime)}</span>
+        </span>
+        <svg class="h-5 w-5 flex-none text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-movida-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"></path></svg>
+      `;
+      button.querySelector('.line-clamp-2').textContent = file.name;
+      button.addEventListener('click', () => navigateToFolder(file.id, file.name));
+      return button;
+    }
+
+    function createOpenButton(file, label = 'Abrir') {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-movida-navy px-3 text-xs font-extrabold text-white transition hover:bg-movida-petrol';
+      button.innerHTML = `<span>${label}</span><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"></path></svg>`;
+      button.addEventListener('click', () => openFile(file));
+      return button;
+    }
+
+    function createMoreButton(file) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'flex h-10 w-10 flex-none items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-movida-petrol';
+      button.setAttribute('aria-label', `Más acciones para ${file.name}`);
+      button.innerHTML = `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg>`;
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        openFileMenu(file, button);
+      });
+      return button;
+    }
+
+    function createGridFileCard(file, index) {
+      const article = document.createElement('article');
+      article.className = 'fade-up group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition hover:-translate-y-1 hover:border-movida-petrol/20 hover:shadow-lift';
+      article.style.animationDelay = `${Math.min(index * 28, 260)}ms`;
+
+      const visualButton = document.createElement('button');
+      visualButton.type = 'button';
+      visualButton.className = 'relative block aspect-[4/3] w-full overflow-hidden bg-slate-50 text-left';
+      visualButton.setAttribute('aria-label', `Abrir ${file.name}`);
+      visualButton.addEventListener('click', () => openFile(file));
+
+      if (isImage(file) && file.thumbnailLink) {
+        const image = document.createElement('img');
+        image.src = file.thumbnailLink.replace(/=s\d+/, '=s700');
+        image.alt = '';
+        image.loading = 'lazy';
+        image.className = 'h-full w-full object-cover transition duration-500 group-hover:scale-105';
+        image.addEventListener('error', () => {
+          visualButton.innerHTML = `<span class="flex h-full items-center justify-center bg-violet-50">${iconMarkup(file, 'h-12 w-12')}</span>`;
+        });
+        visualButton.appendChild(image);
+      } else {
+        visualButton.innerHTML = `<span class="flex h-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">${iconMarkup(file, 'h-12 w-12')}</span>`;
+      }
+
+      const badge = document.createElement('span');
+      badge.className = 'pointer-events-none absolute left-2.5 top-2.5 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-slate-600 shadow-sm backdrop-blur';
+      badge.textContent = getTypeLabel(file);
+      visualButton.appendChild(badge);
+
+      const body = document.createElement('div');
+      body.className = 'flex flex-1 flex-col p-3.5';
+      const title = document.createElement('h3');
+      title.className = 'line-clamp-3 text-sm font-extrabold leading-snug text-movida-ink';
+      title.textContent = file.name;
+      title.title = file.name;
+      const meta = document.createElement('p');
+      meta.className = 'mt-2 text-[11px] font-semibold text-slate-400';
+      meta.textContent = [formatDate(file.modifiedTime), formatSize(file.size)].filter(Boolean).join(' · ');
+      const actions = document.createElement('div');
+      actions.className = 'mt-auto flex items-center gap-2 pt-4';
+      const openButton = createOpenButton(file);
+      openButton.classList.add('flex-1');
+      actions.append(openButton, createMoreButton(file));
+      body.append(title, meta, actions);
+      article.append(visualButton, body);
+      return article;
+    }
+
+    function createListFileCard(file, index) {
+      const article = document.createElement('article');
+      article.className = 'fade-up flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-card transition hover:-translate-y-0.5 hover:border-movida-petrol/20 hover:shadow-lift';
+      article.style.animationDelay = `${Math.min(index * 22, 220)}ms`;
+
+      const openArea = document.createElement('button');
+      openArea.type = 'button';
+      openArea.className = 'flex min-w-0 flex-1 items-center gap-3 text-left';
+      openArea.addEventListener('click', () => openFile(file));
+
+      const visual = document.createElement('span');
+      visual.className = 'flex h-14 w-14 flex-none items-center justify-center overflow-hidden rounded-xl bg-slate-50';
+      if (isImage(file) && file.thumbnailLink) {
+        const image = document.createElement('img');
+        image.src = file.thumbnailLink;
+        image.alt = '';
+        image.loading = 'lazy';
+        image.className = 'h-full w-full object-cover';
+        image.addEventListener('error', () => { visual.innerHTML = iconMarkup(file, 'h-8 w-8'); });
+        visual.appendChild(image);
+      } else {
+        visual.innerHTML = iconMarkup(file, 'h-8 w-8');
+      }
+
+      const text = document.createElement('span');
+      text.className = 'min-w-0 flex-1';
+      const title = document.createElement('span');
+      title.className = 'line-clamp-2 block text-sm font-extrabold leading-snug text-movida-ink';
+      title.textContent = file.name;
+      const meta = document.createElement('span');
+      meta.className = 'mt-1 block text-[11px] font-semibold text-slate-400';
+      meta.textContent = [getTypeLabel(file), formatDate(file.modifiedTime), formatSize(file.size)].filter(Boolean).join(' · ');
+      text.append(title, meta);
+      openArea.append(visual, text);
+
+      const desktopOpen = createOpenButton(file);
+      desktopOpen.classList.add('hidden', 'sm:inline-flex');
+      article.append(openArea, desktopOpen, createMoreButton(file));
+      return article;
+    }
+
+    function renderContent() {
+      $('loading-state').classList.add('hidden');
+      $('error-state').classList.add('hidden');
+      renderNavigation();
+
+      const allFolders = state.files.filter(isFolder);
+      const allFiles = state.files.filter((file) => !isFolder(file));
+      $('home-folder-count').textContent = String(allFolders.length);
+      $('home-file-count').textContent = String(allFiles.length);
+      $('current-item-count').textContent = String(state.files.length);
+
+      const items = filteredItems();
+      const folders = items.filter(isFolder);
+      const files = items.filter((file) => !isFolder(file));
+      const isSearch = $('search-input').value.trim().length > 0;
+
+      $('visible-folder-count').textContent = `${folders.length} ${folders.length === 1 ? 'carpeta' : 'carpetas'}`;
+      $('visible-file-count').textContent = `${files.length} ${files.length === 1 ? 'recurso' : 'recursos'}`;
+
+      const showFolders = folders.length > 0 && (state.filter === 'all' || state.filter === 'folders');
+      const showFiles = files.length > 0 && state.filter !== 'folders';
+      $('folder-section').classList.toggle('hidden', !showFolders);
+      $('file-section').classList.toggle('hidden', !showFiles);
+
+      const folderContainer = $('folder-container');
+      folderContainer.innerHTML = '';
+      folders.forEach((file, index) => folderContainer.appendChild(createFolderCard(file, index)));
+
+      const fileContainer = $('file-container');
+      fileContainer.innerHTML = '';
+      fileContainer.className = state.view === 'grid'
+        ? 'file-grid grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5'
+        : 'flex flex-col gap-3';
+      files.forEach((file, index) => {
+        fileContainer.appendChild(state.view === 'grid' ? createGridFileCard(file, index) : createListFileCard(file, index));
+      });
+
+      const hasVisible = showFolders || showFiles;
+      $('empty-state').classList.toggle('hidden', hasVisible);
+      if (!hasVisible) {
+        $('empty-title').textContent = isSearch ? 'No encontramos resultados' : 'No hay recursos con este filtro';
+        $('empty-text').textContent = isSearch ? 'Prueba con otra palabra o limpia la búsqueda.' : 'Selecciona otro tipo de recurso.';
+      }
+    }
+
+    function showLoading() {
+      $('loading-state').classList.remove('hidden');
+      $('error-state').classList.add('hidden');
+      $('empty-state').classList.add('hidden');
+      $('folder-section').classList.add('hidden');
+      $('file-section').classList.add('hidden');
+    }
+
+    function showError(message) {
+      $('loading-state').classList.add('hidden');
+      $('empty-state').classList.add('hidden');
+      $('folder-section').classList.add('hidden');
+      $('file-section').classList.add('hidden');
+      $('error-text').textContent = message;
+      $('error-state').classList.remove('hidden');
+    }
+
+    function updateFilterChips() {
+      document.querySelectorAll('.filter-chip').forEach((chip) => {
+        const active = chip.dataset.filter === state.filter;
+        chip.setAttribute('aria-pressed', String(active));
+        chip.className = active
+          ? 'filter-chip flex-none rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white'
+          : 'filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600 transition hover:border-movida-petrol/30 hover:text-movida-petrol';
+      });
+    }
+
+    function updateViewControls() {
+      const isGrid = state.view === 'grid';
+      $('grid-view').className = isGrid ? 'rounded-lg bg-white p-2 text-movida-petrol shadow-sm' : 'rounded-lg p-2 text-slate-400';
+      $('list-view').className = !isGrid ? 'rounded-lg bg-white p-2 text-movida-petrol shadow-sm' : 'rounded-lg p-2 text-slate-400';
+      $('grid-view').setAttribute('aria-pressed', String(isGrid));
+      $('list-view').setAttribute('aria-pressed', String(!isGrid));
+    }
+
+    function openFile(file) {
+      if (isFolder(file)) {
+        navigateToFolder(file.id, file.name);
+      } else if (isImage(file) || isPdf(file)) {
+        openPreview(file);
+      } else {
+        openExternal(file.webViewLink);
+      }
+    }
+
+    function openExternal(url) {
+      if (!url) {
+        showToast('Este archivo no tiene un enlace disponible.');
+        return;
+      }
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function openPreview(file) {
+      $('preview-title').textContent = file.name;
+      $('preview-external').href = file.webViewLink || '#';
+      const body = $('preview-body');
+      body.innerHTML = `<div class="flex flex-col items-center gap-4 text-white"><div class="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-cyan-300"></div><p class="text-sm font-semibold text-white/70">Preparando vista previa...</p></div>`;
+      $('preview-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+
+      if (isImage(file)) {
+        const image = new Image();
+        image.alt = file.name;
+        image.className = 'max-h-full max-w-full rounded-xl object-contain shadow-2xl';
+        image.onload = () => { body.innerHTML = ''; body.appendChild(image); };
+        image.onerror = () => {
+          body.innerHTML = `<div class="max-w-md rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-white"><p class="font-extrabold">No se pudo mostrar la imagen.</p><p class="mt-2 text-sm text-white/65">Ábrela directamente en Google Drive.</p></div>`;
         };
-        
-        let state = {
-            files: [],
-            stack: [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }],
-            token: null,
-            view: localStorage.getItem('movida_drive_view') || 'grid',
-            driveReady: false,
-            attempts: 0,
-            lockedUntil: 0,
-            sessionTimer: null
-        };
+        image.src = `https://drive.google.com/uc?export=view&id=${encodeURIComponent(file.id)}`;
+      } else {
+        const iframe = document.createElement('iframe');
+        iframe.title = file.name;
+        iframe.src = `https://drive.google.com/file/d/${encodeURIComponent(file.id)}/preview`;
+        iframe.className = 'h-full w-full rounded-xl border-0 bg-white shadow-2xl sm:h-[92%] sm:w-[94%]';
+        setTimeout(() => { body.innerHTML = ''; body.appendChild(iframe); }, 350);
+      }
+    }
 
-        const $ = id => document.getElementById(id);
-        const escapeHtml = (unsafe) => String(unsafe ?? '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        
-        function showToast(message) {
-            const x = $("toast");
-            x.querySelector('span').textContent = message;
-            x.className = "show";
-            setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+    function closePreview() {
+      $('preview-modal').classList.add('hidden');
+      $('preview-body').innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    function openFileMenu(file, anchor) {
+      state.activeFile = file;
+      const menu = $('file-menu');
+      const rect = anchor.getBoundingClientRect();
+      const width = 208;
+      const left = Math.min(window.innerWidth - width - 12, Math.max(12, rect.right - width));
+      const estimatedHeight = 150;
+      const below = rect.bottom + 8;
+      const top = below + estimatedHeight > window.innerHeight ? Math.max(12, rect.top - estimatedHeight - 8) : below;
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+      menu.classList.add('menu-open');
+    }
+
+    function closeFileMenu() {
+      $('file-menu').classList.remove('menu-open');
+      state.activeFile = null;
+    }
+
+    function toggleProfileMenu() {
+      const menu = $('profile-menu');
+      const open = !menu.classList.contains('menu-open');
+      menu.classList.toggle('menu-open', open);
+      $('profile-button').setAttribute('aria-expanded', String(open));
+    }
+
+    function closeProfileMenu() {
+      $('profile-menu').classList.remove('menu-open');
+      $('profile-button').setAttribute('aria-expanded', 'false');
+    }
+
+    async function copyText(text) {
+      if (!text) {
+        showToast('No hay enlace disponible.');
+        return;
+      }
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
         }
+        showToast('Enlace copiado.');
+      } catch {
+        showToast('No se pudo copiar el enlace.');
+      }
+    }
 
-
-
-        const supabaseClient = window.supabase.createClient(
-            CONFIG.SUPABASE_URL,
-            CONFIG.SUPABASE_PUBLISHABLE_KEY,
-            { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
-        );
-
-        const normalizeCedula = value => String(value || '').replace(/\D/g, '');
-        const normalizeCode = value => String(value || '').trim().toUpperCase();
-
-        function showLoginMessage(message, type = 'error') {
-            const box = $('login-message');
-            box.textContent = message;
-            box.className = `auth-message ${type}`;
+    async function shareFile(file) {
+      const url = file?.webViewLink;
+      if (!url) {
+        showToast('No hay enlace disponible.');
+        return;
+      }
+      const data = { title: file.name, text: 'Te comparto este recurso de La Movida SST.', url };
+      try {
+        if (navigator.share) {
+          await navigator.share(data);
+          return;
         }
+      } catch (error) {
+        if (error?.name === 'AbortError') return;
+      }
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`${data.text}\n${file.name}\n${url}`)}`, '_blank', 'noopener,noreferrer');
+    }
 
-        function clearLoginMessage() {
-            const box = $('login-message');
-            box.textContent = '';
-            box.className = 'auth-message error hidden';
-        }
+    function showToast(message) {
+      $('toast-text').textContent = message;
+      $('toast').classList.add('toast-show');
+      clearTimeout(state.toastTimer);
+      state.toastTimer = setTimeout(() => $('toast').classList.remove('toast-show'), 2800);
+    }
 
-        function setLoginLoading(loading) {
-            $('login-button').disabled = loading;
-            $('login-button-text').textContent = loading ? 'Verificando acceso...' : 'Ingresar a la biblioteca';
-            $('login-icon').classList.toggle('animate-spin', loading);
-        }
+    function updateConnectionStatus() {
+      const online = navigator.onLine;
+      $('connection-dot').className = online ? 'h-2 w-2 rounded-full bg-emerald-500' : 'h-2 w-2 rounded-full bg-amber-500';
+      $('connection-label').textContent = online ? 'En línea' : 'Sin conexión';
+    }
 
-        function readSession() {
-            try {
-                const raw = sessionStorage.getItem(CONFIG.SESSION_KEY);
-                if (!raw) return null;
-                const session = JSON.parse(raw);
-                if (!session.expiresAt || Date.now() >= session.expiresAt) {
-                    sessionStorage.removeItem(CONFIG.SESSION_KEY);
-                    return null;
-                }
-                return session;
-            } catch (_) {
-                sessionStorage.removeItem(CONFIG.SESSION_KEY);
-                return null;
-            }
-        }
+    function initEvents() {
+      $('login-form').addEventListener('submit', handleLogin);
+      $('login-cedula').addEventListener('input', (event) => { event.target.value = normalizeCedula(event.target.value); });
+      $('toggle-code').addEventListener('click', () => {
+        const input = $('login-code');
+        const reveal = input.type === 'password';
+        input.type = reveal ? 'text' : 'password';
+        $('toggle-code').setAttribute('aria-label', reveal ? 'Ocultar código' : 'Mostrar código');
+      });
 
-        function saveSession(name, cedula) {
-            const session = { name: name || 'Integrante', cedula, expiresAt: Date.now() + CONFIG.SESSION_DURATION };
-            sessionStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(session));
-            return session;
-        }
+      $('profile-button').addEventListener('click', (event) => {
+        event.stopPropagation();
+        closeFileMenu();
+        toggleProfileMenu();
+      });
+      $('profile-menu').addEventListener('click', (event) => event.stopPropagation());
+      $('logout-button').addEventListener('click', () => logout());
+      $('back-folder-button').addEventListener('click', goBackFolder);
+      $('retry-button').addEventListener('click', () => loadFolder(state.currentFolderId, { keepStack: true, updateHistory: false }));
 
-        function openApp(session) {
-            $('auth-screen').classList.add('hidden');
-            $('app-container').classList.remove('hidden');
-            $('session-user-name').textContent = session.name || 'Integrante';
-            clearInterval(state.sessionTimer);
-            state.sessionTimer = setInterval(() => {
-                if (Date.now() >= session.expiresAt) logout('Tu sesión de dos horas finalizó.');
-            }, 30000);
-            if (!state.driveReady) initDrive();
-        }
+      $('search-input').addEventListener('input', () => {
+        $('clear-search').classList.toggle('hidden', !$('search-input').value.trim());
+        renderContent();
+      });
+      $('clear-search').addEventListener('click', () => {
+        $('search-input').value = '';
+        $('clear-search').classList.add('hidden');
+        $('search-input').focus();
+        renderContent();
+      });
 
-        function logout(message = '') {
-            sessionStorage.removeItem(CONFIG.SESSION_KEY);
-            clearInterval(state.sessionTimer);
-            $('app-container').classList.add('hidden');
-            $('auth-screen').classList.remove('hidden');
-            $('login-code').value = '';
-            if (message) showLoginMessage(message);
-            else clearLoginMessage();
-            setTimeout(() => $('login-cedula').focus(), 50);
-        }
-
-        async function handleLogin(event) {
-            event.preventDefault();
-            clearLoginMessage();
-
-            if (Date.now() < state.lockedUntil) {
-                const mins = Math.ceil((state.lockedUntil - Date.now()) / 60000);
-                showLoginMessage(`Demasiados intentos. Espera ${mins} minuto(s).`);
-                return;
-            }
-
-            const cedula = normalizeCedula($('login-cedula').value);
-            const codigo = normalizeCode($('login-code').value);
-            $('login-cedula').value = cedula;
-
-            if (cedula.length < 6 || cedula.length > 12) {
-                showLoginMessage('Escribe una cédula válida usando solamente números.');
-                return;
-            }
-            if (codigo.length < 4) {
-                showLoginMessage('Escribe tu código de integrante.');
-                return;
-            }
-
-            setLoginLoading(true);
-            try {
-                const { data, error } = await supabaseClient.rpc('validar_acceso_drive', {
-                    p_cedula: cedula,
-                    p_codigo: codigo
-                });
-                if (error) throw error;
-                const result = Array.isArray(data) ? data[0] : data;
-
-                if (!result?.autorizado) {
-                    state.attempts++;
-                    if (state.attempts >= CONFIG.MAX_ATTEMPTS) {
-                        state.lockedUntil = Date.now() + CONFIG.LOCK_TIME;
-                        state.attempts = 0;
-                        showLoginMessage('Acceso bloqueado temporalmente durante 10 minutos.');
-                    } else {
-                        showLoginMessage(`Cédula o código incorrectos. Te quedan ${CONFIG.MAX_ATTEMPTS - state.attempts} intento(s).`);
-                    }
-                    return;
-                }
-
-                state.attempts = 0;
-                state.lockedUntil = 0;
-                showLoginMessage('Acceso autorizado. Abriendo la biblioteca...', 'success');
-                const session = saveSession(result.nombre, cedula);
-                setTimeout(() => openApp(session), 350);
-            } catch (error) {
-                console.error(error);
-                showLoginMessage('No fue posible validar el acceso. Verifica tu conexión.');
-            } finally {
-                setLoginLoading(false);
-            }
-        }
-
-        /* --- DRIVE LOGIC: REST DIRECTO, SIN GAPI --- */
-        async function initDrive() {
-            if (!readSession()) {
-                logout('Tu sesión no es válida o ya finalizó.');
-                return;
-            }
-
-            state.driveReady = true;
-            await loadFolder(CONFIG.ROOT_FOLDER);
-        }
-
-        async function requestDriveFolder(folderId, pageToken = null) {
-            const params = new URLSearchParams({
-                key: CONFIG.API_KEY,
-                q: `'${folderId}' in parents and trashed = false`,
-                pageSize: '1000',
-                fields: 'nextPageToken,files(id,name,mimeType,webViewLink,iconLink,modifiedTime,thumbnailLink,size)',
-                orderBy: 'folder,name',
-                includeItemsFromAllDrives: 'true',
-                supportsAllDrives: 'true'
-            });
-
-            if (pageToken) params.set('pageToken', pageToken);
-
-            const response = await fetch(
-                `https://www.googleapis.com/drive/v3/files?${params.toString()}`,
-                {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-store',
-                    referrerPolicy: 'strict-origin-when-cross-origin'
-                }
-            );
-
-            let payload = null;
-            try {
-                payload = await response.json();
-            } catch (_) {
-                payload = null;
-            }
-
-            if (!response.ok) {
-                const apiMessage = payload?.error?.message || `Google Drive respondió con el estado ${response.status}.`;
-                const apiReason =
-                    payload?.error?.details?.find(item => item?.reason)?.reason ||
-                    payload?.error?.errors?.[0]?.reason ||
-                    payload?.error?.status ||
-                    '';
-
-                const error = new Error(apiMessage);
-                error.status = response.status;
-                error.reason = apiReason;
-                error.googlePayload = payload;
-                throw error;
-            }
-
-            return payload || { files: [] };
-        }
-
-        window.navTo = function(id, name, push = false) {
-            if (push) {
-                if (state.stack[state.stack.length - 1].id !== id) {
-                    state.stack.push({ id, name: decodeURIComponent(name) });
-                }
-            } else {
-                const idx = state.stack.findIndex(x => x.id === id);
-                if (idx !== -1) state.stack = state.stack.slice(0, idx + 1);
-            }
-
-            $('search-input').value = '';
-            $('clear-search-btn').classList.add('hidden');
-            renderBreadcrumbs();
-            loadFolder(id);
-        };
-
-        async function loadFolder(folderId) {
-            const container = $('file-container');
-            const loader = $('skeleton-loader');
-            const loadMore = $('load-more-container');
-            const noRes = $('no-results');
-
-            container.innerHTML = '';
-            state.files = [];
-            loader.classList.remove('hidden');
-            noRes.classList.add('hidden');
-            $('error-container').classList.add('hidden');
-            loadMore.innerHTML = '';
-
-            try {
-                let pageToken = null;
-
-                do {
-                    const data = await requestDriveFolder(folderId, pageToken);
-                    state.files.push(...(data.files || []));
-                    pageToken = data.nextPageToken || null;
-                } while (pageToken);
-
-                loader.classList.add('hidden');
-                renderFiles(state.files, false);
-
-                if (state.files.length === 0) {
-                    noRes.classList.remove('hidden');
-                    const message = noRes.querySelector('p');
-                    if (message) {
-                        message.textContent = 'La carpeta está vacía o Google Drive no permite listar su contenido públicamente.';
-                    }
-                }
-            } catch (error) {
-                console.error('Error Google Drive:', error);
-                loader.classList.add('hidden');
-
-                let message = error?.message || 'No se pudo abrir esta carpeta de Google Drive.';
-
-                const reason = String(error?.reason || 'sin razón informada');
-
-                if (
-                    reason === 'keyInvalid' ||
-                    reason === 'API_KEY_INVALID' ||
-                    /API key not valid/i.test(message)
-                ) {
-                    message = 'La clave de Google API no es válida o fue desactivada.';
-                } else if (
-                    reason === 'ipRefererBlocked' ||
-                    reason === 'API_KEY_HTTP_REFERRER_BLOCKED' ||
-                    /API_KEY_HTTP_REFERRER_BLOCKED|referer blocked|referrer blocked/i.test(message)
-                ) {
-                    message = 'Google bloqueó el referente HTTP. Revisa los sitios web autorizados de la API Key.';
-                } else if (
-                    reason === 'accessNotConfigured' ||
-                    reason === 'SERVICE_DISABLED' ||
-                    /has not been used|is disabled|access not configured/i.test(message)
-                ) {
-                    message = 'Google Drive API no está habilitada en el mismo proyecto donde se creó esta clave.';
-                } else if (
-                    reason === 'API_KEY_SERVICE_BLOCKED'
-                ) {
-                    message = 'La restricción de API de la clave no permite Google Drive API.';
-                } else if (error?.status === 403) {
-                    message = `Google Drive rechazó la solicitud. Razón: ${reason}. Detalle: ${message}`;
-                } else {
-                    message = `Error de Google Drive. Razón: ${reason}. Detalle: ${message}`;
-                }
-
-                showError(message);
-            }
-        }
-
-        function showError(msg) {
-            $('error-text').textContent = msg;
-            $('error-container').classList.remove('hidden');
-        }
-
-        /* --- RENDER LOGIC --- */
-        function getFileIcon(mime, originalIcon) {
-            // Mapeo de colores por tipo
-            if(mime.includes('folder')) return { icon: `<svg class="w-10 h-10 text-yellow-400 drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path></svg>`, bg: 'bg-yellow-50', shadow: 'hover:shadow-yellow-500/20' };
-            if(mime.includes('pdf')) return { icon: `<svg class="w-10 h-10 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>`, bg: 'bg-red-50', shadow: 'hover:shadow-red-500/20' };
-            if(mime.includes('sheet') || mime.includes('excel')) return { icon: `<svg class="w-10 h-10 text-emerald-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`, bg: 'bg-emerald-50', shadow: 'hover:shadow-emerald-500/20' };
-            if(mime.includes('word') || mime.includes('document')) return { icon: `<svg class="w-10 h-10 text-blue-600" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`, bg: 'bg-blue-50', shadow: 'hover:shadow-blue-500/20' };
-            if(mime.includes('image')) return { icon: `<svg class="w-10 h-10 text-purple-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>`, bg: 'bg-purple-50', shadow: 'hover:shadow-purple-500/20' };
-            
-            // Default
-            return { icon: `<img src="${originalIcon}" class="w-8 h-8 opacity-50 grayscale">`, bg: 'bg-slate-50', shadow: 'hover:shadow-slate-400/20' };
-        }
-
-        function renderFiles(files, append = false) {
-            const container = $('file-container'), term = $('search-input').value.toLowerCase();
-            const filtered = files.filter(f => f.name.toLowerCase().includes(term));
-            if(!append) container.innerHTML = '';
-            
-            // Recomendación 1: Acciones amigables para Celular (opacity-100 en móviles, hover en PC)
-            const mobileFriendlyActions = "opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity";
-
-            filtered.forEach((f, i) => {
-                const isFolder = f.mimeType.includes('folder'), isImg = f.mimeType.includes('image'), isPdf = f.mimeType.includes('pdf');
-                const canPreview = isImg || isPdf;
-                const safeName = escapeHtml(f.name), safeLink = encodeURIComponent(f.name);
-                const date = new Date(f.modifiedTime).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
-                
-                let action = isFolder ? `navTo('${f.id}', '${safeLink}', true)` : (canPreview ? `previewFile('${safeLink}', '${f.mimeType}', '${f.webViewLink}', '${f.thumbnailLink}')` : `window.open('${f.webViewLink}', '_blank')`);
-
-                const fileInfo = getFileIcon(f.mimeType, f.iconLink);
-                const el = document.createElement('div');
-                el.style.animationDelay = `${Math.min(i * 40, 400)}ms`;
-                
-                if(state.view === 'grid') {
-                    // Recomendación 3: Carpetas compactas vs Archivos grandes en la Cuadrícula
-                    if(isFolder) {
-                        el.className = `fade-in bg-white col-span-1 rounded-xl p-3 border border-slate-100 shadow-sm hover:shadow-md ${fileInfo.shadow} transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-3 cursor-pointer group`;
-                        el.innerHTML = `
-                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center ${fileInfo.bg} rounded-lg shadow-inner">
-                                 ${fileInfo.icon.replace('w-10 h-10', 'w-5 h-5')}
-                            </div>
-                            <div class="flex-grow min-w-0" onclick="${action}">
-                                <h3 class="text-sm font-bold text-slate-800 line-clamp-3 leading-snug group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
-                                <p class="text-[10px] text-slate-400 mt-1">${date}</p>
-                            </div>
-                        `;
-                    } else {
-                        let thumb = isImg && f.thumbnailLink ? 
-                            `<div class="w-full aspect-square rounded-xl bg-slate-50 mb-4 overflow-hidden relative shadow-inner"><img src="${f.thumbnailLink.replace('=s220', '=s400')}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy"></div>` : 
-                            `<div class="w-full aspect-square rounded-xl ${fileInfo.bg} mb-4 flex items-center justify-center transition-colors shadow-inner">${fileInfo.icon}</div>`;
-
-                        el.className = `fade-in bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-xl ${fileInfo.shadow} transition-all duration-300 transform hover:-translate-y-2 flex flex-col justify-between group h-full`;
-                        el.innerHTML = `
-                            <div onclick="${action}" class="cursor-pointer">
-                                ${thumb}
-                                <h3 class="text-sm font-bold text-slate-800 leading-snug line-clamp-2 mb-2 group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
-                                <p class="text-[11px] text-slate-400 font-medium flex items-center gap-1.5">
-                                    ${date}
-                                </p>
-                            </div>
-                            <div class="mt-4 pt-3 border-t border-slate-50 flex justify-between items-center ${mobileFriendlyActions}">
-                                <button onclick="shareLink('${f.webViewLink}')" class="text-slate-400 hover:text-brand transition-colors p-1 bg-slate-50 rounded-lg md:bg-transparent" title="Compartir"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg></button>
-                                <button onclick="copyLink('${f.webViewLink}')" class="text-slate-400 hover:text-blue-500 transition-colors p-1 bg-slate-50 rounded-lg md:bg-transparent" title="Copiar Link"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></button>
-                            </div>`;
-                    }
-                } else {
-                    // List View
-                    el.className = `fade-in bg-white rounded-xl p-4 border border-slate-100 shadow-sm hover:shadow-lg ${fileInfo.shadow} transition-all duration-300 flex items-center gap-4 cursor-pointer mb-3 group transform hover:-translate-x-1`;
-                    el.innerHTML = `
-                        <div onclick="${action}" class="flex-shrink-0 w-12 h-12 flex items-center justify-center ${fileInfo.bg} rounded-xl shadow-sm">
-                             ${isImg ? `<img src="${f.thumbnailLink}" class="w-full h-full object-cover rounded-xl">` : fileInfo.icon.replace('w-10 h-10', 'w-6 h-6')}
-                        </div>
-                        <div onclick="${action}" class="flex-grow min-w-0">
-                            <h3 class="text-sm font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-brand transition-colors" title="${safeName}">${safeName}</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">${date}</p>
-                        </div>
-                        ${!isFolder ? `<div class="flex gap-2 ${mobileFriendlyActions}">
-                            <button onclick="shareLink('${f.webViewLink}')" class="p-2 text-slate-400 hover:text-brand bg-slate-50 hover:bg-brand/10 rounded-lg transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg></button>
-                            <button onclick="copyLink('${f.webViewLink}')" class="p-2 text-slate-400 hover:text-blue-500 bg-slate-50 hover:bg-blue-50 rounded-lg transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg></button>
-                        </div>` : ''}`;
-                }
-                container.appendChild(el);
-            });
-        }
-
-        function renderBreadcrumbs() {
-            const c = $('breadcrumb-container'); c.innerHTML = '';
-            state.stack.forEach((folder, i) => {
-                const isLast = i === state.stack.length - 1;
-                const span = document.createElement('span'); span.className = 'flex items-center flex-shrink-0';
-                if (isLast) span.innerHTML = `<span class="font-bold text-slate-900 truncate max-w-[200px] bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-sm text-xs uppercase tracking-wide">${escapeHtml(folder.name)}</span>`;
-                else span.innerHTML = `<button onclick="navTo('${folder.id}','',false)" class="text-slate-500 hover:text-brand hover:bg-white px-2 py-1.5 rounded-lg transition-all font-semibold text-xs uppercase tracking-wide flex items-center gap-1">${escapeHtml(folder.name)}</button><svg class="w-3 h-3 text-slate-300 mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>`;
-                c.appendChild(span);
-            });
-        }
-
-        /* --- PREVIEW & ACTIONS --- */
-        window.previewFile = function(encName, mime, link, thumbLink) {
-            const name = decodeURIComponent(encName), overlay = $('lightbox-overlay'), body = $('lightbox-body'), title = $('lightbox-title'), extLink = $('lightbox-external-link');
-            title.textContent = name;
-            body.innerHTML = ''; 
-            overlay.classList.remove('hidden');
-            
-            // Recomendación 2: Contenedor con animación de Zoom-In
-            const animatedWrapper = document.createElement('div');
-            animatedWrapper.className = 'w-full h-full flex items-center justify-center lightbox-content-enter';
-            
-            extLink.href = link; 
-            
-            if (mime.includes('image')) {
-                const img = new Image(); img.className = 'max-w-full max-h-full object-contain rounded-lg shadow-2xl';
-                img.onload = () => { animatedWrapper.appendChild(img); body.appendChild(animatedWrapper); };
-                img.src = thumbLink ? thumbLink.replace(/=s\d+/, '=s1600') : link; 
-            } else {
-                const iframe = document.createElement('iframe');
-                iframe.src = link.replace(/\/view.*/, '/preview');
-                iframe.className = 'w-full h-full md:w-[90%] md:h-[85%] bg-white rounded-xl shadow-2xl border-0';
-                animatedWrapper.appendChild(iframe);
-                body.appendChild(animatedWrapper);
-            }
-        }
-
-        window.closeLightbox = () => $('lightbox-overlay').classList.add('hidden');
-        document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
-
-        window.shareLink = (link) => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Te comparto este archivo de La Movida SST: ' + link)}`, '_blank', 'noopener,noreferrer');
-
-        window.copyLink = async (text) => {
-            try {
-                if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(text);
-                } else {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    textArea.style.position = 'fixed';
-                    textArea.style.opacity = '0';
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    textArea.remove();
-                }
-                showToast('Enlace copiado al portapapeles');
-            } catch (_) {
-                showToast('No se pudo copiar el enlace');
-            }
-        }
-
-        /* --- EVENTOS --- */
-        
-        // Recomendación 4: Limpiar búsqueda interactiva
-        const searchInput = $('search-input');
-        const clearBtn = $('clear-search-btn');
-
-        if (state.view === 'list') {
-            $('file-container').className = 'flex flex-col gap-2';
-            $('list-view-btn').className = 'p-1.5 rounded-md bg-white text-brand shadow-sm transition-all';
-            $('grid-view-btn').className = 'p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all';
-        }
-
-        searchInput.addEventListener('input', () => {
-            if(searchInput.value.length > 0) clearBtn.classList.remove('hidden');
-            else clearBtn.classList.add('hidden');
-            
-            renderFiles(state.files);
-            if(state.files.length > 0 && $('file-container').children.length === 0) $('file-container').innerHTML = '<div class="col-span-full text-center py-20"><p class="text-slate-400 font-medium">No encontramos resultados en esta carpeta</p></div>';
+      document.querySelectorAll('.filter-chip').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          state.filter = chip.dataset.filter;
+          updateFilterChips();
+          renderContent();
         });
+      });
 
-        clearBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            clearBtn.classList.add('hidden');
-            renderFiles(state.files);
-        });
+      $('sort-select').addEventListener('change', () => {
+        state.sort = $('sort-select').value;
+        localStorage.setItem(CONFIG.SORT_KEY, state.sort);
+        renderContent();
+      });
 
-        $('grid-view-btn').addEventListener('click', () => { 
-            state.view = 'grid'; localStorage.setItem('movida_drive_view', 'grid'); 
-            $('file-container').className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 items-start';
-            $('grid-view-btn').className = "p-1.5 rounded-md bg-white text-brand shadow-sm transition-all";
-            $('list-view-btn').className = "p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all";
-            renderFiles(state.files); 
-        });
+      $('grid-view').addEventListener('click', () => {
+        state.view = 'grid';
+        localStorage.setItem(CONFIG.VIEW_KEY, state.view);
+        updateViewControls();
+        renderContent();
+      });
+      $('list-view').addEventListener('click', () => {
+        state.view = 'list';
+        localStorage.setItem(CONFIG.VIEW_KEY, state.view);
+        updateViewControls();
+        renderContent();
+      });
 
-        $('list-view-btn').addEventListener('click', () => { 
-            state.view = 'list'; localStorage.setItem('movida_drive_view', 'list'); 
-            $('file-container').className = 'flex flex-col gap-2';
-            $('list-view-btn').className = "p-1.5 rounded-md bg-white text-brand shadow-sm transition-all";
-            $('grid-view-btn').className = "p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all";
-            renderFiles(state.files); 
-        });
+      $('menu-open-drive').addEventListener('click', () => { if (state.activeFile) openExternal(state.activeFile.webViewLink); closeFileMenu(); });
+      $('menu-share').addEventListener('click', () => { if (state.activeFile) shareFile(state.activeFile); closeFileMenu(); });
+      $('menu-copy').addEventListener('click', () => { if (state.activeFile) copyText(state.activeFile.webViewLink); closeFileMenu(); });
 
-        $('login-form').addEventListener('submit', handleLogin);
-        $('login-cedula').addEventListener('input', (e) => { e.target.value = normalizeCedula(e.target.value); });
-        $('toggle-code').addEventListener('click', () => {
-            const input = $('login-code');
-            const show = input.type === 'password';
-            input.type = show ? 'text' : 'password';
-            $('toggle-code').setAttribute('aria-label', show ? 'Ocultar código' : 'Mostrar código');
-        });
-        $('logout-button').addEventListener('click', () => logout());
+      $('dismiss-session-warning').addEventListener('click', () => {
+        state.warningDismissed = true;
+        $('session-warning').classList.add('hidden');
+      });
+      $('warning-logout').addEventListener('click', () => logout());
 
-        // Inicialización: Drive solo carga después de una sesión válida.
-        const existingSession = readSession();
-        if (existingSession) openApp(existingSession);
-        else $('login-cedula').focus();
-    </script>
+      $('close-preview').addEventListener('click', closePreview);
+      $('preview-modal').addEventListener('click', (event) => { if (event.target === $('preview-modal')) closePreview(); });
+
+      document.addEventListener('click', () => {
+        closeProfileMenu();
+        closeFileMenu();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeProfileMenu();
+          closeFileMenu();
+          if (!$('preview-modal').classList.contains('hidden')) closePreview();
+        }
+      });
+
+      window.addEventListener('resize', closeFileMenu);
+      window.addEventListener('scroll', closeFileMenu, { passive: true });
+      window.addEventListener('online', updateConnectionStatus);
+      window.addEventListener('offline', updateConnectionStatus);
+      window.addEventListener('popstate', (event) => {
+        if (!readSession() || !event.state?.movidaDrive || !Array.isArray(event.state.stack)) return;
+        state.stack = event.state.stack;
+        const folder = state.stack[state.stack.length - 1];
+        loadFolder(folder.id, { keepStack: true, updateHistory: false });
+      });
+    }
+
+    function bootstrap() {
+      initEvents();
+      updateConnectionStatus();
+      updateFilterChips();
+      updateViewControls();
+      $('sort-select').value = state.sort;
+      const session = readSession();
+      if (session) openApp(session);
+      else $('login-cedula').focus();
+    }
+
+    bootstrap();
+  </script>
 </body>
 </html>
