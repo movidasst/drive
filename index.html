@@ -2,28 +2,29 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>El drive colaborativo de la Movida sst</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca colaborativa | La Movida SST</title>
     
     <!-- SEO y Meta Tags (Búsquedas, WhatsApp, Telegram, etc.) -->
-    <meta name="description" content="El drive de La Movida de SST">
+    <meta name="description" content="Biblioteca colaborativa de recursos técnicos para integrantes de La Movida SST.">
     <meta name="keywords" content="normas covenin, normas sst venezuela, seguridad y salud en el trabajo, sst dao network, movida sst, drive colaborativo">
     
     <!-- Open Graph (Facebook, WhatsApp, Telegram, LinkedIn) -->
-    <meta property="og:title" content="El drive colaborativo de la movida sst">
-    <meta property="og:description" content="El drive de La Movida de SST">
-    <meta property="og:image" content="https://assets.poap.xyz/cec12a20-fefb-4199-9cc0-b1ece87fe44d.png">
-    <meta property="og:url" content="https://www.movidasst.com">
+    <meta property="og:title" content="Biblioteca colaborativa | La Movida SST">
+    <meta property="og:description" content="Recursos técnicos para integrantes de La Movida SST.">
+    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200">
+    <meta property="og:url" content="https://drive.movidasst.com">
     <meta property="og:type" content="website">
     
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="El drive colaborativo de la movida sst">
-    <meta name="twitter:description" content="El drive de La Movida de SST">
-    <meta name="twitter:image" content="https://assets.poap.xyz/cec12a20-fefb-4199-9cc0-b1ece87fe44d.png">
+    <meta name="twitter:title" content="Biblioteca colaborativa | La Movida SST">
+    <meta name="twitter:description" content="Recursos técnicos para integrantes de La Movida SST.">
+    <meta name="twitter:image" content="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Fuentes Google: Outfit (Incluyendo peso 800) -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -40,9 +41,9 @@
                             900: '#0f172a', /* Títulos */
                         },
                         brand: {
-                            DEFAULT: '#00b050',
-                            dark: '#008f40',
-                            light: '#e6f7ed'
+                            DEFAULT: '#006D8F',
+                            dark: '#0B2A6F',
+                            light: '#e9f7f8'
                         }
                     },
                     fontFamily: {
@@ -50,7 +51,7 @@
                     },
                     boxShadow: {
                         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'glow': '0 0 15px rgba(0, 176, 80, 0.3)',
+                        'glow': '0 0 15px rgba(0, 109, 143, 0.3)',
                     }
                 }
             }
@@ -82,13 +83,13 @@
         .ambient-light-top {
             position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
             width: 800px; height: 400px;
-            background: radial-gradient(circle, rgba(0, 176, 80, 0.06) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 109, 143, 0.08) 0%, transparent 70%);
             filter: blur(120px); pointer-events: none; z-index: 0;
         }
         .ambient-light-bottom {
             position: fixed; bottom: -150px; right: 0%;
             width: 600px; height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(11, 42, 111, 0.07) 0%, transparent 70%);
             filter: blur(120px); pointer-events: none; z-index: 0;
         }
 
@@ -127,25 +128,155 @@
             transition: all 0.3s ease;
         }
         .input-modern:focus {
-            border-color: #00b050;
+            border-color: #006D8F;
             background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(0, 176, 80, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 109, 143, 0.12);
         }
         .input-modern::placeholder { color: #94a3b8; }
 
         /* Toast Notification */
         #toast { visibility: hidden; min-width: 280px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 10000; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px); font-size: 14px; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 30px -5px rgba(0,0,0,0.2); font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; }
         #toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); bottom: 50px; }
+
+
+        /* --- ACCESO PREMIUM --- */
+        .auth-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            position: relative;
+            z-index: 100;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255,255,255,.96);
+            border: 1px solid rgba(226,232,240,.95);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 32px 85px -38px rgba(11,42,111,.5);
+            backdrop-filter: blur(18px);
+        }
+        .auth-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 30px 24px 26px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg,#0B2A6F 0%,#006D8F 62%,#139f9f 100%);
+        }
+        .auth-hero::before,
+        .auth-hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+        }
+        .auth-hero::before { width: 190px; height: 190px; right: -75px; top: -90px; }
+        .auth-hero::after { width: 230px; height: 230px; left: -115px; bottom: -150px; }
+        .auth-logo {
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            border-radius: 999px;
+            background: white;
+            padding: 8px;
+            box-shadow: 0 18px 35px -18px rgba(0,0,0,.55);
+            position: relative;
+            z-index: 1;
+        }
+        .auth-body { padding: 26px 24px 24px; }
+        .auth-label { display:block; font-size:14px; font-weight:800; color:#334155; margin-bottom:8px; }
+        .auth-field { position:relative; }
+        .auth-field svg { position:absolute; width:20px; height:20px; left:15px; top:50%; transform:translateY(-50%); color:#94a3b8; pointer-events:none; }
+        .auth-input {
+            width:100%;
+            border:1px solid #dbe5ec;
+            background:#f8fafc;
+            border-radius:16px;
+            padding:14px 45px;
+            color:#0f172a;
+            font-weight:700;
+            transition:.22s ease;
+        }
+        .auth-input:focus { outline:none; background:white; border-color:#006D8F; box-shadow:0 0 0 5px rgba(0,109,143,.11); }
+        .auth-submit {
+            width:100%; min-height:54px; border:0; border-radius:16px; margin-top:22px;
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            color:white; font-weight:800;
+            background:linear-gradient(90deg,#0B2A6F,#006D8F,#139f9f);
+            box-shadow:0 14px 30px -16px rgba(0,109,143,.75);
+            transition:.22s ease;
+        }
+        .auth-submit:hover { transform:translateY(-1px); box-shadow:0 18px 34px -16px rgba(0,109,143,.8); }
+        .auth-submit:disabled { opacity:.65; cursor:not-allowed; transform:none; }
+        .auth-message { margin-top:16px; border-radius:14px; padding:12px 14px; font-size:13px; font-weight:700; }
+        .auth-message.error { color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; }
+        .auth-message.success { color:#047857; background:#ecfdf5; border:1px solid #a7f3d0; }
+        .session-chip { display:inline-flex; align-items:center; gap:7px; border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); padding:7px 11px; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.14em; position:relative; z-index:1; }
+        .session-chip-dot { width:8px; height:8px; border-radius:999px; background:#86efac; }
+        .logout-btn { display:flex; align-items:center; gap:7px; padding:9px 12px; border-radius:12px; background:#fff; border:1px solid #e2e8f0; color:#475569; font-size:12px!important; font-weight:800; transition:.2s ease; }
+        .logout-btn:hover { color:#dc2626; background:#fef2f2; border-color:#fecaca; }
+        @media (max-width: 767px) {
+            .auth-card { border-radius:26px; }
+            .auth-body { padding:24px 20px; }
+            .auth-hero { padding:28px 20px 24px; }
+        }
+
     </style>
 </head>
 <body class="tech-bg">
+
+    <!-- ACCESO PARA INTEGRANTES -->
+    <section id="auth-screen" class="auth-screen" aria-labelledby="auth-title">
+        <div class="auth-card fade-in">
+            <div class="auth-hero">
+                <img src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w512" class="auth-logo" alt="Logo de La Movida SST">
+                <div class="mt-4"><span class="session-chip"><span class="session-chip-dot"></span>Acceso para integrantes</span></div>
+                <h1 id="auth-title" class="relative z-10 mt-4 text-3xl font-extrabold leading-tight">Biblioteca colaborativa</h1>
+                <p class="relative z-10 mt-2 text-sm text-white/80 leading-relaxed">Recursos técnicos y materiales compartidos por la comunidad de La Movida SST.</p>
+            </div>
+            <div class="auth-body">
+                <form id="login-form" novalidate>
+                    <label for="login-cedula" class="auth-label">Cédula</label>
+                    <div class="auth-field">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21a8 8 0 10-16 0m8-11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+                        <input id="login-cedula" class="auth-input" type="text" inputmode="numeric" autocomplete="username" maxlength="12" placeholder="Ejemplo: 12345678" required>
+                    </div>
+                    <p class="mt-2 text-xs text-slate-500">Solo números, sin V, puntos ni guiones.</p>
+
+                    <label for="login-code" class="auth-label mt-5">Código de integrante</label>
+                    <div class="auth-field">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        <input id="login-code" class="auth-input pr-12" type="password" autocomplete="current-password" maxlength="20" placeholder="Tu código del directorio" required>
+                        <button id="toggle-code" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 hover:bg-slate-100" aria-label="Mostrar código">
+                            <svg class="!static !transform-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.5 12C3.8 8 7.5 5 12 5s8.2 3 9.5 7c-1.3 4-5 7-9.5 7s-8.2-3-9.5-7z"/></svg>
+                        </button>
+                    </div>
+
+                    <div id="login-message" class="auth-message error hidden" role="alert" aria-live="polite"></div>
+                    <button id="login-button" type="submit" class="auth-submit">
+                        <svg id="login-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5m5 5H3"/></svg>
+                        <span id="login-button-text">Ingresar a la biblioteca</span>
+                    </button>
+                </form>
+                <div class="mt-5 pt-5 border-t border-slate-100 text-center">
+                    <p class="text-xs text-slate-500 leading-relaxed">La sesión dura hasta dos horas. El código no se guarda en este dispositivo.</p>
+                    <a href="https://directorio.movidasst.com/" target="_blank" rel="noopener noreferrer" class="inline-flex mt-3 text-sm font-extrabold text-brand hover:text-brand-dark">Consultar mi credencial</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Luces Ambientales -->
     <div class="ambient-light-top"></div>
     <div class="ambient-light-bottom"></div>
 
     <!-- APP PRINCIPAL -->
-    <div id="app-container" class="transition-opacity duration-700 relative z-10">
+    <div id="app-container" class="hidden transition-opacity duration-700 relative z-10">
         
         <!-- NAVBAR STICKY GLASSMORPHISM -->
         <header class="sticky top-0 z-50 w-full backdrop-blur-md bg-white/90 border-b border-slate-200 shadow-sm transition-all duration-300">
@@ -154,7 +285,7 @@
                     <!-- Brand -->
                     <div class="flex items-center gap-4 w-full md:w-auto">
                         <div class="bg-white p-1 rounded-full shadow-md border border-slate-100 flex items-center justify-center">
-                            <img src="https://assets.poap.xyz/cec12a20-fefb-4199-9cc0-b1ece87fe44d.png" class="w-14 h-14 object-contain rounded-full" alt="Logo">
+                            <img src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w1200" class="w-14 h-14 object-contain rounded-full" alt="Logo">
                         </div>
                         <div>
                             <h1 class="text-lg font-extrabold tracking-tight text-slate-900 leading-none">Drive Movida SST</h1>
@@ -180,22 +311,27 @@
                         </a>
 
                         <!-- BOTÓN DE CANAL WHATSAPP -->
-                        <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-[#128C7E] transition-all shadow-lg hover:shadow-[#25D366]/30 hover:-translate-y-0.5 group">
+                        <a href="https://whatsapp.com/channel/0029Va0mlH5Jf05mrcCz8r3e" target="_blank" rel="noopener noreferrer" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-[#128C7E] transition-all shadow-lg hover:shadow-[#25D366]/30 hover:-translate-y-0.5 group">
                             <svg class="w-4 h-4 text-white/90 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.385 0 0 5.388 0 12.035c0 2.126.553 4.195 1.603 6.01L.226 23.53l5.63-1.478A11.968 11.968 0 0 0 12.031 24c6.643 0 12.03-5.388 12.03-12.035S18.675 0 12.031 0zm0 21.996c-1.802 0-3.567-.482-5.118-1.4l-.366-.217-3.804.998.995-3.705-.238-.377a9.982 9.982 0 0 1-1.528-5.26c0-5.526 4.498-10.026 10.03-10.026 5.53 0 10.028 4.5 10.028 10.026s-4.5 10.028-10.028 10.026zm5.503-7.525c-.301-.151-1.783-.88-2.06-.98-.276-.101-.478-.151-.678.151-.202.302-.78 1.002-.955 1.203-.176.202-.352.227-.653.076-.302-.151-1.274-.469-2.428-1.503-.898-.806-1.503-1.801-1.68-2.102-.176-.302-.018-.465.132-.616.135-.135.302-.352.453-.528.151-.176.202-.302.302-.503.1-.202.05-.378-.025-.529-.076-.151-.678-1.631-.93-2.234-.246-.588-.495-.508-.678-.518-.176-.008-.378-.008-.579-.008-.201 0-.528.076-.804.378-.276.302-1.056 1.032-1.056 2.518 0 1.486 1.081 2.922 1.232 3.123.151.202 2.133 3.255 5.166 4.56.721.311 1.283.497 1.722.636.724.23 1.383.197 1.898.119.58-.088 1.783-.728 2.034-1.433.251-.705.251-1.309.176-1.434-.076-.126-.277-.202-.579-.353z"/></svg>
                             <span class="hidden sm:inline">Canal WhatsApp</span>
                             <span class="sm:hidden">Canal</span>
                         </a>
 
                         <!-- BOTÓN DE APORTE -->
-                        <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-brand transition-all shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5 group">
+                        <a href="https://forms.gle/haUg2ZRDqCeqMSJVA" target="_blank" rel="noopener noreferrer" class="w-auto flex-grow md:flex-grow-0 flex justify-center items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-xs font-bold hover:bg-brand transition-all shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5 group">
                             <svg class="w-4 h-4 text-slate-300 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                             <span class="hidden sm:inline">Aportar Recurso</span>
                             <span class="sm:hidden">Aportar</span>
                         </a>
 
-                        <div class="hidden lg:flex flex-col items-end mr-2">
-                            <span class="text-xs font-semibold text-slate-900">Hola, <span class="text-brand">Equipo</span></span>
+                        <div class="hidden lg:flex flex-col items-end mr-1 max-w-[190px]">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Acceso autorizado</span>
+                            <span id="session-user-name" class="truncate w-full text-right text-xs font-extrabold text-slate-900">Integrante</span>
                         </div>
+                        <button id="logout-button" type="button" class="logout-btn" aria-label="Cerrar sesión">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                            <span class="hidden sm:inline">Salir</span>
+                        </button>
                         
                         <div class="flex gap-1 bg-slate-100 p-1 rounded-lg">
                              <button id="grid-view-btn" class="p-1.5 rounded-md bg-white text-brand shadow-sm transition-all"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg></button>
@@ -291,7 +427,7 @@
         
         <!-- Botón Externo de Seguridad -->
         <div class="absolute bottom-10 left-0 w-full flex justify-center z-20 pointer-events-none">
-             <a id="lightbox-external-link" href="#" target="_blank" class="pointer-events-auto bg-white hover:bg-slate-50 text-slate-900 text-xs font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 border border-slate-100">
+             <a id="lightbox-external-link" href="#" target="_blank" rel="noopener noreferrer" class="pointer-events-auto bg-white hover:bg-slate-50 text-slate-900 text-xs font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 border border-slate-100">
                 <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 ABRIR EN NUEVA PESTAÑA
              </a>
@@ -307,14 +443,29 @@
     <script>
         /* --- CONFIGURACIÓN --- */
         const CONFIG = {
-            API_KEY: 'AIzaSyCclnDEY_Rsq33mNiGmcAuqECD5Tv4Uk5I',
-            ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq'
+            API_KEY: 'AIzaSyCIDaShfG6acvLg2LiH-zmKtcC_klQbA0E',
+            ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq',
+            SUPABASE_URL: 'https://lfdmbkzghnwvsapxypvt.supabase.co',
+            SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_bRnkA6PA8-v073nrw9zxiQ_8rVGiOn1',
+            SESSION_KEY: 'movida_drive_session_v1',
+            SESSION_DURATION: 2 * 60 * 60 * 1000,
+            MAX_ATTEMPTS: 5,
+            LOCK_TIME: 10 * 60 * 1000
         };
         
-        let state = { files: [], stack: [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }], token: null, view: 'grid' };
+        let state = {
+            files: [],
+            stack: [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }],
+            token: null,
+            view: localStorage.getItem('movida_drive_view') || 'grid',
+            driveReady: false,
+            attempts: 0,
+            lockedUntil: 0,
+            sessionTimer: null
+        };
 
         const $ = id => document.getElementById(id);
-        const escapeHtml = (unsafe) => unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        const escapeHtml = (unsafe) => String(unsafe ?? '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         
         function showToast(message) {
             const x = $("toast");
@@ -323,65 +474,287 @@
             setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
         }
 
-        /* --- DRIVE LOGIC --- */
-        async function initDrive() {
-            if (!window.gapi) await loadScript('https://apis.google.com/js/api.js');
-            gapi.load('client', async () => {
-                try {
-                    await gapi.client.init({ apiKey: CONFIG.API_KEY, discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'] });
-                    loadFolder(CONFIG.ROOT_FOLDER);
-                } catch(e) { showError("Error API: " + (e.error?.message || e.message)); }
-            });
+
+
+        const supabaseClient = window.supabase.createClient(
+            CONFIG.SUPABASE_URL,
+            CONFIG.SUPABASE_PUBLISHABLE_KEY,
+            { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
+        );
+
+        const normalizeCedula = value => String(value || '').replace(/\D/g, '');
+        const normalizeCode = value => String(value || '').trim().toUpperCase();
+
+        function showLoginMessage(message, type = 'error') {
+            const box = $('login-message');
+            box.textContent = message;
+            box.className = `auth-message ${type}`;
         }
 
-        function loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.body.appendChild(s);
+        function clearLoginMessage() {
+            const box = $('login-message');
+            box.textContent = '';
+            box.className = 'auth-message error hidden';
+        }
+
+        function setLoginLoading(loading) {
+            $('login-button').disabled = loading;
+            $('login-button-text').textContent = loading ? 'Verificando acceso...' : 'Ingresar a la biblioteca';
+            $('login-icon').classList.toggle('animate-spin', loading);
+        }
+
+        function readSession() {
+            try {
+                const raw = sessionStorage.getItem(CONFIG.SESSION_KEY);
+                if (!raw) return null;
+                const session = JSON.parse(raw);
+                if (!session.expiresAt || Date.now() >= session.expiresAt) {
+                    sessionStorage.removeItem(CONFIG.SESSION_KEY);
+                    return null;
+                }
+                return session;
+            } catch (_) {
+                sessionStorage.removeItem(CONFIG.SESSION_KEY);
+                return null;
+            }
+        }
+
+        function saveSession(name, cedula) {
+            const session = { name: name || 'Integrante', cedula, expiresAt: Date.now() + CONFIG.SESSION_DURATION };
+            sessionStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(session));
+            return session;
+        }
+
+        function openApp(session) {
+            $('auth-screen').classList.add('hidden');
+            $('app-container').classList.remove('hidden');
+            $('session-user-name').textContent = session.name || 'Integrante';
+            clearInterval(state.sessionTimer);
+            state.sessionTimer = setInterval(() => {
+                if (Date.now() >= session.expiresAt) logout('Tu sesión de dos horas finalizó.');
+            }, 30000);
+            if (!state.driveReady) initDrive();
+        }
+
+        function logout(message = '') {
+            sessionStorage.removeItem(CONFIG.SESSION_KEY);
+            clearInterval(state.sessionTimer);
+            $('app-container').classList.add('hidden');
+            $('auth-screen').classList.remove('hidden');
+            $('login-code').value = '';
+            if (message) showLoginMessage(message);
+            else clearLoginMessage();
+            setTimeout(() => $('login-cedula').focus(), 50);
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            clearLoginMessage();
+
+            if (Date.now() < state.lockedUntil) {
+                const mins = Math.ceil((state.lockedUntil - Date.now()) / 60000);
+                showLoginMessage(`Demasiados intentos. Espera ${mins} minuto(s).`);
+                return;
+            }
+
+            const cedula = normalizeCedula($('login-cedula').value);
+            const codigo = normalizeCode($('login-code').value);
+            $('login-cedula').value = cedula;
+
+            if (cedula.length < 6 || cedula.length > 12) {
+                showLoginMessage('Escribe una cédula válida usando solamente números.');
+                return;
+            }
+            if (codigo.length < 4) {
+                showLoginMessage('Escribe tu código de integrante.');
+                return;
+            }
+
+            setLoginLoading(true);
+            try {
+                const { data, error } = await supabaseClient.rpc('validar_acceso_drive', {
+                    p_cedula: cedula,
+                    p_codigo: codigo
+                });
+                if (error) throw error;
+                const result = Array.isArray(data) ? data[0] : data;
+
+                if (!result?.autorizado) {
+                    state.attempts++;
+                    if (state.attempts >= CONFIG.MAX_ATTEMPTS) {
+                        state.lockedUntil = Date.now() + CONFIG.LOCK_TIME;
+                        state.attempts = 0;
+                        showLoginMessage('Acceso bloqueado temporalmente durante 10 minutos.');
+                    } else {
+                        showLoginMessage(`Cédula o código incorrectos. Te quedan ${CONFIG.MAX_ATTEMPTS - state.attempts} intento(s).`);
+                    }
+                    return;
+                }
+
+                state.attempts = 0;
+                state.lockedUntil = 0;
+                showLoginMessage('Acceso autorizado. Abriendo la biblioteca...', 'success');
+                const session = saveSession(result.nombre, cedula);
+                setTimeout(() => openApp(session), 350);
+            } catch (error) {
+                console.error(error);
+                showLoginMessage('No fue posible validar el acceso. Verifica tu conexión.');
+            } finally {
+                setLoginLoading(false);
+            }
+        }
+
+        /* --- DRIVE LOGIC: REST DIRECTO, SIN GAPI --- */
+        async function initDrive() {
+            if (!readSession()) {
+                logout('Tu sesión no es válida o ya finalizó.');
+                return;
+            }
+
+            state.driveReady = true;
+            await loadFolder(CONFIG.ROOT_FOLDER);
+        }
+
+        async function requestDriveFolder(folderId, pageToken = null) {
+            const params = new URLSearchParams({
+                key: CONFIG.API_KEY,
+                q: `'${folderId}' in parents and trashed = false`,
+                pageSize: '1000',
+                fields: 'nextPageToken,files(id,name,mimeType,webViewLink,iconLink,modifiedTime,thumbnailLink,size)',
+                orderBy: 'folder,name',
+                includeItemsFromAllDrives: 'true',
+                supportsAllDrives: 'true'
             });
+
+            if (pageToken) params.set('pageToken', pageToken);
+
+            const response = await fetch(
+                `https://www.googleapis.com/drive/v3/files?${params.toString()}`,
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-store',
+                    referrerPolicy: 'strict-origin-when-cross-origin'
+                }
+            );
+
+            let payload = null;
+            try {
+                payload = await response.json();
+            } catch (_) {
+                payload = null;
+            }
+
+            if (!response.ok) {
+                const apiMessage = payload?.error?.message || `Google Drive respondió con el estado ${response.status}.`;
+                const apiReason =
+                    payload?.error?.details?.find(item => item?.reason)?.reason ||
+                    payload?.error?.errors?.[0]?.reason ||
+                    payload?.error?.status ||
+                    '';
+
+                const error = new Error(apiMessage);
+                error.status = response.status;
+                error.reason = apiReason;
+                error.googlePayload = payload;
+                throw error;
+            }
+
+            return payload || { files: [] };
         }
 
         window.navTo = function(id, name, push = false) {
             if (push) {
-                if(state.stack[state.stack.length-1].id !== id) state.stack.push({ id, name: decodeURIComponent(name) });
+                if (state.stack[state.stack.length - 1].id !== id) {
+                    state.stack.push({ id, name: decodeURIComponent(name) });
+                }
             } else {
                 const idx = state.stack.findIndex(x => x.id === id);
                 if (idx !== -1) state.stack = state.stack.slice(0, idx + 1);
             }
-            $('search-input').value = ''; // Limpiar búsqueda al cambiar de carpeta
-            $('clear-search-btn').classList.add('hidden');
-            renderBreadcrumbs(); 
-            loadFolder(id);
-        }
 
-        async function loadFolder(folderId, pageToken = null) {
-            const container = $('file-container'), loader = $('skeleton-loader'), loadMore = $('load-more-container'), noRes = $('no-results');
-            
-            if (!pageToken) { container.innerHTML = ''; state.files = []; loader.classList.remove('hidden'); noRes.classList.add('hidden'); $('error-container').classList.add('hidden'); loadMore.innerHTML = ''; }
+            $('search-input').value = '';
+            $('clear-search-btn').classList.add('hidden');
+            renderBreadcrumbs();
+            loadFolder(id);
+        };
+
+        async function loadFolder(folderId) {
+            const container = $('file-container');
+            const loader = $('skeleton-loader');
+            const loadMore = $('load-more-container');
+            const noRes = $('no-results');
+
+            container.innerHTML = '';
+            state.files = [];
+            loader.classList.remove('hidden');
+            noRes.classList.add('hidden');
+            $('error-container').classList.add('hidden');
+            loadMore.innerHTML = '';
 
             try {
-                const res = await gapi.client.drive.files.list({
-                    pageSize: 100, fields: 'nextPageToken, files(id, name, mimeType, webViewLink, iconLink, modifiedTime, thumbnailLink, size)',
-                    q: `'${folderId}' in parents and trashed = false`, orderBy: 'folder,name', pageToken: pageToken,
-                    includeItemsFromAllDrives: true, supportsAllDrives: true
-                });
+                let pageToken = null;
+
+                do {
+                    const data = await requestDriveFolder(folderId, pageToken);
+                    state.files.push(...(data.files || []));
+                    pageToken = data.nextPageToken || null;
+                } while (pageToken);
 
                 loader.classList.add('hidden');
-                state.files = [...state.files, ...(res.result.files || [])];
-                state.token = res.result.nextPageToken;
+                renderFiles(state.files, false);
 
-                renderFiles(res.result.files || [], !pageToken);
-                if (state.files.length === 0) noRes.classList.remove('hidden');
-                
-                if (state.token) {
-                    const btn = document.createElement('button');
-                    btn.className = 'text-brand text-xs font-extrabold border-2 border-brand px-10 py-3 rounded-full hover:bg-brand hover:text-white transition-all duration-300 uppercase tracking-widest shadow-lg hover:shadow-brand/40 transform hover:-translate-y-1';
-                    btn.textContent = 'Cargar más archivos'; btn.onclick = () => loadFolder(folderId, state.token);
-                    loadMore.innerHTML = ''; loadMore.appendChild(btn);
+                if (state.files.length === 0) {
+                    noRes.classList.remove('hidden');
+                    const message = noRes.querySelector('p');
+                    if (message) {
+                        message.textContent = 'La carpeta está vacía o Google Drive no permite listar su contenido públicamente.';
+                    }
                 }
-            } catch (e) { loader.classList.add('hidden'); showError("No se pudo conectar con Drive."); }
+            } catch (error) {
+                console.error('Error Google Drive:', error);
+                loader.classList.add('hidden');
+
+                let message = error?.message || 'No se pudo abrir esta carpeta de Google Drive.';
+
+                const reason = String(error?.reason || 'sin razón informada');
+
+                if (
+                    reason === 'keyInvalid' ||
+                    reason === 'API_KEY_INVALID' ||
+                    /API key not valid/i.test(message)
+                ) {
+                    message = 'La clave de Google API no es válida o fue desactivada.';
+                } else if (
+                    reason === 'ipRefererBlocked' ||
+                    reason === 'API_KEY_HTTP_REFERRER_BLOCKED' ||
+                    /API_KEY_HTTP_REFERRER_BLOCKED|referer blocked|referrer blocked/i.test(message)
+                ) {
+                    message = 'Google bloqueó el referente HTTP. Revisa los sitios web autorizados de la API Key.';
+                } else if (
+                    reason === 'accessNotConfigured' ||
+                    reason === 'SERVICE_DISABLED' ||
+                    /has not been used|is disabled|access not configured/i.test(message)
+                ) {
+                    message = 'Google Drive API no está habilitada en el mismo proyecto donde se creó esta clave.';
+                } else if (
+                    reason === 'API_KEY_SERVICE_BLOCKED'
+                ) {
+                    message = 'La restricción de API de la clave no permite Google Drive API.';
+                } else if (error?.status === 403) {
+                    message = `Google Drive rechazó la solicitud. Razón: ${reason}. Detalle: ${message}`;
+                } else {
+                    message = `Error de Google Drive. Razón: ${reason}. Detalle: ${message}`;
+                }
+
+                showError(message);
+            }
         }
 
-        function showError(msg) { $('error-text').textContent = msg; $('error-container').classList.remove('hidden'); }
+        function showError(msg) {
+            $('error-text').textContent = msg;
+            $('error-container').classList.remove('hidden');
+        }
 
         /* --- RENDER LOGIC --- */
         function getFileIcon(mime, originalIcon) {
@@ -482,6 +855,7 @@
         /* --- PREVIEW & ACTIONS --- */
         window.previewFile = function(encName, mime, link, thumbLink) {
             const name = decodeURIComponent(encName), overlay = $('lightbox-overlay'), body = $('lightbox-body'), title = $('lightbox-title'), extLink = $('lightbox-external-link');
+            title.textContent = name;
             body.innerHTML = ''; 
             overlay.classList.remove('hidden');
             
@@ -507,16 +881,26 @@
         window.closeLightbox = () => $('lightbox-overlay').classList.add('hidden');
         document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLightbox(); });
 
-        window.shareLink = (link) => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Te comparto este archivo de la Movida SST: ' + link)}`, '_blank');
+        window.shareLink = (link) => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Te comparto este archivo de La Movida SST: ' + link)}`, '_blank', 'noopener,noreferrer');
 
-        window.copyLink = (text) => {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed"; textArea.style.left = "-9999px";
-            document.body.appendChild(textArea); textArea.focus(); textArea.select();
-            try { document.execCommand('copy'); showToast("Enlace copiado al portapapeles"); } 
-            catch (err) { showToast("No se pudo copiar el enlace"); }
-            document.body.removeChild(textArea);
+        window.copyLink = async (text) => {
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                } else {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    textArea.remove();
+                }
+                showToast('Enlace copiado al portapapeles');
+            } catch (_) {
+                showToast('No se pudo copiar el enlace');
+            }
         }
 
         /* --- EVENTOS --- */
@@ -524,6 +908,12 @@
         // Recomendación 4: Limpiar búsqueda interactiva
         const searchInput = $('search-input');
         const clearBtn = $('clear-search-btn');
+
+        if (state.view === 'list') {
+            $('file-container').className = 'flex flex-col gap-2';
+            $('list-view-btn').className = 'p-1.5 rounded-md bg-white text-brand shadow-sm transition-all';
+            $('grid-view-btn').className = 'p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all';
+        }
 
         searchInput.addEventListener('input', () => {
             if(searchInput.value.length > 0) clearBtn.classList.remove('hidden');
@@ -540,7 +930,7 @@
         });
 
         $('grid-view-btn').addEventListener('click', () => { 
-            state.view = 'grid'; 
+            state.view = 'grid'; localStorage.setItem('movida_drive_view', 'grid'); 
             $('file-container').className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 items-start';
             $('grid-view-btn').className = "p-1.5 rounded-md bg-white text-brand shadow-sm transition-all";
             $('list-view-btn').className = "p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all";
@@ -548,15 +938,27 @@
         });
 
         $('list-view-btn').addEventListener('click', () => { 
-            state.view = 'list'; 
+            state.view = 'list'; localStorage.setItem('movida_drive_view', 'list'); 
             $('file-container').className = 'flex flex-col gap-2';
             $('list-view-btn').className = "p-1.5 rounded-md bg-white text-brand shadow-sm transition-all";
             $('grid-view-btn').className = "p-1.5 rounded-md text-slate-400 hover:text-slate-600 transition-all";
             renderFiles(state.files); 
         });
 
-        // Inicializar el Drive directamente al cargar
-        initDrive();
+        $('login-form').addEventListener('submit', handleLogin);
+        $('login-cedula').addEventListener('input', (e) => { e.target.value = normalizeCedula(e.target.value); });
+        $('toggle-code').addEventListener('click', () => {
+            const input = $('login-code');
+            const show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            $('toggle-code').setAttribute('aria-label', show ? 'Ocultar código' : 'Mostrar código');
+        });
+        $('logout-button').addEventListener('click', () => logout());
+
+        // Inicialización: Drive solo carga después de una sesión válida.
+        const existingSession = readSession();
+        if (existingSession) openApp(existingSession);
+        else $('login-cedula').focus();
     </script>
 </body>
 </html>
