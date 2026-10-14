@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://lh3.googleusercontent.com https://drive.google.com https://*.googleusercontent.com; connect-src 'self' https://lfdmbkzghnwvsapxypvt.supabase.co; frame-src https://drive.google.com https://docs.google.com; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca colaborativa | La Movida SST</title>
   <meta name="description" content="Biblioteca colaborativa de recursos técnicos para integrantes de La Movida SST.">
@@ -19,34 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="assets/app.css">
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            movida: {
-              navy: '#0B2A6F',
-              petrol: '#006D8F',
-              teal: '#139F9F',
-              green: '#58B947',
-              ink: '#102A43',
-              mist: '#F4F8FA'
-            }
-          },
-          fontFamily: {
-            sans: ['Outfit', 'sans-serif']
-          },
-          boxShadow: {
-            card: '0 12px 28px -22px rgba(15, 42, 67, .32)',
-            lift: '0 20px 42px -28px rgba(15, 42, 67, .38)'
-          }
-        }
-      }
-    };
-  </script>
 
   <style>
     :root { color-scheme: light; }
@@ -70,6 +46,12 @@
       border-bottom: 1px solid #d9e4ec;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+    }
+    @media (max-width: 639px) {
+      #app-shell > header > div { padding-top: 8px; padding-bottom: 8px; }
+      #home-hero h2 { font-size: 16px; }
+      #search-help { font-size: 11px; }
+      #profile-menu { max-width: calc(100vw - 32px); }
     }
     .auth-card {
       box-shadow: 0 28px 80px -42px rgba(11, 42, 111, .55);
@@ -206,7 +188,7 @@
         </form>
 
         <div class="mt-6 border-t border-slate-100 pt-5 text-center">
-          <p class="text-xs leading-relaxed text-slate-500">La sesión dura hasta dos horas. Tu código no se guarda en el dispositivo.</p>
+          <p class="text-xs leading-relaxed text-slate-500">La sesión dura hasta dos horas. Tu código no se guarda en el dispositivo. Puedes renovar tu sesión mientras consultas la biblioteca.</p>
           <a href="https://directorio.movidasst.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-movida-petrol transition hover:text-movida-navy">
             ¿No recuerdas tu código? Consulta tu credencial
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -226,7 +208,7 @@
           <div class="flex min-w-0 items-center gap-3">
             <img src="https://lh3.googleusercontent.com/d/1MjVa3JxeKC95xEdlcZ5ZFMCKlatbrU2s=w256" class="h-11 w-11 flex-none rounded-full border border-slate-100 bg-white p-1 object-contain shadow-sm" alt="La Movida SST">
             <div class="min-w-0">
-              <h1 class="truncate text-base font-extrabold text-movida-ink sm:text-lg">Biblioteca Movida SST</h1>
+              <h1 class="truncate text-sm font-extrabold text-movida-ink sm:text-lg">Biblioteca Movida SST</h1>
               <div class="mt-0.5 flex items-center gap-2">
                 <span id="connection-dot" class="h-2 w-2 rounded-full bg-emerald-500"></span>
                 <span id="connection-label" class="text-[10px] font-extrabold uppercase tracking-[.14em] text-slate-500">En línea</span>
@@ -271,13 +253,14 @@
         <div class="mt-3 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
           <div class="relative">
             <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" stroke-width="2"></circle><path d="m21 21-4.35-4.35" stroke-width="2" stroke-linecap="round"></path></svg>
-            <input id="search-input" type="search" autocomplete="off" placeholder="Buscar archivos o carpetas..." class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-12 text-base font-semibold text-slate-700 outline-none transition focus:border-movida-teal focus:bg-white focus:ring-4 focus:ring-movida-teal/10" aria-label="Buscar archivos y carpetas">
+            <input id="search-input" type="search" autocomplete="off" placeholder="Buscar archivos…" class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-12 text-base font-semibold text-slate-700 outline-none transition focus:border-movida-teal focus:bg-white focus:ring-4 focus:ring-movida-teal/10" aria-label="Buscar archivos y carpetas en la biblioteca" aria-describedby="search-help">
             <button id="clear-search" type="button" class="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Limpiar búsqueda">
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6 6 18M6 6l12 12"></path></svg>
             </button>
           </div>
 
-          <div class="flex items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <select id="search-scope" aria-label="Alcance de búsqueda" class="min-h-11 max-w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-bold text-slate-600"><option value="all">Toda la biblioteca</option><option value="current">Esta carpeta</option></select>
             <div class="flex rounded-xl border border-slate-200 bg-slate-100 p-1">
               <button id="grid-view" type="button" class="rounded-lg bg-white p-2 text-movida-petrol shadow-sm" aria-label="Vista de cuadrícula" aria-pressed="true">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z"></path></svg>
@@ -295,6 +278,7 @@
           </div>
         </div>
 
+        <p id="search-help" class="mt-2 text-xs text-slate-500">Búsqueda por nombre de archivo o carpeta.</p>
         <div class="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3">
           <button id="back-folder-button" type="button" class="hidden min-h-10 flex-none items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-extrabold text-slate-600 shadow-sm transition hover:border-movida-petrol/30 hover:text-movida-petrol">
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 18 9 12l6-6"></path></svg>
@@ -306,26 +290,14 @@
     </header>
 
     <main class="mx-auto max-w-7xl px-4 pb-24 pt-5 sm:px-6 sm:pt-7">
-      <section id="home-hero" class="rounded-3xl border border-slate-200 bg-white p-5 shadow-card sm:p-7">
-        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p class="text-xs font-extrabold uppercase tracking-[.17em] text-movida-petrol">Repositorio colaborativo</p>
-            <h2 class="mt-2 text-2xl font-extrabold text-movida-ink sm:text-3xl">Recursos para tu actualización profesional</h2>
-            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">Explora carpetas, consulta documentos y comparte materiales de Seguridad y Salud en el Trabajo.</p>
-          </div>
-          <div class="grid grid-cols-2 gap-2 sm:flex">
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-center">
-              <p id="home-folder-count" class="text-xl font-extrabold text-movida-petrol">0</p>
-              <p class="text-[10px] font-extrabold uppercase tracking-wide text-slate-500">Carpetas</p>
-            </div>
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-center">
-              <p id="home-file-count" class="text-xl font-extrabold text-movida-petrol">0</p>
-              <p class="text-[10px] font-extrabold uppercase tracking-wide text-slate-500">Archivos</p>
-            </div>
-          </div>
+      <section id="home-hero" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card">
+        <div class="grid grid-cols-[1fr_auto] items-center gap-3">
+          <div class="min-w-0"><p class="text-[10px] font-extrabold uppercase tracking-wide text-movida-petrol">Biblioteca colaborativa</p><h2 class="mt-1 text-base font-extrabold text-movida-ink"><span class="sm:hidden">Recursos de SST</span><span class="hidden sm:inline">Recursos para tu actualización profesional</span></h2><p class="mt-1 hidden text-xs text-slate-600 sm:block">De la Reacción a la Prevención</p></div>
+          <div class="flex gap-4"><p class="text-center"><strong id="home-file-count" class="block text-xl text-movida-petrol">—</strong><span class="text-xs text-slate-600">archivos</span></p><p class="text-center"><strong id="home-folder-count" class="block text-xl text-movida-petrol">—</strong><span class="text-xs text-slate-600">carpetas</span></p></div>
         </div>
+        <p class="mt-2 text-xs text-slate-500">Toda la biblioteca, incluidas las subcarpetas.</p>
       </section>
-
+      <div class="mt-3 flex flex-wrap items-center justify-between gap-2"><p id="catalog-status" class="text-xs text-slate-600" role="status" aria-live="polite">Preparando catálogo…</p><button id="refresh-catalog" type="button" class="min-h-11 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-movida-petrol">Actualizar</button></div>
       <section id="folder-summary" class="hidden rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-card sm:px-5">
         <div class="flex items-center justify-between gap-3">
           <div class="min-w-0">
@@ -340,15 +312,16 @@
       </section>
 
       <section class="mt-5">
-        <div class="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1" aria-label="Filtros de tipo">
-          <button class="filter-chip flex-none rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white" data-filter="all" aria-pressed="true">Todos</button>
-          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="folders" aria-pressed="false">Carpetas</button>
-          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="pdf" aria-pressed="false">PDF</button>
-          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="docs" aria-pressed="false">Documentos</button>
-          <button class="filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="images" aria-pressed="false">Imágenes</button>
+        <div class="flex flex-wrap items-center gap-2 pb-1" aria-label="Filtros de tipo">
+          <button class="filter-chip flex-none min-h-11 rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white" data-filter="all" aria-pressed="true">Todos</button>
+          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="folders" aria-pressed="false">Carpetas</button>
+          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="pdf" aria-pressed="false">PDF</button>
+          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="docs" aria-pressed="false">Documentos</button>
+          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="images" aria-pressed="false">Imágenes</button>
         </div>
       </section>
 
+      <p id="results-status" class="mt-3 text-xs text-slate-600" role="status" aria-live="polite"></p>
       <section id="loading-state" class="mt-5" aria-label="Cargando recursos">
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card"><div class="skeleton h-16 rounded-xl"></div></div>
@@ -395,7 +368,8 @@
         <div id="file-container" class="file-grid grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5"></div>
       </section>
 
-      <p class="mt-12 text-center text-xs leading-relaxed text-slate-500">Los documentos pertenecen a sus respectivos autores y se comparten con fines de actualización profesional.</p>
+      <p class="mt-12 text-center text-xs leading-relaxed text-slate-500">Los documentos pertenecen a sus respectivos autores y se comparten con fines de actualización profesional. · Elaborado por David Linares Brea · www.movidasst.com</p>
+      <button id="load-more" type="button" class="mx-auto mt-5 hidden min-h-11 rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-bold text-movida-petrol">Mostrar más resultados</button>
     </main>
   </div>
 
@@ -460,907 +434,6 @@
     <span id="toast-text"></span>
   </div>
 
-  <script>
-    'use strict';
-
-    const CONFIG = Object.freeze({
-      API_KEY: 'AIzaSyCIDaShfG6acvLg2LiH-zmKtcC_klQbA0E',
-      ROOT_FOLDER: '1wnDWCTeL8fMGmo7_hOim6rT1d_omAbcq',
-      SUPABASE_URL: 'https://lfdmbkzghnwvsapxypvt.supabase.co',
-      SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_bRnkA6PA8-v073nrw9zxiQ_8rVGiOn1',
-      SESSION_KEY: 'movida_drive_session_v1',
-      VIEW_KEY: 'movida_drive_view_v2',
-      SORT_KEY: 'movida_drive_sort_v1',
-      SESSION_DURATION: 2 * 60 * 60 * 1000,
-      MAX_ATTEMPTS: 5,
-      LOCK_TIME: 10 * 60 * 1000,
-      SESSION_WARNING: 5 * 60 * 1000
-    });
-
-    const state = {
-      files: [],
-      stack: [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }],
-      currentFolderId: CONFIG.ROOT_FOLDER,
-      view: localStorage.getItem(CONFIG.VIEW_KEY) === 'list' ? 'list' : 'grid',
-      sort: localStorage.getItem(CONFIG.SORT_KEY) || 'name-asc',
-      filter: 'all',
-      driveReady: false,
-      loading: false,
-      attempts: 0,
-      lockedUntil: 0,
-      sessionTimer: null,
-      toastTimer: null,
-      warningDismissed: false,
-      activeFile: null,
-      suppressPopState: false
-    };
-
-    const $ = (id) => document.getElementById(id);
-    const supabaseClient = window.supabase.createClient(
-      CONFIG.SUPABASE_URL,
-      CONFIG.SUPABASE_PUBLISHABLE_KEY,
-      { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }
-    );
-
-    const normalizeCedula = (value) => String(value || '').replace(/\D/g, '');
-    const normalizeCode = (value) => String(value || '').trim().toUpperCase();
-    const isFolder = (file) => file.mimeType === 'application/vnd.google-apps.folder';
-    const isImage = (file) => String(file.mimeType || '').startsWith('image/');
-    const isPdf = (file) => file.mimeType === 'application/pdf';
-
-    function showLoginMessage(message, type = 'error') {
-      const box = $('login-message');
-      box.className = 'mt-5 rounded-2xl border px-4 py-3 text-sm font-bold';
-      if (type === 'success') {
-        box.classList.add('border-emerald-200', 'bg-emerald-50', 'text-emerald-700');
-      } else {
-        box.classList.add('border-red-200', 'bg-red-50', 'text-red-700');
-      }
-      box.textContent = message;
-      box.classList.remove('hidden');
-    }
-
-    function clearLoginMessage() {
-      $('login-message').classList.add('hidden');
-      $('login-message').textContent = '';
-    }
-
-    function setLoginLoading(loading) {
-      $('login-button').disabled = loading;
-      $('login-button-text').textContent = loading ? 'Verificando acceso...' : 'Ingresar a la biblioteca';
-      $('login-icon').classList.toggle('animate-spin', loading);
-    }
-
-    function readSession() {
-      try {
-        const raw = sessionStorage.getItem(CONFIG.SESSION_KEY);
-        if (!raw) return null;
-        const session = JSON.parse(raw);
-        if (!session?.expiresAt || Date.now() >= session.expiresAt) {
-          sessionStorage.removeItem(CONFIG.SESSION_KEY);
-          return null;
-        }
-        return session;
-      } catch {
-        sessionStorage.removeItem(CONFIG.SESSION_KEY);
-        return null;
-      }
-    }
-
-    function saveSession(name, cedula) {
-      const session = {
-        name: name || 'Integrante',
-        cedula,
-        expiresAt: Date.now() + CONFIG.SESSION_DURATION
-      };
-      sessionStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(session));
-      return session;
-    }
-
-    function formatRemaining(milliseconds) {
-      const minutesTotal = Math.max(0, Math.ceil(milliseconds / 60000));
-      const hours = Math.floor(minutesTotal / 60);
-      const minutes = minutesTotal % 60;
-      return hours > 0 ? `${hours} h ${minutes} min` : `${minutes} min`;
-    }
-
-    function setUserIdentity(session) {
-      const name = session.name || 'Integrante';
-      $('header-user-name').textContent = name;
-      $('menu-user-name').textContent = name;
-      $('profile-initial').textContent = name.trim().charAt(0).toUpperCase() || 'M';
-    }
-
-    function scheduleSession(session) {
-      clearInterval(state.sessionTimer);
-      state.warningDismissed = false;
-
-      const update = () => {
-        const remaining = session.expiresAt - Date.now();
-        if (remaining <= 0) {
-          logout('Tu sesión de dos horas finalizó.');
-          return;
-        }
-        const label = formatRemaining(remaining);
-        $('menu-session-time').textContent = label;
-        $('warning-session-time').textContent = label;
-        if (remaining <= CONFIG.SESSION_WARNING && !state.warningDismissed) {
-          $('session-warning').classList.remove('hidden');
-        }
-      };
-
-      update();
-      state.sessionTimer = setInterval(update, 30000);
-    }
-
-    function openApp(session) {
-      $('auth-screen').classList.add('hidden');
-      $('app-shell').classList.remove('hidden');
-      setUserIdentity(session);
-      scheduleSession(session);
-      updateViewControls();
-      $('sort-select').value = state.sort;
-      replaceHistoryState();
-      if (!state.driveReady) initDrive();
-      else loadFolder(state.currentFolderId, { keepStack: true, updateHistory: false });
-    }
-
-    function logout(message = '') {
-      sessionStorage.removeItem(CONFIG.SESSION_KEY);
-      clearInterval(state.sessionTimer);
-      closeProfileMenu();
-      closeFileMenu();
-      $('session-warning').classList.add('hidden');
-      $('app-shell').classList.add('hidden');
-      $('auth-screen').classList.remove('hidden');
-      $('login-code').value = '';
-      state.stack = [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }];
-      state.currentFolderId = CONFIG.ROOT_FOLDER;
-      state.files = [];
-      if (message) showLoginMessage(message);
-      else clearLoginMessage();
-      setTimeout(() => $('login-cedula').focus(), 50);
-    }
-
-    async function handleLogin(event) {
-      event.preventDefault();
-      clearLoginMessage();
-
-      if (Date.now() < state.lockedUntil) {
-        const mins = Math.ceil((state.lockedUntil - Date.now()) / 60000);
-        showLoginMessage(`Demasiados intentos. Espera ${mins} minuto(s).`);
-        return;
-      }
-
-      const cedula = normalizeCedula($('login-cedula').value);
-      const codigo = normalizeCode($('login-code').value);
-      $('login-cedula').value = cedula;
-
-      if (cedula.length < 6 || cedula.length > 12) {
-        showLoginMessage('Escribe una cédula válida usando solamente números.');
-        $('login-cedula').focus();
-        return;
-      }
-      if (codigo.length < 4) {
-        showLoginMessage('Escribe el código que aparece en tu credencial.');
-        $('login-code').focus();
-        return;
-      }
-
-      setLoginLoading(true);
-      try {
-        const { data, error } = await supabaseClient.rpc('validar_acceso_drive', {
-          p_cedula: cedula,
-          p_codigo: codigo
-        });
-        if (error) throw error;
-        const result = Array.isArray(data) ? data[0] : data;
-
-        if (!result?.autorizado) {
-          state.attempts += 1;
-          if (state.attempts >= CONFIG.MAX_ATTEMPTS) {
-            state.lockedUntil = Date.now() + CONFIG.LOCK_TIME;
-            state.attempts = 0;
-            showLoginMessage('Acceso bloqueado temporalmente durante 10 minutos.');
-          } else {
-            showLoginMessage(`Cédula o código incorrectos. Te quedan ${CONFIG.MAX_ATTEMPTS - state.attempts} intento(s).`);
-          }
-          return;
-        }
-
-        state.attempts = 0;
-        state.lockedUntil = 0;
-        showLoginMessage('Acceso autorizado. Abriendo la biblioteca...', 'success');
-        const session = saveSession(result.nombre, cedula);
-        setTimeout(() => openApp(session), 350);
-      } catch (error) {
-        console.error('Error de acceso:', error);
-        showLoginMessage('No fue posible validar el acceso. Verifica tu conexión e inténtalo nuevamente.');
-      } finally {
-        setLoginLoading(false);
-      }
-    }
-
-    async function initDrive() {
-      if (!readSession()) {
-        logout('Tu sesión no es válida o ya finalizó.');
-        return;
-      }
-      state.driveReady = true;
-      await loadFolder(CONFIG.ROOT_FOLDER, { keepStack: false, updateHistory: false });
-    }
-
-    async function requestDriveFolder(folderId, pageToken = null) {
-      const params = new URLSearchParams({
-        key: CONFIG.API_KEY,
-        q: `'${folderId}' in parents and trashed = false`,
-        pageSize: '1000',
-        fields: 'nextPageToken,files(id,name,mimeType,webViewLink,iconLink,modifiedTime,thumbnailLink,size)',
-        orderBy: 'folder,name',
-        includeItemsFromAllDrives: 'true',
-        supportsAllDrives: 'true'
-      });
-      if (pageToken) params.set('pageToken', pageToken);
-
-      const response = await fetch(`https://www.googleapis.com/drive/v3/files?${params.toString()}`, {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-store',
-        referrerPolicy: 'strict-origin-when-cross-origin'
-      });
-
-      let payload = null;
-      try { payload = await response.json(); } catch { payload = null; }
-
-      if (!response.ok) {
-        const error = new Error(payload?.error?.message || `Google Drive respondió con el estado ${response.status}.`);
-        error.status = response.status;
-        error.reason = payload?.error?.errors?.[0]?.reason || '';
-        throw error;
-      }
-      return payload || { files: [] };
-    }
-
-    async function fetchAllFiles(folderId) {
-      const files = [];
-      let pageToken = null;
-      do {
-        const data = await requestDriveFolder(folderId, pageToken);
-        files.push(...(data.files || []));
-        pageToken = data.nextPageToken || null;
-      } while (pageToken);
-      return files;
-    }
-
-    async function loadFolder(folderId, options = {}) {
-      if (state.loading) return;
-      const { keepStack = true, updateHistory = false } = options;
-      state.loading = true;
-      state.currentFolderId = folderId;
-      state.filter = 'all';
-      $('search-input').value = '';
-      $('clear-search').classList.add('hidden');
-      updateFilterChips();
-      showLoading();
-      renderNavigation();
-
-      try {
-        state.files = await fetchAllFiles(folderId);
-        renderContent();
-        if (updateHistory) pushHistoryState();
-        else if (!keepStack) replaceHistoryState();
-      } catch (error) {
-        console.error('Error Google Drive:', error);
-        let message = error?.message || 'No se pudo abrir esta carpeta de Google Drive.';
-        if (error?.reason === 'keyInvalid' || /API key not valid/i.test(message)) {
-          message = 'La clave de Google API no es válida o fue desactivada.';
-        } else if (error?.reason === 'ipRefererBlocked' || /referer|referrer/i.test(message)) {
-          message = 'Google bloqueó la clave para este dominio. Revisa los referentes HTTP autorizados.';
-        } else if (error?.status === 403) {
-          message = `Google Drive rechazó la solicitud: ${message}`;
-        }
-        showError(message);
-      } finally {
-        state.loading = false;
-      }
-    }
-
-    function navigateToFolder(id, name) {
-      if (state.stack[state.stack.length - 1]?.id !== id) {
-        state.stack.push({ id, name });
-      }
-      loadFolder(id, { keepStack: true, updateHistory: true });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function navigateToStackIndex(index, updateHistory = true) {
-      if (index < 0 || index >= state.stack.length) return;
-      state.stack = state.stack.slice(0, index + 1);
-      const folder = state.stack[state.stack.length - 1];
-      loadFolder(folder.id, { keepStack: true, updateHistory });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function goBackFolder() {
-      if (state.stack.length <= 1) return;
-      history.back();
-    }
-
-    function historyPayload() {
-      return {
-        movidaDrive: true,
-        stack: state.stack.map((item) => ({ id: item.id, name: item.name }))
-      };
-    }
-
-    function replaceHistoryState() {
-      history.replaceState(historyPayload(), '', location.href);
-    }
-
-    function pushHistoryState() {
-      history.pushState(historyPayload(), '', location.href);
-    }
-
-    function renderNavigation() {
-      const isRoot = state.stack.length === 1;
-      $('back-folder-button').classList.toggle('hidden', isRoot);
-      $('back-folder-button').classList.toggle('flex', !isRoot);
-      $('home-hero').classList.toggle('hidden', !isRoot);
-      $('folder-summary').classList.toggle('hidden', isRoot);
-      $('current-folder-title').textContent = state.stack[state.stack.length - 1]?.name || 'Carpeta';
-
-      const container = $('breadcrumbs');
-      container.innerHTML = '';
-      state.stack.forEach((folder, index) => {
-        if (index > 0) {
-          const separator = document.createElement('span');
-          separator.className = 'px-1 text-slate-300';
-          separator.textContent = '›';
-          container.appendChild(separator);
-        }
-        if (index === state.stack.length - 1) {
-          const current = document.createElement('span');
-          current.className = 'max-w-[220px] flex-none truncate rounded-xl bg-slate-100 px-3 py-2 text-xs font-extrabold text-movida-ink';
-          current.textContent = folder.name;
-          current.title = folder.name;
-          container.appendChild(current);
-        } else {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'flex-none rounded-xl px-2.5 py-2 text-xs font-bold text-slate-500 transition hover:bg-slate-100 hover:text-movida-petrol';
-          button.textContent = folder.name;
-          button.addEventListener('click', () => navigateToStackIndex(index, true));
-          container.appendChild(button);
-        }
-      });
-    }
-
-    function getType(file) {
-      const mime = String(file.mimeType || '');
-      if (isFolder(file)) return 'folders';
-      if (mime === 'application/pdf') return 'pdf';
-      if (mime.startsWith('image/')) return 'images';
-      if (mime.includes('document') || mime.includes('word') || mime.includes('spreadsheet') || mime.includes('sheet') || mime.includes('excel') || mime.includes('presentation')) return 'docs';
-      return 'other';
-    }
-
-    function getTypeLabel(file) {
-      const type = getType(file);
-      if (type === 'folders') return 'Carpeta';
-      if (type === 'pdf') return 'PDF';
-      if (type === 'images') return 'Imagen';
-      if (String(file.mimeType || '').includes('spreadsheet') || String(file.mimeType || '').includes('sheet') || String(file.mimeType || '').includes('excel')) return 'Hoja de cálculo';
-      if (String(file.mimeType || '').includes('presentation')) return 'Presentación';
-      if (type === 'docs') return 'Documento';
-      return 'Archivo';
-    }
-
-    function formatDate(value) {
-      if (!value) return 'Sin fecha';
-      return new Intl.DateTimeFormat('es-VE', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(value));
-    }
-
-    function formatSize(value) {
-      const bytes = Number(value);
-      if (!Number.isFinite(bytes) || bytes <= 0) return '';
-      const units = ['B', 'KB', 'MB', 'GB'];
-      let size = bytes;
-      let index = 0;
-      while (size >= 1024 && index < units.length - 1) {
-        size /= 1024;
-        index += 1;
-      }
-      return `${size.toFixed(size >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
-    }
-
-    function sortFiles(files) {
-      const copy = [...files];
-      if (state.sort === 'recent') {
-        return copy.sort((a, b) => new Date(b.modifiedTime || 0) - new Date(a.modifiedTime || 0));
-      }
-      if (state.sort === 'oldest') {
-        return copy.sort((a, b) => new Date(a.modifiedTime || 0) - new Date(b.modifiedTime || 0));
-      }
-      return copy.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
-    }
-
-    function filteredItems() {
-      const term = $('search-input').value.trim().toLocaleLowerCase('es');
-      let items = state.files.filter((file) => !term || file.name.toLocaleLowerCase('es').includes(term));
-      if (state.filter !== 'all') items = items.filter((file) => getType(file) === state.filter);
-      return sortFiles(items);
-    }
-
-    function iconMarkup(file, size = 'h-9 w-9') {
-      const type = getType(file);
-      if (type === 'folders') {
-        return `<svg class="${size} text-amber-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6a2 2 0 012-2h5l2 2h7a2 2 0 012 2v9a3 3 0 01-3 3H6a3 3 0 01-3-3V6z"></path></svg>`;
-      }
-      if (type === 'pdf') {
-        return `<svg class="${size} text-red-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h8l4 4v16H6V2zm7 1.5V7h3.5L13 3.5zM8 11v7h2v-2h1.1a2.5 2.5 0 000-5H8zm2 2h1a.5.5 0 010 1h-1v-1zm3 5h2.1a3.1 3.1 0 000-6H13v6zm2-4h.2a1.1 1.1 0 010 2H15v-2z"></path></svg>`;
-      }
-      if (type === 'images') {
-        return `<svg class="${size} text-violet-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h16a2 2 0 012 2v14a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2zm1 16h14l-4.5-6-3.5 4.5-2.5-3L5 19zm4-10a2 2 0 100-4 2 2 0 000 4z"></path></svg>`;
-      }
-      if (getTypeLabel(file) === 'Hoja de cálculo') {
-        return `<svg class="${size} text-emerald-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 2h10l4 4v16H5V2zm9 1.5V7h3.5L14 3.5zM8 10v8h8v-8H8zm2 2h1v1h-1v-1zm3 0h1v1h-1v-1zm-3 3h1v1h-1v-1zm3 0h1v1h-1v-1z"></path></svg>`;
-      }
-      return `<svg class="${size} text-blue-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 2h8l4 4v16H6V2zm7 1.5V7h3.5L13 3.5zM8 11h8v2H8v-2zm0 4h8v2H8v-2z"></path></svg>`;
-    }
-
-    function createFolderCard(file, index) {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'fade-up group flex min-h-20 w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-card transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-lift';
-      button.style.animationDelay = `${Math.min(index * 25, 220)}ms`;
-      button.innerHTML = `
-        <span class="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-amber-50">${iconMarkup(file, 'h-7 w-7')}</span>
-        <span class="min-w-0 flex-1">
-          <span class="line-clamp-2 text-sm font-extrabold leading-snug text-movida-ink transition group-hover:text-movida-petrol"></span>
-          <span class="mt-1 block text-[11px] font-semibold text-slate-400">Actualizada ${formatDate(file.modifiedTime)}</span>
-        </span>
-        <svg class="h-5 w-5 flex-none text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-movida-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"></path></svg>
-      `;
-      button.querySelector('.line-clamp-2').textContent = file.name;
-      button.addEventListener('click', () => navigateToFolder(file.id, file.name));
-      return button;
-    }
-
-    function createOpenButton(file, label = 'Abrir') {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-movida-navy px-3 text-xs font-extrabold text-white transition hover:bg-movida-petrol';
-      button.innerHTML = `<span>${label}</span><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"></path></svg>`;
-      button.addEventListener('click', () => openFile(file));
-      return button;
-    }
-
-    function createMoreButton(file) {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'flex h-10 w-10 flex-none items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-movida-petrol';
-      button.setAttribute('aria-label', `Más acciones para ${file.name}`);
-      button.innerHTML = `<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg>`;
-      button.addEventListener('click', (event) => {
-        event.stopPropagation();
-        openFileMenu(file, button);
-      });
-      return button;
-    }
-
-    function createGridFileCard(file, index) {
-      const article = document.createElement('article');
-      article.className = 'fade-up group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card transition hover:-translate-y-1 hover:border-movida-petrol/20 hover:shadow-lift';
-      article.style.animationDelay = `${Math.min(index * 28, 260)}ms`;
-
-      const visualButton = document.createElement('button');
-      visualButton.type = 'button';
-      visualButton.className = 'relative block aspect-[4/3] w-full overflow-hidden bg-slate-50 text-left';
-      visualButton.setAttribute('aria-label', `Abrir ${file.name}`);
-      visualButton.addEventListener('click', () => openFile(file));
-
-      if (isImage(file) && file.thumbnailLink) {
-        const image = document.createElement('img');
-        image.src = file.thumbnailLink.replace(/=s\d+/, '=s700');
-        image.alt = '';
-        image.loading = 'lazy';
-        image.className = 'h-full w-full object-cover transition duration-500 group-hover:scale-105';
-        image.addEventListener('error', () => {
-          visualButton.innerHTML = `<span class="flex h-full items-center justify-center bg-violet-50">${iconMarkup(file, 'h-12 w-12')}</span>`;
-        });
-        visualButton.appendChild(image);
-      } else {
-        visualButton.innerHTML = `<span class="flex h-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">${iconMarkup(file, 'h-12 w-12')}</span>`;
-      }
-
-      const badge = document.createElement('span');
-      badge.className = 'pointer-events-none absolute left-2.5 top-2.5 rounded-full border border-white/70 bg-white/90 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-slate-600 shadow-sm backdrop-blur';
-      badge.textContent = getTypeLabel(file);
-      visualButton.appendChild(badge);
-
-      const body = document.createElement('div');
-      body.className = 'flex flex-1 flex-col p-3.5';
-      const title = document.createElement('h3');
-      title.className = 'line-clamp-3 text-sm font-extrabold leading-snug text-movida-ink';
-      title.textContent = file.name;
-      title.title = file.name;
-      const meta = document.createElement('p');
-      meta.className = 'mt-2 text-[11px] font-semibold text-slate-400';
-      meta.textContent = [formatDate(file.modifiedTime), formatSize(file.size)].filter(Boolean).join(' · ');
-      const actions = document.createElement('div');
-      actions.className = 'mt-auto flex items-center gap-2 pt-4';
-      const openButton = createOpenButton(file);
-      openButton.classList.add('flex-1');
-      actions.append(openButton, createMoreButton(file));
-      body.append(title, meta, actions);
-      article.append(visualButton, body);
-      return article;
-    }
-
-    function createListFileCard(file, index) {
-      const article = document.createElement('article');
-      article.className = 'fade-up flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-card transition hover:-translate-y-0.5 hover:border-movida-petrol/20 hover:shadow-lift';
-      article.style.animationDelay = `${Math.min(index * 22, 220)}ms`;
-
-      const openArea = document.createElement('button');
-      openArea.type = 'button';
-      openArea.className = 'flex min-w-0 flex-1 items-center gap-3 text-left';
-      openArea.addEventListener('click', () => openFile(file));
-
-      const visual = document.createElement('span');
-      visual.className = 'flex h-14 w-14 flex-none items-center justify-center overflow-hidden rounded-xl bg-slate-50';
-      if (isImage(file) && file.thumbnailLink) {
-        const image = document.createElement('img');
-        image.src = file.thumbnailLink;
-        image.alt = '';
-        image.loading = 'lazy';
-        image.className = 'h-full w-full object-cover';
-        image.addEventListener('error', () => { visual.innerHTML = iconMarkup(file, 'h-8 w-8'); });
-        visual.appendChild(image);
-      } else {
-        visual.innerHTML = iconMarkup(file, 'h-8 w-8');
-      }
-
-      const text = document.createElement('span');
-      text.className = 'min-w-0 flex-1';
-      const title = document.createElement('span');
-      title.className = 'line-clamp-2 block text-sm font-extrabold leading-snug text-movida-ink';
-      title.textContent = file.name;
-      const meta = document.createElement('span');
-      meta.className = 'mt-1 block text-[11px] font-semibold text-slate-400';
-      meta.textContent = [getTypeLabel(file), formatDate(file.modifiedTime), formatSize(file.size)].filter(Boolean).join(' · ');
-      text.append(title, meta);
-      openArea.append(visual, text);
-
-      const desktopOpen = createOpenButton(file);
-      desktopOpen.classList.add('hidden', 'sm:inline-flex');
-      article.append(openArea, desktopOpen, createMoreButton(file));
-      return article;
-    }
-
-    function renderContent() {
-      $('loading-state').classList.add('hidden');
-      $('error-state').classList.add('hidden');
-      renderNavigation();
-
-      const allFolders = state.files.filter(isFolder);
-      const allFiles = state.files.filter((file) => !isFolder(file));
-      $('home-folder-count').textContent = String(allFolders.length);
-      $('home-file-count').textContent = String(allFiles.length);
-      $('current-item-count').textContent = String(state.files.length);
-
-      const items = filteredItems();
-      const folders = items.filter(isFolder);
-      const files = items.filter((file) => !isFolder(file));
-      const isSearch = $('search-input').value.trim().length > 0;
-
-      $('visible-folder-count').textContent = `${folders.length} ${folders.length === 1 ? 'carpeta' : 'carpetas'}`;
-      $('visible-file-count').textContent = `${files.length} ${files.length === 1 ? 'recurso' : 'recursos'}`;
-
-      const showFolders = folders.length > 0 && (state.filter === 'all' || state.filter === 'folders');
-      const showFiles = files.length > 0 && state.filter !== 'folders';
-      $('folder-section').classList.toggle('hidden', !showFolders);
-      $('file-section').classList.toggle('hidden', !showFiles);
-
-      const folderContainer = $('folder-container');
-      folderContainer.innerHTML = '';
-      folders.forEach((file, index) => folderContainer.appendChild(createFolderCard(file, index)));
-
-      const fileContainer = $('file-container');
-      fileContainer.innerHTML = '';
-      fileContainer.className = state.view === 'grid'
-        ? 'file-grid grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 xl:grid-cols-5'
-        : 'flex flex-col gap-3';
-      files.forEach((file, index) => {
-        fileContainer.appendChild(state.view === 'grid' ? createGridFileCard(file, index) : createListFileCard(file, index));
-      });
-
-      const hasVisible = showFolders || showFiles;
-      $('empty-state').classList.toggle('hidden', hasVisible);
-      if (!hasVisible) {
-        $('empty-title').textContent = isSearch ? 'No encontramos resultados' : 'No hay recursos con este filtro';
-        $('empty-text').textContent = isSearch ? 'Prueba con otra palabra o limpia la búsqueda.' : 'Selecciona otro tipo de recurso.';
-      }
-    }
-
-    function showLoading() {
-      $('loading-state').classList.remove('hidden');
-      $('error-state').classList.add('hidden');
-      $('empty-state').classList.add('hidden');
-      $('folder-section').classList.add('hidden');
-      $('file-section').classList.add('hidden');
-    }
-
-    function showError(message) {
-      $('loading-state').classList.add('hidden');
-      $('empty-state').classList.add('hidden');
-      $('folder-section').classList.add('hidden');
-      $('file-section').classList.add('hidden');
-      $('error-text').textContent = message;
-      $('error-state').classList.remove('hidden');
-    }
-
-    function updateFilterChips() {
-      document.querySelectorAll('.filter-chip').forEach((chip) => {
-        const active = chip.dataset.filter === state.filter;
-        chip.setAttribute('aria-pressed', String(active));
-        chip.className = active
-          ? 'filter-chip flex-none rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white'
-          : 'filter-chip flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600 transition hover:border-movida-petrol/30 hover:text-movida-petrol';
-      });
-    }
-
-    function updateViewControls() {
-      const isGrid = state.view === 'grid';
-      $('grid-view').className = isGrid ? 'rounded-lg bg-white p-2 text-movida-petrol shadow-sm' : 'rounded-lg p-2 text-slate-400';
-      $('list-view').className = !isGrid ? 'rounded-lg bg-white p-2 text-movida-petrol shadow-sm' : 'rounded-lg p-2 text-slate-400';
-      $('grid-view').setAttribute('aria-pressed', String(isGrid));
-      $('list-view').setAttribute('aria-pressed', String(!isGrid));
-    }
-
-    function openFile(file) {
-      if (isFolder(file)) {
-        navigateToFolder(file.id, file.name);
-      } else if (isImage(file) || isPdf(file)) {
-        openPreview(file);
-      } else {
-        openExternal(file.webViewLink);
-      }
-    }
-
-    function openExternal(url) {
-      if (!url) {
-        showToast('Este archivo no tiene un enlace disponible.');
-        return;
-      }
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
-
-    function openPreview(file) {
-      $('preview-title').textContent = file.name;
-      $('preview-external').href = file.webViewLink || '#';
-      const body = $('preview-body');
-      body.innerHTML = `<div class="flex flex-col items-center gap-4 text-white"><div class="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-cyan-300"></div><p class="text-sm font-semibold text-white/70">Preparando vista previa...</p></div>`;
-      $('preview-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-
-      if (isImage(file)) {
-        const image = new Image();
-        image.alt = file.name;
-        image.className = 'max-h-full max-w-full rounded-xl object-contain shadow-2xl';
-        image.onload = () => { body.innerHTML = ''; body.appendChild(image); };
-        image.onerror = () => {
-          body.innerHTML = `<div class="max-w-md rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-white"><p class="font-extrabold">No se pudo mostrar la imagen.</p><p class="mt-2 text-sm text-white/65">Ábrela directamente en Google Drive.</p></div>`;
-        };
-        image.src = `https://drive.google.com/uc?export=view&id=${encodeURIComponent(file.id)}`;
-      } else {
-        const iframe = document.createElement('iframe');
-        iframe.title = file.name;
-        iframe.src = `https://drive.google.com/file/d/${encodeURIComponent(file.id)}/preview`;
-        iframe.className = 'h-full w-full rounded-xl border-0 bg-white shadow-2xl sm:h-[92%] sm:w-[94%]';
-        setTimeout(() => { body.innerHTML = ''; body.appendChild(iframe); }, 350);
-      }
-    }
-
-    function closePreview() {
-      $('preview-modal').classList.add('hidden');
-      $('preview-body').innerHTML = '';
-      document.body.style.overflow = '';
-    }
-
-    function openFileMenu(file, anchor) {
-      state.activeFile = file;
-      const menu = $('file-menu');
-      const rect = anchor.getBoundingClientRect();
-      const width = 208;
-      const left = Math.min(window.innerWidth - width - 12, Math.max(12, rect.right - width));
-      const estimatedHeight = 150;
-      const below = rect.bottom + 8;
-      const top = below + estimatedHeight > window.innerHeight ? Math.max(12, rect.top - estimatedHeight - 8) : below;
-      menu.style.left = `${left}px`;
-      menu.style.top = `${top}px`;
-      menu.classList.add('menu-open');
-    }
-
-    function closeFileMenu() {
-      $('file-menu').classList.remove('menu-open');
-      state.activeFile = null;
-    }
-
-    function toggleProfileMenu() {
-      const menu = $('profile-menu');
-      const open = !menu.classList.contains('menu-open');
-      menu.classList.toggle('menu-open', open);
-      $('profile-button').setAttribute('aria-expanded', String(open));
-    }
-
-    function closeProfileMenu() {
-      $('profile-menu').classList.remove('menu-open');
-      $('profile-button').setAttribute('aria-expanded', 'false');
-    }
-
-    async function copyText(text) {
-      if (!text) {
-        showToast('No hay enlace disponible.');
-        return;
-      }
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          const textarea = document.createElement('textarea');
-          textarea.value = text;
-          textarea.style.position = 'fixed';
-          textarea.style.opacity = '0';
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          textarea.remove();
-        }
-        showToast('Enlace copiado.');
-      } catch {
-        showToast('No se pudo copiar el enlace.');
-      }
-    }
-
-    async function shareFile(file) {
-      const url = file?.webViewLink;
-      if (!url) {
-        showToast('No hay enlace disponible.');
-        return;
-      }
-      const data = { title: file.name, text: 'Te comparto este recurso de La Movida SST.', url };
-      try {
-        if (navigator.share) {
-          await navigator.share(data);
-          return;
-        }
-      } catch (error) {
-        if (error?.name === 'AbortError') return;
-      }
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(`${data.text}\n${file.name}\n${url}`)}`, '_blank', 'noopener,noreferrer');
-    }
-
-    function showToast(message) {
-      $('toast-text').textContent = message;
-      $('toast').classList.add('toast-show');
-      clearTimeout(state.toastTimer);
-      state.toastTimer = setTimeout(() => $('toast').classList.remove('toast-show'), 2800);
-    }
-
-    function updateConnectionStatus() {
-      const online = navigator.onLine;
-      $('connection-dot').className = online ? 'h-2 w-2 rounded-full bg-emerald-500' : 'h-2 w-2 rounded-full bg-amber-500';
-      $('connection-label').textContent = online ? 'En línea' : 'Sin conexión';
-    }
-
-    function initEvents() {
-      $('login-form').addEventListener('submit', handleLogin);
-      $('login-cedula').addEventListener('input', (event) => { event.target.value = normalizeCedula(event.target.value); });
-      $('toggle-code').addEventListener('click', () => {
-        const input = $('login-code');
-        const reveal = input.type === 'password';
-        input.type = reveal ? 'text' : 'password';
-        $('toggle-code').setAttribute('aria-label', reveal ? 'Ocultar código' : 'Mostrar código');
-      });
-
-      $('profile-button').addEventListener('click', (event) => {
-        event.stopPropagation();
-        closeFileMenu();
-        toggleProfileMenu();
-      });
-      $('profile-menu').addEventListener('click', (event) => event.stopPropagation());
-      $('logout-button').addEventListener('click', () => logout());
-      $('back-folder-button').addEventListener('click', goBackFolder);
-      $('retry-button').addEventListener('click', () => loadFolder(state.currentFolderId, { keepStack: true, updateHistory: false }));
-
-      $('search-input').addEventListener('input', () => {
-        $('clear-search').classList.toggle('hidden', !$('search-input').value.trim());
-        renderContent();
-      });
-      $('clear-search').addEventListener('click', () => {
-        $('search-input').value = '';
-        $('clear-search').classList.add('hidden');
-        $('search-input').focus();
-        renderContent();
-      });
-
-      document.querySelectorAll('.filter-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-          state.filter = chip.dataset.filter;
-          updateFilterChips();
-          renderContent();
-        });
-      });
-
-      $('sort-select').addEventListener('change', () => {
-        state.sort = $('sort-select').value;
-        localStorage.setItem(CONFIG.SORT_KEY, state.sort);
-        renderContent();
-      });
-
-      $('grid-view').addEventListener('click', () => {
-        state.view = 'grid';
-        localStorage.setItem(CONFIG.VIEW_KEY, state.view);
-        updateViewControls();
-        renderContent();
-      });
-      $('list-view').addEventListener('click', () => {
-        state.view = 'list';
-        localStorage.setItem(CONFIG.VIEW_KEY, state.view);
-        updateViewControls();
-        renderContent();
-      });
-
-      $('menu-open-drive').addEventListener('click', () => { if (state.activeFile) openExternal(state.activeFile.webViewLink); closeFileMenu(); });
-      $('menu-share').addEventListener('click', () => { if (state.activeFile) shareFile(state.activeFile); closeFileMenu(); });
-      $('menu-copy').addEventListener('click', () => { if (state.activeFile) copyText(state.activeFile.webViewLink); closeFileMenu(); });
-
-      $('dismiss-session-warning').addEventListener('click', () => {
-        state.warningDismissed = true;
-        $('session-warning').classList.add('hidden');
-      });
-      $('warning-logout').addEventListener('click', () => logout());
-
-      $('close-preview').addEventListener('click', closePreview);
-      $('preview-modal').addEventListener('click', (event) => { if (event.target === $('preview-modal')) closePreview(); });
-
-      document.addEventListener('click', () => {
-        closeProfileMenu();
-        closeFileMenu();
-      });
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          closeProfileMenu();
-          closeFileMenu();
-          if (!$('preview-modal').classList.contains('hidden')) closePreview();
-        }
-      });
-
-      window.addEventListener('resize', closeFileMenu);
-      window.addEventListener('scroll', closeFileMenu, { passive: true });
-      window.addEventListener('online', updateConnectionStatus);
-      window.addEventListener('offline', updateConnectionStatus);
-      window.addEventListener('popstate', (event) => {
-        if (!readSession() || !event.state?.movidaDrive || !Array.isArray(event.state.stack)) return;
-        state.stack = event.state.stack;
-        const folder = state.stack[state.stack.length - 1];
-        loadFolder(folder.id, { keepStack: true, updateHistory: false });
-      });
-    }
-
-    function bootstrap() {
-      initEvents();
-      updateConnectionStatus();
-      updateFilterChips();
-      updateViewControls();
-      $('sort-select').value = state.sort;
-      const session = readSession();
-      if (session) openApp(session);
-      else $('login-cedula').focus();
-    }
-
-    bootstrap();
-  </script>
+  <script src="assets/app.js" defer></script>
 </body>
 </html>

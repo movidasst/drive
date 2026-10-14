@@ -1,0 +1,10 @@
+{
+  "name": "biblioteca-movida-sst",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tailwindcss -i styles.css -o assets/app.css --minify",
+    "test": "node --test tests/*.test.js"
+  },
+  "devDependencies": { "tailwindcss": "3.4.17" }
+}

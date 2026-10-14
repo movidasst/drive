@@ -1,0 +1,5 @@
+[functions.drive-api]
+# Credential login is public; every other operation validates an opaque, hashed,
+# expiring database session in the handler before touching the catalog.
+verify_jwt = false
+entrypoint = "./functions/drive-api/index.js"
