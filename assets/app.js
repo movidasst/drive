@@ -8,6 +8,7 @@
       SESSION_KEY: 'movida_drive_session_v2',
       VIEW_KEY: 'movida_drive_view_v2',
       SORT_KEY: 'movida_drive_sort_v1',
+      NAMES_KEY: 'movida_drive_full_names_v1',
       SESSION_WARNING: 5 * 60 * 1000
     });
 
@@ -19,6 +20,7 @@
       view: safeGet(localStorage, CONFIG.VIEW_KEY) === 'list' ? 'list' : 'grid',
       sort: safeGet(localStorage, CONFIG.SORT_KEY) || 'name-asc',
       filter: 'all',
+      collection: 'browse', favorites: new Set(), favoritesKey: null, folderStats: new Map(), fullNames: safeGet(localStorage, CONFIG.NAMES_KEY) === 'true',
       driveReady: false,
       sessionTimer: null,
       toastTimer: null,
@@ -64,7 +66,7 @@
       try {
         const data = await api('catalog', { refresh: manual }, token);
         if (generation !== state.catalogGeneration || readSession()?.token !== token) return;
-        state.catalog = data.items || []; state.folderMap = new Map((data.folders || []).map(folder => [folder.id, folder])); state.catalogMeta = data;
+        state.catalog = data.items || []; state.folderMap = new Map((data.folders || []).map(folder => [folder.id, folder])); state.catalogMeta = data; rebuildFolderStats();
         updateCatalogStatus();
         const id = state.folderMap.has(state.currentFolderId) ? state.currentFolderId : CONFIG.ROOT_FOLDER;
         await loadFolder(id, { preserveSearch: true });
@@ -122,7 +124,7 @@
     }
 
     function saveSession(data) {
-      const session = { token: data.token, name: data.name || 'Integrante', expiresAt: data.expiresAt };
+      const session = { token: data.token, name: data.name || 'Integrante', expiresAt: data.expiresAt, favoritesScope: data.favoritesScope || null };
       if (!safeSet(sessionStorage, CONFIG.SESSION_KEY, JSON.stringify(session))) throw new Error('Permite el almacenamiento de sesión en tu navegador para ingresar.');
       return session;
     }
@@ -160,7 +162,7 @@
 
     function openApp(session) {
       $('auth-screen').classList.add('hidden'); $('app-shell').classList.remove('hidden');
-      setUserIdentity(session); scheduleSession(session); updateViewControls(); $('sort-select').value = state.sort;
+      setUserIdentity(session); loadFavorites(session); scheduleSession(session); updateViewControls(); $('sort-select').value = state.sort;
       initDrive();
     }
 
@@ -169,7 +171,7 @@
       safeRemove(sessionStorage, CONFIG.SESSION_KEY); clearInterval(state.sessionTimer); clearTimeout(state.catalogPoll); state.catalogGeneration++;
       if (revoke && token) api('logout', {}, token).catch(() => {});
       closePreview(); closeProfileMenu(); closeFileMenu(); $('session-warning').classList.add('hidden'); $('app-shell').classList.add('hidden'); $('auth-screen').classList.remove('hidden');
-      $('login-code').value = ''; state.stack = [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }]; state.currentFolderId = CONFIG.ROOT_FOLDER; state.files = []; state.catalog = []; state.folderMap.clear(); state.catalogMeta = null; state.driveReady = false;
+      $('login-code').value = ''; state.stack = [{ id: CONFIG.ROOT_FOLDER, name: 'Inicio' }]; state.currentFolderId = CONFIG.ROOT_FOLDER; state.files = []; state.catalog = []; state.folderMap.clear(); state.catalogMeta = null; state.driveReady = false; state.favorites.clear(); state.favoritesKey = null; state.collection = 'browse'; state.folderStats.clear();
       $('folder-container').replaceChildren(); $('file-container').replaceChildren(); $('home-file-count').textContent = '—'; $('home-folder-count').textContent = '—';
       if (message) showLoginMessage(message); else clearLoginMessage();
       setTimeout(() => $('login-cedula').focus(), 50);
@@ -202,7 +204,7 @@
       if (!readSession()) return;
       if (!state.folderMap.has(folderId)) folderId = CONFIG.ROOT_FOLDER;
       state.currentFolderId = folderId; state.stack = pathForFolder(folderId); state.files = state.catalog.filter(file => file.parentId === folderId);
-      if (!options.preserveSearch) { state.filter = 'all'; $('search-input').value = ''; $('clear-search').classList.add('hidden'); state.visibleLimit = 60; }
+      if (!options.preserveSearch) { state.filter = 'all'; state.collection = 'browse'; $('search-input').value = ''; $('clear-search').classList.add('hidden'); state.visibleLimit = 60; }
       updateFilterChips(); renderContent();
       if (options.updateHistory) pushHistoryState(); else replaceHistoryState();
     }
@@ -238,7 +240,8 @@
       const isRoot = state.stack.length === 1;
       $('back-folder-button').classList.toggle('hidden', isRoot);
       $('back-folder-button').classList.toggle('flex', !isRoot);
-      $('home-hero').classList.toggle('hidden', !isRoot);
+      $('home-hero').classList.toggle('hidden', !isRoot || state.collection !== 'browse');
+      $('library-totals').classList.toggle('hidden', !isRoot || state.collection !== 'browse');
       $('folder-summary').classList.toggle('hidden', isRoot);
       $('current-folder-title').textContent = state.stack[state.stack.length - 1]?.name || 'Carpeta';
 
@@ -273,19 +276,63 @@
       if (isFolder(file)) return 'folders';
       if (mime === 'application/pdf') return 'pdf';
       if (mime.startsWith('image/')) return 'images';
-      if (mime.includes('document') || mime.includes('word') || mime.includes('spreadsheet') || mime.includes('sheet') || mime.includes('excel') || mime.includes('presentation') || mime.includes('powerpoint')) return 'docs';
+      if (mime.startsWith('video/')) return 'videos';
+      if (mime.startsWith('audio/')) return 'audio';
+      if (/spreadsheet|sheet|excel|csv/.test(mime)) return 'sheets';
+      if (/presentation|powerpoint/.test(mime)) return 'slides';
+      if (/document|word|text\/plain|rtf|opendocument.text/.test(mime)) return 'docs';
       return 'other';
     }
-
     function getTypeLabel(file) {
-      const type = getType(file);
-      if (type === 'folders') return 'Carpeta';
-      if (type === 'pdf') return 'PDF';
-      if (type === 'images') return 'Imagen';
-      if (String(file.mimeType || '').includes('spreadsheet') || String(file.mimeType || '').includes('sheet') || String(file.mimeType || '').includes('excel')) return 'Hoja de cálculo';
-      if (String(file.mimeType || '').includes('presentation')) return 'Presentación';
-      if (type === 'docs') return 'Documento';
-      return 'Archivo';
+      return { folders: 'Carpeta', pdf: 'PDF', images: 'Imagen', videos: 'Video', audio: 'Audio', sheets: 'Hoja de cálculo', slides: 'Presentación', docs: 'Documento', other: 'Archivo' }[getType(file)];
+    }
+    function loadFavorites(session) {
+      state.favoritesKey = session.favoritesScope ? `movida_drive_favorites_v1_${session.favoritesScope}` : null;
+      try { const ids = JSON.parse(state.favoritesKey ? safeGet(localStorage, state.favoritesKey) || '[]' : '[]'); state.favorites = new Set(Array.isArray(ids) ? ids.filter(id => typeof id === 'string').slice(0, 5000) : []); } catch { state.favorites = new Set(); }
+    }
+    function toggleFavorite(file, button) {
+      if (!state.favoritesKey) { showToast('Vuelve a ingresar para guardar tus favoritos.'); return; }
+      const updated = new Set(state.favorites); const saved = !updated.has(file.id);
+      if (saved) updated.add(file.id); else updated.delete(file.id);
+      if (!safeSet(localStorage, state.favoritesKey, JSON.stringify([...updated]))) { showToast('El navegador no permite guardar favoritos.'); return; }
+      state.favorites = updated;
+      if (state.collection === 'favorites') renderContent(); else { button.setAttribute('aria-pressed', String(saved)); button.setAttribute('aria-label', `${saved ? 'Quitar de' : 'Guardar en'} favoritos: ${file.name}`); updateCollections(); }
+      showToast(saved ? 'Guardado en favoritos.' : 'Quitado de favoritos.');
+    }
+    function createFavoriteButton(file) {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'utility-icon favorite-button';
+      const saved = state.favorites.has(file.id); button.setAttribute('aria-pressed', String(saved)); button.setAttribute('aria-label', `${saved ? 'Quitar de' : 'Guardar en'} favoritos: ${file.name}`);
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.5l-5.7 3 1.1-6.3L2.8 9.7l6.4-.9L12 3Z" fill="currentColor" stroke="currentColor" stroke-width="1.2"/></svg>';
+      button.addEventListener('click', event => { event.stopPropagation(); toggleFavorite(file, button); }); return button;
+    }
+    function rebuildFolderStats() {
+      state.folderStats = new Map([...state.folderMap.keys()].map(id => [id, { files: 0, directFiles: 0, subfolders: 0 }]));
+      for (const file of state.catalog) {
+        const direct = state.folderStats.get(file.parentId); if (!direct) continue;
+        if (isFolder(file)) { direct.subfolders++; continue; }
+        direct.directFiles++; let id = file.parentId; const seen = new Set();
+        while (id && !seen.has(id)) { seen.add(id); const stats = state.folderStats.get(id); if (stats) stats.files++; id = state.folderMap.get(id)?.parentId; }
+      }
+    }
+    function updateCollections() {
+      document.querySelectorAll('[data-collection]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.collection === state.collection)));
+      $('favorites-count').textContent = String(state.catalog.filter(file => state.favorites.has(file.id)).length);
+      $('recent-mode-control').classList.toggle('hidden', state.collection !== 'recent');
+      $('sort-select').disabled = state.collection === 'recent';
+      $('search-scope').disabled = state.collection !== 'browse';
+      $('toggle-full-names').setAttribute('aria-pressed', String(state.fullNames));
+      $('collection-help').textContent = state.collection === 'favorites' ? 'Tus favoritos de toda la biblioteca, guardados para tu cuenta en este navegador.' : state.collection === 'recent' ? ($('recent-mode').value === 'added' ? 'Nuevas incorporaciones detectadas desde que se activó este registro; no es la fecha de creación del archivo.' : 'Archivos de toda la biblioteca, ordenados por su última modificación en Google Drive.') : '';
+    }
+    async function shareFolder(file) {
+      const url = `https://drive.movidasst.com/#folder=${encodeURIComponent(file.id)}`;
+      if (navigator.share) { try { await navigator.share({ title: file.name, text: 'Carpeta de la Biblioteca Movida SST', url }); return; } catch (error) { if (error.name === 'AbortError') return; } }
+      await copyText(url);
+    }
+    function fileMeta(file) {
+      const values = [getTypeLabel(file), `Modificado ${formatDate(file.modifiedTime)}`, formatSize(file.size)];
+      if (state.collection === 'recent' && $('recent-mode').value === 'added' && file.addedAt) values.push(`Incorporado ${formatDate(file.addedAt)}`);
+      if (isGlobalSearch() || state.collection !== 'browse') values.push(originPath(file));
+      return values.filter(Boolean).join(' · ');
     }
 
     function formatDate(value) {
@@ -319,9 +366,12 @@
 
     function filteredItems() {
       const term = normalizeSearch($('search-input').value.trim());
-      const source = isGlobalSearch() ? state.catalog : state.files;
+      const source = state.collection !== 'browse' || isGlobalSearch() ? state.catalog : state.files;
       let items = source.filter(file => !term || normalizeSearch(file.name).includes(term));
+      if (state.collection === 'favorites') items = items.filter(file => state.favorites.has(file.id));
+      if (state.collection === 'recent') items = items.filter(file => !isFolder(file) && ($('recent-mode').value !== 'added' || file.addedAt));
       if (state.filter !== 'all') items = items.filter(file => getType(file) === state.filter);
+      if (state.collection === 'recent') { const field = $('recent-mode').value === 'added' ? 'addedAt' : 'modifiedTime'; return [...items].sort((a,b) => new Date(b[field] || 0) - new Date(a[field] || 0)); }
       return sortFiles(items);
     }
 
@@ -343,22 +393,20 @@
     }
 
     function createFolderCard(file, index) {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'fade-up group flex min-h-20 w-full items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-card transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-lift';
-      button.style.animationDelay = `${Math.min(index * 25, 220)}ms`;
-      button.innerHTML = `
-        <span class="flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-amber-50">${iconMarkup(file, 'h-7 w-7')}</span>
-        <span class="min-w-0 flex-1">
-          <span class="line-clamp-2 text-sm font-extrabold leading-snug text-movida-ink transition group-hover:text-movida-petrol"></span>
-          <span class="mt-1 block text-[11px] font-semibold text-slate-400">Actualizada ${formatDate(file.modifiedTime)}</span>
-        </span>
-        <svg class="h-5 w-5 flex-none text-slate-300 transition group-hover:translate-x-0.5 group-hover:text-movida-petrol" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 18 6-6-6-6"></path></svg>
-      `;
-      button.querySelector('.line-clamp-2').textContent = file.name;
-      if (isGlobalSearch()) { const path = document.createElement('span'); path.className = 'mt-1 block text-xs text-slate-600'; path.textContent = originPath(file); button.querySelector('.min-w-0').appendChild(path); }
-      button.addEventListener('click', () => navigateToFolder(file.id, file.name));
-      return button;
+      const article = document.createElement('article'); article.className = 'folder-card';
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'folder-open';
+      const icon = document.createElement('span'); icon.className = 'folder-icon'; icon.innerHTML = iconMarkup(file, 'h-6 w-6');
+      const info = document.createElement('span'); info.className = 'min-w-0 flex-1';
+      const title = document.createElement('span'); title.className = `${state.fullNames ? 'full-resource-name' : 'line-clamp-2'} block text-sm font-extrabold leading-snug text-movida-ink`; title.textContent = file.name; title.title = file.name;
+      const stats = state.folderStats.get(file.id) || { files: 0, subfolders: 0 };
+      const count = document.createElement('span'); count.className = 'mt-1 block text-xs font-semibold text-movida-petrol'; count.textContent = `${stats.files} ${stats.files === 1 ? 'archivo' : 'archivos'} en total${stats.subfolders ? ` · ${stats.subfolders} ${stats.subfolders === 1 ? 'subcarpeta' : 'subcarpetas'}` : ''}`;
+      info.append(title, count);
+      if (isGlobalSearch() || state.collection !== 'browse') { const route = document.createElement('span'); route.className = 'mt-1 block text-xs text-slate-600 full-resource-name'; route.textContent = originPath(file); info.appendChild(route); }
+      button.append(icon, info); button.addEventListener('click', () => navigateToFolder(file.id, file.name));
+      const actions = document.createElement('div'); actions.className = 'folder-actions';
+      const share = document.createElement('button'); share.type = 'button'; share.className = 'utility-icon share-folder'; share.setAttribute('aria-label', `Compartir carpeta: ${file.name}`);
+      share.innerHTML = '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-4m-6.8 7 6.8 4"/></svg>';
+      share.addEventListener('click', () => shareFolder(file)); actions.append(createFavoriteButton(file), share); article.append(button, actions); return article;
     }
 
     function createOpenButton(file, label = 'Abrir') {
@@ -416,19 +464,19 @@
       const body = document.createElement('div');
       body.className = 'flex flex-1 flex-col p-3.5';
       const title = document.createElement('h3');
-      title.className = 'line-clamp-3 text-sm font-extrabold leading-snug text-movida-ink';
+      title.className = `${state.fullNames ? 'full-resource-name' : 'line-clamp-3'} text-sm font-extrabold leading-snug text-movida-ink`;
       title.textContent = file.name;
       title.title = file.name;
       const meta = document.createElement('p');
       meta.className = 'mt-2 text-[11px] font-semibold text-slate-600';
-      meta.textContent = [formatDate(file.modifiedTime), formatSize(file.size), isGlobalSearch() ? originPath(file) : ''].filter(Boolean).join(' · ');
+      meta.textContent = fileMeta(file);
       const actions = document.createElement('div');
       actions.className = 'mt-auto flex items-center gap-2 pt-4';
       const openButton = createOpenButton(file);
       openButton.classList.add('flex-1');
       actions.append(openButton, createMoreButton(file));
       body.append(title, meta, actions);
-      article.append(visualButton, body);
+      const visual = document.createElement('div'); visual.className = 'file-visual'; visual.append(visualButton, createFavoriteButton(file)); article.append(visual, body);
       return article;
     }
 
@@ -459,24 +507,25 @@
       const text = document.createElement('span');
       text.className = 'min-w-0 flex-1';
       const title = document.createElement('span');
-      title.className = 'line-clamp-2 block text-sm font-extrabold leading-snug text-movida-ink';
+      title.className = `${state.fullNames ? 'full-resource-name' : 'line-clamp-2'} block text-sm font-extrabold leading-snug text-movida-ink`;
+      title.title = file.name;
       title.textContent = file.name;
       const meta = document.createElement('span');
       meta.className = 'mt-1 block text-[11px] font-semibold text-slate-600';
-      meta.textContent = [getTypeLabel(file), formatDate(file.modifiedTime), formatSize(file.size), isGlobalSearch() ? originPath(file) : ''].filter(Boolean).join(' · ');
+      meta.textContent = fileMeta(file);
       text.append(title, meta);
       openArea.append(visual, text);
 
       const desktopOpen = createOpenButton(file);
       desktopOpen.classList.add('hidden', 'sm:inline-flex');
-      article.append(openArea, desktopOpen, createMoreButton(file));
+      article.append(openArea, desktopOpen, createFavoriteButton(file), createMoreButton(file));
       return article;
     }
 
     function renderContent() {
       $('loading-state').classList.add('hidden');
       $('error-state').classList.add('hidden');
-      renderNavigation();
+      renderNavigation(); updateCollections();
 
       const allFolders = state.catalog.filter(isFolder);
       const allFiles = state.catalog.filter((file) => !isFolder(file));
@@ -511,12 +560,12 @@
       });
 
       $('load-more').classList.toggle('hidden', files.length <= state.visibleLimit);
-      $('results-status').textContent = isSearch ? `${items.length} resultado(s) ${isGlobalSearch() ? 'en toda la biblioteca' : 'en esta carpeta'}` : `${state.files.length} elementos en esta carpeta`;
+      $('results-status').textContent = state.collection !== 'browse' ? `${items.length} ${state.collection === 'favorites' ? 'favoritos' : 'archivos recientes'} en toda la biblioteca` : isSearch ? `${items.length} resultado(s) ${isGlobalSearch() ? 'en toda la biblioteca' : 'en esta carpeta'}` : `${state.files.length} elementos en esta carpeta`;
       const hasVisible = showFolders || showFiles;
       $('empty-state').classList.toggle('hidden', hasVisible);
       if (!hasVisible) {
-        $('empty-title').textContent = isSearch ? 'No encontramos resultados' : !state.files.length ? 'Esta carpeta está vacía' : 'No hay recursos con este filtro';
-        $('empty-text').textContent = isSearch ? 'Prueba otra palabra o cambia el alcance de búsqueda.' : !state.files.length ? 'Vuelve a Inicio para explorar otras carpetas.' : 'Selecciona otro tipo de recurso.';
+        $('empty-title').textContent = state.collection === 'favorites' && !isSearch && state.filter === 'all' ? 'Todavía no tienes favoritos' : state.collection === 'recent' && $('recent-mode').value === 'added' && !isSearch && state.filter === 'all' ? 'Aquí aparecerán las nuevas incorporaciones' : isSearch ? 'No encontramos resultados' : !state.files.length ? 'Esta carpeta está vacía' : 'No hay recursos con este filtro';
+        $('empty-text').textContent = state.collection === 'favorites' && !isSearch && state.filter === 'all' ? 'Pulsa la estrella de un archivo o carpeta para guardarlo aquí.' : state.collection === 'recent' && $('recent-mode').value === 'added' && !isSearch && state.filter === 'all' ? 'Puedes consultar ahora los archivos modificados recientemente.' : isSearch ? 'Prueba otra palabra o cambia el alcance de búsqueda.' : !state.files.length ? 'Vuelve a Inicio para explorar otras carpetas.' : 'Selecciona otro tipo de recurso.';
       }
     }
 
@@ -537,15 +586,7 @@
       $('error-state').classList.remove('hidden');
     }
 
-    function updateFilterChips() {
-      document.querySelectorAll('.filter-chip').forEach((chip) => {
-        const active = chip.dataset.filter === state.filter;
-        chip.setAttribute('aria-pressed', String(active));
-        chip.className = active
-          ? 'filter-chip min-h-11 flex-none rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white'
-          : 'filter-chip min-h-11 flex-none rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600 transition hover:border-movida-petrol/30 hover:text-movida-petrol';
-      });
-    }
+    function updateFilterChips() { $('type-filter').value = state.filter; }
 
     function updateViewControls() {
       const isGrid = state.view === 'grid';
@@ -724,13 +765,11 @@
         renderContent();
       });
 
-      document.querySelectorAll('.filter-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-          state.filter = chip.dataset.filter; state.visibleLimit = 60;
-          updateFilterChips();
-          renderContent();
-        });
-      });
+      $('type-filter').addEventListener('change', () => { state.filter = $('type-filter').value; state.visibleLimit = 60; renderContent(); });
+      document.querySelectorAll('[data-collection]').forEach(button => button.addEventListener('click', () => { state.collection = button.dataset.collection; if (state.collection !== 'browse') $('search-scope').value = 'all'; state.visibleLimit = 60; renderContent(); }));
+      $('recent-mode').addEventListener('change', () => { state.visibleLimit = 60; renderContent(); });
+      $('toggle-full-names').addEventListener('click', () => { state.fullNames = !state.fullNames; safeSet(localStorage, CONFIG.NAMES_KEY, String(state.fullNames)); renderContent(); });
+      $('share-current-folder').addEventListener('click', () => shareFolder({ id: state.currentFolderId, name: state.stack.at(-1)?.name || 'Inicio' }));
 
       $('sort-select').addEventListener('change', () => {
         state.sort = $('sort-select').value;

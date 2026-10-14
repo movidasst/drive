@@ -89,7 +89,7 @@ export function createHandler({ rpc, waitUntil = null, fetcher = fetch, now = ()
           if (result?.status === 429) return reply({ message: 'Demasiados intentos. Inténtalo nuevamente en unos minutos.', retryAfter: result.retryAfter }, 429, { 'Retry-After': String(result.retryAfter) });
           return reply({ message: 'Cédula o código incorrectos, o acceso no autorizado.' }, 401);
         }
-        return reply({ token, name: result.name, expiresAt: result.expiresAt });
+        return reply({ token, name: result.name, expiresAt: result.expiresAt, favoritesScope: result.favoritesScope });
       }
       if (!['session', 'renew', 'logout', 'catalog'].includes(action)) return reply({ message: 'Acción no válida.' }, 400);
       const token = req.headers.get('authorization')?.match(/^Bearer ([a-f0-9]{64})$/)?.[1];

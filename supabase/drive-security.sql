@@ -83,7 +83,7 @@ begin
   insert into public.drive_sessions_v2(token_hash,integrante_id,created_at,expires_at) values(p_token_hash,v_id,v_now,v_expires);
   delete from public.drive_sessions_v2 where expires_at<v_now-interval '1 day';
   delete from public.drive_attempts_v2 where window_start<v_now-interval '1 day';
-  return jsonb_build_object('ok',true,'name',coalesce(nullif(v_name,''),'Integrante'),'expiresAt',floor(extract(epoch from v_expires)*1000));
+  return jsonb_build_object('ok',true,'name',coalesce(nullif(v_name,''),'Integrante'),'expiresAt',floor(extract(epoch from v_expires)*1000),'favoritesScope',md5('drive-favorites:'||v_id::text));
 end $fn$;
 
 create or replace function public.drive_session_v2(p_token_hash text,p_action text default 'validate')
@@ -104,12 +104,12 @@ begin
   elsif p_action<>'validate' then return jsonb_build_object('ok',false,'status',400);
   end if;
   select concat_ws(' ',nullif(btrim(nombres),''),nullif(btrim(apellidos),'')) into v_name from public.integrantes where id=v_session.integrante_id;
-  return jsonb_build_object('ok',true,'name',coalesce(nullif(v_name,''),'Integrante'),'expiresAt',floor(extract(epoch from v_session.expires_at)*1000));
+  return jsonb_build_object('ok',true,'name',coalesce(nullif(v_name,''),'Integrante'),'expiresAt',floor(extract(epoch from v_session.expires_at)*1000),'favoritesScope',md5('drive-favorites:'||v_session.integrante_id::text));
 end $fn$;
 
 create or replace function public.drive_catalog_api_v2(p_action text,p_payload jsonb default '{}'::jsonb)
 returns jsonb language plpgsql security invoker set search_path='' as $fn$
-declare v_row public.drive_catalog_v2; v_config public.drive_config_v2; v_now timestamptz:=clock_timestamp();
+declare v_row public.drive_catalog_v2; v_config public.drive_config_v2; v_catalog jsonb; v_now timestamptz:=clock_timestamp();
 begin
   if p_action='config' then
     select * into v_config from public.drive_config_v2 where id;
@@ -124,7 +124,14 @@ begin
     return jsonb_build_object('claimed',found);
   elsif p_action='commit' then
     if jsonb_typeof(p_payload->'catalog'->'items')<>'array' or jsonb_typeof(p_payload->'catalog'->'folders')<>'array' then raise exception 'invalid catalog'; end if;
-    update public.drive_catalog_v2 set payload=p_payload->'catalog',updated_at=v_now,refresh_owner=null,refreshing_until=null,last_error=null
+    select * into v_row from public.drive_catalog_v2 where id for update;
+    if v_row.refresh_owner is distinct from (p_payload->>'owner') or v_row.refreshing_until<=v_now then return jsonb_build_object('ok',false); end if;
+    select jsonb_set(p_payload->'catalog','{items}',coalesce(jsonb_agg(n.item || jsonb_build_object('addedAt',case when o.item is not null then o.item->'addedAt' when v_row.payload->>'trackingEnabledAt' is null then null else to_jsonb(v_now) end) order by n.position),'[]'::jsonb))
+      into v_catalog
+      from jsonb_array_elements(p_payload->'catalog'->'items') with ordinality n(item,position)
+      left join jsonb_array_elements(v_row.payload->'items') o(item) on o.item->>'id'=n.item->>'id';
+    v_catalog:=v_catalog || jsonb_build_object('trackingEnabledAt',coalesce(v_row.payload->'trackingEnabledAt',to_jsonb(v_now)));
+    update public.drive_catalog_v2 set payload=v_catalog,updated_at=v_now,refresh_owner=null,refreshing_until=null,last_error=null
       where id and refresh_owner=p_payload->>'owner' and refreshing_until>v_now;
     return jsonb_build_object('ok',found);
   elsif p_action='fail' then

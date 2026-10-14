@@ -11,6 +11,16 @@ Sitio: https://drive.movidasst.com. Elaborado por David Linares Brea.
 - Bloqueo persistente tras cinco intentos por documento en diez minutos y límite de cincuenta solicitudes de ingreso por IP en ese período.
 - El catálogo completo se guarda en servidor. Se revisa al superar una hora y al pulsar Actualizar; la actualización manual tiene un mínimo de cinco minutos entre intentos. Una actualización parcial o fallida conserva la versión completa anterior.
 
+## Apariencia y herramientas de consulta
+
+El banner usa una ilustración SVG ligera y la identidad de La Movida de SST+, adaptada a móvil. La vista Explorar mantiene la estructura de carpetas; Favoritos y Recientes abarcan toda la biblioteca. Cada carpeta indica el total de archivos de su árbol y sus subcarpetas directas. Compartir carpeta usa el enlace de la biblioteca y exige que quien lo abre ingrese.
+
+Los favoritos se guardan en `localStorage` bajo un identificador estable de la cuenta que entrega el servidor, sin guardar cédula ni código. Persisten en ese navegador y no se sincronizan entre dispositivos. Al cerrar sesión se limpia su representación en memoria; otra cuenta usa un conjunto separado. Si el navegador bloquea el almacenamiento, se informa y no se simula que fueron guardados.
+
+Recientes distingue modificación en Google Drive e incorporación observada por el catálogo. `addedAt` empieza a registrarse para nuevos identificadores después de activar `trackingEnabledAt`; los recursos existentes conservan una fecha de incorporación desconocida. No se interpreta `modifiedTime` ni la creación de Google como incorporación. La fecha se conserva en posteriores actualizaciones completas del catálogo.
+
+Los filtros separan documentos, PDF, imágenes, hojas de cálculo, presentaciones, videos, audios y otros recursos. Nombres completos permite expandir los nombres en móvil y escritorio.
+
 ## Desarrollo y publicación
 
 ```sh

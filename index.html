@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/app.css?v=20261014-visual">
 
 
   <style>
@@ -53,6 +53,39 @@
       #search-help { font-size: 11px; }
       #profile-menu { max-width: calc(100vw - 32px); }
     }
+    .library-banner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; overflow: hidden; border-radius: 22px; background: linear-gradient(115deg, #00205b, #005b73 72%, #007b85); padding: 24px 28px; color: white; box-shadow: 0 12px 30px -20px #00205b80; }
+    .banner-copy { min-width: 0; z-index: 1; }
+    .banner-eyebrow { font-size: 10px; font-weight: 800; letter-spacing: .16em; color: #bceee6; }
+    #home-hero h2 { margin-top: 6px; font-size: 27px; font-weight: 800; line-height: 1.18; }
+    .banner-description { margin-top: 8px; font-size: 14px; color: #e3f3f8; }
+    .banner-motto { margin-top: 8px; font-size: 12px; font-weight: 700; color: #ffe19a; }
+    .banner-art { width: 225px; height: 135px; flex-shrink: 0; }
+    .library-totals { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 14px; padding: 12px 2px 0; font-size: 12px; color: #475569; }
+    .library-totals strong { color: #007b85; font-size: 19px; font-weight: 800; }
+    .library-totals span { color: #64748b; font-size: 11px; }
+    .collection-tabs { display: flex; gap: 4px; padding: 4px; background: #eaf0f5; border: 1px solid #dce5ed; border-radius: 14px; }
+    .collection-tab { flex: 1; min-height: 44px; border-radius: 10px; font-size: 12px; font-weight: 800; color: #475569; }
+    .collection-tab[aria-pressed="true"] { background: white; color: #00205b; box-shadow: 0 2px 6px #00205b0c; }
+    .resource-tools { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin-top: 12px; }
+    .type-control { display: block; color: #64748b; font-size: 10px; font-weight: 700; min-width: 0; }
+    .type-control select { display: block; min-height: 44px; margin-top: 3px; max-width: 100%; border: 1px solid #dce5ed; border-radius: 12px; background: white; padding: 8px 10px; font-size: 12px; font-weight: 700; color: #334155; }
+    .name-toggle, .folder-share-button { min-height: 44px; border: 1px solid #dce5ed; border-radius: 12px; background: white; padding: 8px 12px; font-size: 11px; font-weight: 700; color: #006575; }
+    .name-toggle[aria-pressed="true"] { background: #e2f2ef; border-color: #007b85; }
+    .folder-card { display: flex; gap: 6px; align-items: center; padding: 10px; border: 1px solid #e2e8f0; border-radius: 18px; background: white; transition: border-color .2s; }
+    .folder-card:hover { border-color: #a3d5d4; }
+    .folder-open { display: flex; flex: 1; min-width: 0; align-items: center; gap: 12px; padding: 4px; text-align: left; }
+    .folder-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 40px; height: 44px; border-radius: 12px; background: #fff8e6; }
+    .folder-actions { display: flex; flex-shrink: 0; flex-direction: column; }
+    .utility-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 11px; color: #64748b; background: white; border: 1px solid transparent; }
+    .utility-icon:hover { background: #f1f6f8; border-color: #dce5ed; }
+    .favorite-button[aria-pressed="true"] { color: #a35c00; background: #fff7dd; }
+    .favorite-button[aria-pressed="false"] svg path { fill: none; }
+    .favorite-button svg { width: 20px; height: 20px; }
+    .file-visual { position: relative; }
+    .file-visual > .favorite-button { position: absolute; top: 8px; right: 8px; border: 1px solid #e2e8f0; }
+    .full-resource-name { overflow-wrap: anywhere; word-break: break-word; }
+    @media(max-width: 639px) { .library-banner { padding: 16px; gap: 8px; border-radius: 18px; } #home-hero h2 { font-size: 19px; } .banner-art { width: 78px; height: 84px; } .banner-description { display: none; } .banner-motto { font-size: 10px; } .banner-eyebrow { font-size: 9px; } .library-totals { padding-top: 8px; } .name-toggle { max-width: 130px; } .folder-share-button { font-size: 10px; padding: 8px; } }
+    .library-banner.hidden, .library-totals.hidden, .type-control.hidden { display: none; }
     .auth-card {
       box-shadow: 0 28px 80px -42px rgba(11, 42, 111, .55);
     }
@@ -290,20 +323,19 @@
     </header>
 
     <main class="mx-auto max-w-7xl px-4 pb-24 pt-5 sm:px-6 sm:pt-7">
-      <section id="home-hero" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-card">
-        <div class="grid grid-cols-[1fr_auto] items-center gap-3">
-          <div class="min-w-0"><p class="text-[10px] font-extrabold uppercase tracking-wide text-movida-petrol">Biblioteca colaborativa</p><h2 class="mt-1 text-base font-extrabold text-movida-ink"><span class="sm:hidden">Recursos de SST</span><span class="hidden sm:inline">Recursos para tu actualización profesional</span></h2><p class="mt-1 hidden text-xs text-slate-600 sm:block">De la Reacción a la Prevención</p></div>
-          <div class="flex gap-4"><p class="text-center"><strong id="home-file-count" class="block text-xl text-movida-petrol">—</strong><span class="text-xs text-slate-600">archivos</span></p><p class="text-center"><strong id="home-folder-count" class="block text-xl text-movida-petrol">—</strong><span class="text-xs text-slate-600">carpetas</span></p></div>
-        </div>
-        <p class="mt-2 text-xs text-slate-500">Toda la biblioteca, incluidas las subcarpetas.</p>
+      <section id="home-hero" class="library-banner" aria-label="Biblioteca colaborativa de SST">
+        <div class="banner-copy"><p class="banner-eyebrow">LA MOVIDA DE SST+</p><h2>Biblioteca colaborativa de SST</h2><p class="banner-description">Conocimiento que compartimos para avanzar.</p><p class="banner-motto">De la Reacción a la Prevención</p></div>
+        <svg class="banner-art" viewBox="0 0 260 150" fill="none" aria-hidden="true"><circle cx="190" cy="68" r="70" fill="white" opacity=".06"/><circle cx="190" cy="68" r="48" stroke="white" opacity=".12"/><path d="M28 61c34-11 57-7 84 6v65c-27-13-50-17-84-6V61Z" fill="#eefcfa"/><path d="M112 67c27-13 50-17 84-6v65c-34-11-57-7-84 6V67Z" fill="#c2eee7"/><path d="M112 67v65M43 77c20-5 37-2 53 4M43 92c20-5 37-2 53 4M43 107c20-5 37-2 53 4M128 81c16-6 33-9 53-4M128 96c16-6 33-9 53-4" stroke="#007b85" stroke-width="4" stroke-linecap="round"/><rect x="163" y="21" width="60" height="80" rx="10" transform="rotate(9 163 21)" fill="white"/><path d="m176 43 27 4m-29 12 27 4m-29 12 18 3" stroke="#007b85" stroke-width="4" stroke-linecap="round"/><circle cx="212" cy="116" r="22" fill="#ffb600"/><path d="m202 116 6 6 13-14" stroke="#00205b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="53" cy="28" r="6" fill="#70ad47"/><circle cx="236" cy="44" r="4" fill="#ffb600"/></svg>
       </section>
+      <div id="library-totals" class="library-totals"><p><strong id="home-file-count">—</strong> archivos <span aria-hidden="true">·</span> <strong id="home-folder-count">—</strong> carpetas</p><span>Incluidas las subcarpetas</span></div>
       <div class="mt-3 flex flex-wrap items-center justify-between gap-2"><p id="catalog-status" class="text-xs text-slate-600" role="status" aria-live="polite">Preparando catálogo…</p><button id="refresh-catalog" type="button" class="min-h-11 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-movida-petrol">Actualizar</button></div>
       <section id="folder-summary" class="hidden rounded-2xl border border-slate-200 bg-white px-4 py-4 shadow-card sm:px-5">
-        <div class="flex items-center justify-between gap-3">
-          <div class="min-w-0">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="min-w-0 flex-1">
             <p class="text-[10px] font-extrabold uppercase tracking-[.15em] text-movida-petrol">Carpeta actual</p>
-            <h2 id="current-folder-title" class="mt-1 truncate text-xl font-extrabold text-movida-ink">Carpeta</h2>
+            <h2 id="current-folder-title" class="mt-1 break-words text-xl font-extrabold text-movida-ink">Carpeta</h2>
           </div>
+          <button id="share-current-folder" type="button" class="folder-share-button" aria-label="Compartir esta carpeta">Compartir carpeta</button>
           <div class="flex-none rounded-xl bg-slate-50 px-3 py-2 text-center">
             <p id="current-item-count" class="text-lg font-extrabold text-movida-petrol">0</p>
             <p class="text-[9px] font-extrabold uppercase tracking-wide text-slate-500">Elementos</p>
@@ -311,14 +343,11 @@
         </div>
       </section>
 
-      <section class="mt-5">
-        <div class="flex flex-wrap items-center gap-2 pb-1" aria-label="Filtros de tipo">
-          <button class="filter-chip flex-none min-h-11 rounded-full bg-movida-navy px-4 py-2 text-xs font-extrabold text-white" data-filter="all" aria-pressed="true">Todos</button>
-          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="folders" aria-pressed="false">Carpetas</button>
-          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="pdf" aria-pressed="false">PDF</button>
-          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="docs" aria-pressed="false">Documentos</button>
-          <button class="filter-chip flex-none min-h-11 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-extrabold text-slate-600" data-filter="images" aria-pressed="false">Imágenes</button>
-        </div>
+      <section class="mt-4" aria-label="Explorar recursos">
+        <div class="collection-tabs" role="group" aria-label="Vista de recursos"><button type="button" class="collection-tab" data-collection="browse" aria-pressed="true">Explorar</button><button type="button" class="collection-tab" data-collection="favorites" aria-pressed="false">☆ Favoritos <span id="favorites-count">0</span></button><button type="button" class="collection-tab" data-collection="recent" aria-pressed="false">Recientes</button></div>
+        <div class="resource-tools"><label class="type-control">Tipo de recurso<select id="type-filter"><option value="all">Todos</option><option value="folders">Carpetas</option><option value="pdf">PDF</option><option value="docs">Documentos</option><option value="sheets">Hojas de cálculo</option><option value="slides">Presentaciones</option><option value="images">Imágenes</option><option value="videos">Videos</option><option value="audio">Audios</option><option value="other">Otros archivos</option></select></label><button id="toggle-full-names" type="button" class="name-toggle" aria-pressed="false">Nombres completos</button></div>
+        <label id="recent-mode-control" class="type-control mt-3 hidden">Orden de recientes<select id="recent-mode"><option value="modified">Modificados recientemente</option><option value="added">Nuevas incorporaciones</option></select></label>
+        <p id="collection-help" class="mt-2 text-xs text-slate-600"></p>
       </section>
 
       <p id="results-status" class="mt-3 text-xs text-slate-600" role="status" aria-live="polite"></p>
@@ -434,6 +463,6 @@
     <span id="toast-text"></span>
   </div>
 
-  <script src="assets/app.js" defer></script>
+  <script src="assets/app.js?v=20261014-visual" defer></script>
 </body>
 </html>

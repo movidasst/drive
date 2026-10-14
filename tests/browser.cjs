@@ -28,26 +28,52 @@ const server = http.createServer((req, res) => {
       const context = await browser.newContext({ viewport: { width, height: 900 } });
       const page = await context.newPage();
       page.on('pageerror', error => errors.push(error.message));
-      let rejectSession = false;
+      let rejectSession = false; let memberScope = 'test-member'; let mockAdded = false;
       const actions = [];
       await page.route('https://lfdmbkzghnwvsapxypvt.supabase.co/functions/v1/drive-api', async route => {
         const request = route.request(); const input = request.postDataJSON(); actions.push(input.action);
         const headers = { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' };
         if (request.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: { ...headers, 'Access-Control-Allow-Headers': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS' } });
-        if (input.action === 'catalog') return route.fulfill({ status: 200, headers, body: JSON.stringify(catalog) });
+        if (input.action === 'catalog') return route.fulfill({ status: 200, headers, body: JSON.stringify(mockAdded ? { ...catalog, items: catalog.items.map((file,index) => index === catalog.items.findIndex(f => f.mimeType === 'application/pdf') ? { ...file, addedAt: new Date().toISOString() } : file) } : catalog) });
         if (rejectSession && input.action === 'session') return route.fulfill({ status: 401, headers, body: JSON.stringify({ message: 'Sesión inválida' }) });
-        return route.fulfill({ status: 200, headers, body: JSON.stringify({ ok: true, token: 'a'.repeat(64), name: 'Integrante de prueba', expiresAt: Date.now() + 7200000 }) });
+        return route.fulfill({ status: 200, headers, body: JSON.stringify({ ok: true, token: 'a'.repeat(64), name: 'Integrante de prueba', favoritesScope: memberScope, expiresAt: Date.now() + 7200000 }) });
       });
       await page.route('https://fonts.googleapis.com/**', route => route.fulfill({ status: 200, contentType: 'text/css', body: '' }));
       await page.route('https://lh3.googleusercontent.com/**', route => route.fulfill({ status: 200, contentType: 'image/svg+xml', body: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#007b85"/><text x="20" y="25" text-anchor="middle" fill="white" font-size="12">SST+</text></svg>' }));
       await page.route('https://drive.google.com/**', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<p>Vista previa de prueba</p>' }));
+      await page.addInitScript(() => { Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { window.testCopiedLink = text; } } }); Object.defineProperty(navigator, 'share', { configurable: true, value: undefined }); });
       await page.goto(base);
       await page.locator('#login-cedula').fill('12345678'); await page.locator('#login-code').fill('TEST'); await page.locator('#login-button').click();
       await page.waitForFunction(() => document.getElementById('home-file-count').textContent === '753');
       assert.equal(await page.locator('#home-folder-count').textContent(), '53');
-      assert.equal(await page.locator('#folder-container > button').count(), 47);
+      assert.equal(await page.locator('#folder-container > article').count(), 47);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `Overflow at ${width}`);
-      for (const chip of await page.locator('.filter-chip').all()) { const box = await chip.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width, `Filter cut off at ${width}`); }
+      for (const control of await page.locator('.collection-tab, #type-filter, #toggle-full-names').all()) { const box = await control.boundingBox(); assert.ok(box.x >= 0 && box.x + box.width <= width, `Control cut off at ${width}`); }
+      assert.equal(await page.locator('#recent-mode-control').isVisible(), false);
+      await page.screenshot({ path: path.join(output, `inicio-default-${width}.png`), fullPage: false });
+      await page.locator('#folder-container > article').filter({ hasText: 'GRUPO DE ESTUDIO' }).locator('.share-folder').click();
+      assert.match(await page.evaluate(() => window.testCopiedLink), /^https:\/\/drive\.movidasst\.com\/#folder=/);
+      // Folder totals include every nested level.
+      assert.match(await page.locator('#folder-container > article').filter({ hasText: 'GRUPO DE ESTUDIO' }).textContent(), /462 archivos en total/);
+      await page.locator('#folder-container > article').filter({ hasText: 'GRUPO DE ESTUDIO' }).locator('.favorite-button').click();
+      await page.locator('[data-collection="favorites"]').click();
+      assert.equal(await page.locator('#folder-container > article').count(), 1);
+      await page.reload();
+      await page.waitForFunction(() => document.getElementById('home-file-count').textContent === '753');
+      await page.locator('[data-collection="favorites"]').click();
+      assert.equal(await page.locator('#folder-container > article').count(), 1, 'Favorites must survive reload');
+      await page.locator('[data-collection="recent"]').click();
+      assert.ok(await page.locator('#file-container > article').count() > 0);
+      await page.locator('#recent-mode').selectOption('added');
+      assert.equal(await page.locator('#empty-title').textContent(), 'Aquí aparecerán las nuevas incorporaciones');
+      mockAdded = true; await page.locator('#refresh-catalog').click();
+      await page.waitForFunction(() => document.getElementById('file-container').textContent.includes('Incorporado'));
+      assert.equal(await page.locator('#file-container > article').count(), 1);
+      mockAdded = false;
+      await page.locator('[data-collection="browse"]').click();
+      await page.locator('#toggle-full-names').click();
+      assert.ok(await page.locator('#folder-container .full-resource-name').count() > 0);
+
       await page.screenshot({ path: path.join(output, `inicio-${width}.png`), fullPage: false });
       await page.locator('#search-input').fill('covenin');
       await page.waitForTimeout(200);
@@ -58,16 +84,17 @@ const server = http.createServer((req, res) => {
       assert.match(await page.locator('#results-status').textContent(), /esta carpeta/);
       await page.locator('#clear-search').click();
       await page.locator('#search-scope').selectOption('all');
-      await page.locator('#folder-container > button').filter({ hasText: 'GRUPO DE ESTUDIO' }).click();
-      await page.locator('#folder-container > button').filter({ hasText: 'Estudio Norma MMC' }).click();
+      await page.locator('#folder-container > article').filter({ hasText: 'GRUPO DE ESTUDIO' }).locator('.folder-open').click();
+      await page.locator('#folder-container > article').filter({ hasText: 'Estudio Norma MMC' }).locator('.folder-open').click();
       assert.equal(await page.locator('#current-item-count').textContent(), '461');
+      assert.equal(await page.locator('#home-hero').isVisible(), false);
       assert.equal(await page.locator('#file-container > article').count(), 60);
       await page.locator('#load-more').click();
       assert.equal(await page.locator('#file-container > article').count(), 120);
       const deepUrl = page.url(); await page.reload();
       await page.waitForFunction(() => document.getElementById('current-item-count').textContent === '461');
       assert.equal(page.url(), deepUrl);
-      await page.locator('[data-filter="pdf"]').click();
+      await page.locator('#type-filter').selectOption('pdf');
       await page.locator('#file-container button').filter({ hasText: /^Abrir$/ }).first().click();
       await page.waitForTimeout(50);
       assert.equal(await page.locator('#preview-modal').isVisible(), true);
@@ -84,8 +111,11 @@ const server = http.createServer((req, res) => {
       rejectSession = true; await page.reload();
       await page.waitForTimeout(100);
       assert.equal(await page.locator('#auth-screen').isVisible(), true);
+      rejectSession = false; memberScope = 'second-member'; await page.locator('#login-cedula').fill('87654321'); await page.locator('#login-code').fill('TEST'); await page.locator('#login-button').click();
+      await page.waitForFunction(() => document.getElementById('home-file-count').textContent === '753');
+      await page.locator('[data-collection="favorites"]').click(); assert.equal(await page.locator('#favorites-count').textContent(), '0', 'Favorites cannot leak to another account');
       await browser.close(); browser = null;
-      console.log(`UI passed: ${width}px, global search, pagination, deep link, preview, logout, forged-session rejection`);
+      console.log(`UI passed: ${width}px, favorites, recursive folder counts, recent modes, full names, global search, pagination, deep link, preview, logout`);
     }
     assert.deepEqual(errors, []);
   } finally { if (browser) await browser.close(); server.close(); }
