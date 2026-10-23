@@ -238,11 +238,12 @@
 
     function renderNavigation() {
       const isRoot = state.stack.length === 1;
-      $('back-folder-button').classList.toggle('hidden', isRoot);
-      $('back-folder-button').classList.toggle('flex', !isRoot);
+      $('back-folder-button').classList.toggle('hidden', isRoot || state.collection !== 'browse');
+      $('back-folder-button').classList.toggle('flex', !isRoot && state.collection === 'browse');
       $('home-hero').classList.toggle('hidden', !isRoot || state.collection !== 'browse');
       $('library-totals').classList.toggle('hidden', !isRoot || state.collection !== 'browse');
-      $('folder-summary').classList.toggle('hidden', isRoot);
+      $('folder-summary').classList.toggle('hidden', isRoot || state.collection !== 'browse');
+      $('breadcrumbs').parentElement.classList.toggle('hidden', state.collection !== 'browse');
       $('current-folder-title').textContent = state.stack[state.stack.length - 1]?.name || 'Carpeta';
 
       const container = $('breadcrumbs');
@@ -766,7 +767,7 @@
       });
 
       $('type-filter').addEventListener('change', () => { state.filter = $('type-filter').value; state.visibleLimit = 60; renderContent(); });
-      document.querySelectorAll('[data-collection]').forEach(button => button.addEventListener('click', () => { state.collection = button.dataset.collection; if (state.collection !== 'browse') $('search-scope').value = 'all'; state.visibleLimit = 60; renderContent(); }));
+      document.querySelectorAll('[data-collection]').forEach(button => button.addEventListener('click', () => { state.collection = button.dataset.collection; if (state.collection !== 'browse') $('search-scope').value = 'all'; state.visibleLimit = 60; renderContent(); window.scrollTo({ top: 0, behavior: 'auto' }); }));
       $('recent-mode').addEventListener('change', () => { state.visibleLimit = 60; renderContent(); });
       $('toggle-full-names').addEventListener('click', () => { state.fullNames = !state.fullNames; safeSet(localStorage, CONFIG.NAMES_KEY, String(state.fullNames)); renderContent(); });
       $('share-current-folder').addEventListener('click', () => shareFolder({ id: state.currentFolderId, name: state.stack.at(-1)?.name || 'Inicio' }));
