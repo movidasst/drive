@@ -158,6 +158,66 @@
         transition-duration: .01ms !important;
       }
     }
+
+    /* Navegación sólida al borde inferior: sin tarjetas flotantes ni solapamientos. */
+    #app-shell { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+    #app-shell > main { padding-bottom: 42px; }
+    .glass-header { position: relative; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    .library-bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 80;
+      box-sizing: border-box; width: 100%; margin: 0; gap: 0;
+      display: grid; grid-template-columns: repeat(3, minmax(0, 190px)); justify-content: center;
+      padding: 5px 12px calc(5px + env(safe-area-inset-bottom));
+      border: 0; border-top: 1px solid #dce5ec; border-radius: 0;
+      background: #fff; box-shadow: 0 -2px 12px rgba(0,32,91,.06);
+    }
+    .library-bottom-nav .collection-tab {
+      position: relative; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 4px; min-width: 0; min-height: 62px; padding: 6px 2px;
+      border: 0; border-radius: 0; background: transparent; box-shadow: none;
+      color: #607489; font: 800 11px/1.15 'Outfit', sans-serif; white-space: nowrap;
+      transition: color .16s ease, background .16s ease;
+    }
+    .library-bottom-nav .collection-tab svg { width: 23px; height: 23px; flex: none; }
+    .library-bottom-nav .collection-tab[aria-pressed="true"] {
+      color: #007b85; background: transparent; box-shadow: none;
+    }
+    .library-bottom-nav .collection-tab[aria-pressed="true"]::before {
+      content: ''; position: absolute; top: -6px; left: 26%; width: 48%;
+      height: 3px; border-radius: 0 0 3px 3px; background: #007b85;
+    }
+    .library-bottom-nav .collection-tab:hover { background: #eff7f8; color: #00205b; }
+    .bottom-nav-counter { font-size: 10px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .library-section-title { font-size: 19px; line-height: 1.25; font-weight: 800; color: #00205b; margin: 0 0 5px; }
+    #session-warning { bottom: calc(83px + env(safe-area-inset-bottom)); }
+    .resource-tools { flex-wrap: wrap; gap: 10px; }
+    #library-search-tools { gap: 9px; }
+    #library-search-tools .library-search-options { gap: 8px; }
+    #search-scope, #sort-select { min-width: 0; }
+    @media (max-width: 639px) {
+      #app-shell > header > div { padding-bottom: 10px; }
+      #app-shell > main { padding-top: 12px; }
+      #library-search-tools { display: grid; grid-template-columns: minmax(0,1fr); }
+      .library-search-options { display: grid !important; grid-template-columns: minmax(0,1fr) auto; align-items: center; }
+      .library-search-options #search-scope { width: 100%; }
+      .library-search-options #sort-select { grid-column: 1; grid-row: 2; width: 100%; max-width: none; }
+      .library-search-options > div { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; justify-content: center; }
+      #search-help { margin-top: 5px; }
+      .library-section-title { font-size: 17px; }
+      .resource-tools .type-control { flex: 1 1 180px; }
+      .resource-tools .type-control select { width: 100%; }
+      .resource-tools .name-toggle { flex: none; }
+      #session-warning { right: 12px; left: 12px; }
+    }
+    @media (max-width: 359px) {
+      .library-bottom-nav { padding-right: 3px; padding-left: 3px; }
+      .library-bottom-nav .collection-tab { font-size: 10px; }
+      .library-bottom-nav .collection-tab svg { width: 21px; height: 21px; }
+      .resource-tools .name-toggle { max-width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .library-bottom-nav .collection-tab { transition: none; }
+    }
   </style>
 </head>
 <body>
@@ -235,7 +295,7 @@
 
   <!-- APLICACIÓN -->
   <div id="app-shell" class="hidden min-h-screen">
-    <header class="glass-header sticky top-0 z-50">
+    <header class="glass-header z-50">
       <div class="mx-auto max-w-7xl px-4 py-3 sm:px-6">
         <div class="flex items-center justify-between gap-3">
           <div class="flex min-w-0 items-center gap-3">
@@ -283,7 +343,7 @@
           </div>
         </div>
 
-        <div class="mt-3 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div id="library-search-tools" class="mt-3 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-center">
           <div class="relative">
             <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8" stroke-width="2"></circle><path d="m21 21-4.35-4.35" stroke-width="2" stroke-linecap="round"></path></svg>
             <input id="search-input" type="search" autocomplete="off" placeholder="Buscar archivos…" class="min-h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-12 text-base font-semibold text-slate-700 outline-none transition focus:border-movida-teal focus:bg-white focus:ring-4 focus:ring-movida-teal/10" aria-label="Buscar archivos y carpetas en la biblioteca" aria-describedby="search-help">
@@ -292,7 +352,7 @@
             </button>
           </div>
 
-          <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="library-search-options flex flex-wrap items-center justify-between gap-2">
             <select id="search-scope" aria-label="Alcance de búsqueda" class="min-h-11 max-w-full rounded-xl border border-slate-200 bg-white px-2 text-xs font-bold text-slate-600"><option value="all">Toda la biblioteca</option><option value="current">Esta carpeta</option></select>
             <div class="flex rounded-xl border border-slate-200 bg-slate-100 p-1">
               <button id="grid-view" type="button" class="rounded-lg bg-white p-2 text-movida-petrol shadow-sm" aria-label="Vista de cuadrícula" aria-pressed="true">
@@ -344,7 +404,7 @@
       </section>
 
       <section class="mt-4" aria-label="Explorar recursos">
-        <div class="collection-tabs" role="group" aria-label="Vista de recursos"><button type="button" class="collection-tab" data-collection="browse" aria-pressed="true">Explorar</button><button type="button" class="collection-tab" data-collection="favorites" aria-pressed="false">☆ Favoritos <span id="favorites-count">0</span></button><button type="button" class="collection-tab" data-collection="recent" aria-pressed="false">Recientes</button></div>
+        <h2 id="resource-list-title" class="library-section-title">Explora tus recursos</h2>
         <div class="resource-tools"><label class="type-control">Tipo de recurso<select id="type-filter"><option value="all">Todos</option><option value="folders">Carpetas</option><option value="pdf">PDF</option><option value="docs">Documentos</option><option value="sheets">Hojas de cálculo</option><option value="slides">Presentaciones</option><option value="images">Imágenes</option><option value="videos">Videos</option><option value="audio">Audios</option><option value="other">Otros archivos</option></select></label><button id="toggle-full-names" type="button" class="name-toggle" aria-pressed="false">Nombres completos</button></div>
         <label id="recent-mode-control" class="type-control mt-3 hidden">Orden de recientes<select id="recent-mode"><option value="modified">Modificados recientemente</option><option value="added">Nuevas incorporaciones</option></select></label>
         <p id="collection-help" class="mt-2 text-xs text-slate-600"></p>
@@ -400,6 +460,13 @@
       <p class="mt-12 text-center text-xs leading-relaxed text-slate-500">Los documentos pertenecen a sus respectivos autores y se comparten con fines de actualización profesional. · Elaborado por David Linares Brea · www.movidasst.com</p>
       <button id="load-more" type="button" class="mx-auto mt-5 hidden min-h-11 rounded-xl border border-slate-200 bg-white px-5 py-2 text-sm font-bold text-movida-petrol">Mostrar más resultados</button>
     </main>
+
+    <!-- Navegación inferior tipo app, visible únicamente tras iniciar sesión. -->
+    <nav class="collection-tabs library-bottom-nav" aria-label="Secciones de la biblioteca">
+      <button type="button" class="collection-tab" data-collection="browse" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><path d="M3 10h18"/></svg><span class="nav-label">Explorar</span></button>
+      <button type="button" class="collection-tab" data-collection="favorites" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.3-5.7-3-5.7 3 1.1-6.3-4.6-4.5 6.4-.9L12 3Z"/></svg><span class="nav-label">Favoritos <span id="favorites-count" class="bottom-nav-counter">0</span></span></button>
+      <button type="button" class="collection-tab" data-collection="recent" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span class="nav-label">Recientes</span></button>
+    </nav>
   </div>
 
   <!-- MENÚ DE ARCHIVO -->
